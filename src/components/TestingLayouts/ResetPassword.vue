@@ -21,7 +21,7 @@
       <p class="hover:underline cursor-pointer">German</p>
       <div class="border-r-[1px] border-r-slate-300"></div>
       <p class="font-bold hover:underline cursor-pointer">English</p>
-    </div>
+    </div> 
   </div>
 
   <div class="absolute bottom-0 w-full p-3 bg-[#F7F9FA] flex justify-center items-center space-x-3 text-[14px] font-medium text-[#666]">
