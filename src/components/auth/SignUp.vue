@@ -5,64 +5,110 @@
       <div
         class="container max-w-sm md:max-w-md mx-auto flex-1 flex flex-col items-center justify-center px-2"
       >
-        <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+        <div
+          class="my-10 bg-white px-6 py-8 shadow-lg text-black w-full rounded-tl-3xl rounded-tr-3xl"
+        >
           <div>
-            <h1 class="mb-8 text-3xl text-center">Create Account</h1>
+            <h1 class="mb-8 text-3xl text-center font-semibold text-gray-700">
+              Create Account
+            </h1>
           </div>
 
           <form @submit="signUserUp">
-            <div class="">
-              <div class="mb-6 hidden">
-                Login with
-                <span
-                  title="Login with Username and password"
-                  @click="toggleLoginOption('username')"
-                  class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                  :class="!loginWithEmail ? 'border-green-600  ' : ''"
-                  >Username</span
-                >
-                or
-                <span
-                  title="Login with Email and password"
-                  @click="toggleLoginOption('email')"
-                  class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                  :class="loginWithEmail ? 'border-green-600 ' : ''"
-                  >Email</span
-                >
-              </div>
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-600"
+              for="email"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
+              name="email"
+              placeholder="Email"
+              v-model="email"
+            />
 
-              <div class="my-1 p-2">
-                <input
-                  v-if="loginWithEmail"
-                  type="text"
-                  class="block border rounded-xl border-grey-light w-full p-3 mb-4 outline-none"
-                  name="email"
-                  placeholder="Email"
-                  v-model="email"
-                />
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-600"
+              for="username"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
+              name="username"
+              placeholder="Username"
+              v-model="username"
+            />
 
+            <div class="mb-3 p-1">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600"
+                for="password"
+              >
+                Password
+              </label>
+              <div class="relative">
                 <input
-                  v-if="!loginWithEmail"
-                  type="text"
-                  class="block border border-grey-light w-full p-3 rounded-xl mb-4 outline-none"
-                  name="username"
-                  placeholder="Username"
-                  v-model="username"
+                  :type="passwordVisibility ? 'text' : 'password'"
+                  class="block border w-full p-3 rounded-xl outline-none pr-14"
+                  name="password"
+                  placeholder="Password"
+                  v-model="password"
+                  title="toggle password visibility"
                 />
+                <span
+                  class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                  @click="togglePasswordVisibility"
+                >
+                  <i
+                    class="fa text-4xl"
+                    :class="
+                      passwordVisibility
+                        ? 'fa fa-eye-slash text-gray-500'
+                        : ' fa-eye  text-gray-700'
+                    "
+                  ></i>
+                </span>
               </div>
             </div>
 
-            <div class="my-1 p-2">
-              <input
-                type="password"
-                class="block border border-grey-light w-full p-3 rounded-xl mb-4 outline-none"
-                name="password"
-                placeholder="Password"
-                v-model="password"
-              />
+            <div class="mb-3 p-1 relative">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600"
+                for="confirm_password"
+              >
+                Confirm Password
+              </label>
+
+              <div class="relative">
+                <input
+                  :type="passwordVisibility ? 'text' : 'password'"
+                  class="block border w-full p-3 rounded-xl outline-none pr-14"
+                  name="confirm_password"
+                  placeholder="Confirm Password"
+                  v-model="confirm_password"
+                  title="toggle password visibility"
+                />
+                <span
+                  class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                  @click="togglePasswordVisibility"
+                >
+                  <i
+                    class="fa text-4xl"
+                    :class="
+                      passwordVisibility
+                        ? 'fa fa-eye-slash text-gray-500'
+                        : ' fa-eye  text-gray-700'
+                    "
+                  ></i>
+                </span>
+              </div>
             </div>
 
-            <div class="text-sm text-grey-dark mt-4">
+            <div class="text-sm text-grey-dark my-6 px-2">
               By signing up, you agree to the
               <a
                 class="no-underline border-b border-grey-dark text-grey-dark"
@@ -106,25 +152,30 @@
   export default {
     name: 'SignUp',
     setup() {
-      const loginWithEmail = ref(true)
+      const passwordVisibility = ref(true)
       const email = ref('')
       const username = ref('')
       const password = ref('')
-
-      const toggleLoginOption = (event) => {
-        loginWithEmail.value = event === 'email' ? true : false
-      }
+      const confirm_password = ref('')
 
       const signUserUp = (event) => {
         event.preventDefault()
+
+        if (password.value !== confirm_password.value)
+          return alert('password not matching')
+      }
+
+      const togglePasswordVisibility = () => {
+        passwordVisibility.value = !passwordVisibility.value
       }
       return {
         email,
         username,
         password,
-        loginWithEmail,
-        toggleLoginOption,
+        confirm_password,
         signUserUp,
+        passwordVisibility,
+        togglePasswordVisibility,
       }
     },
   }

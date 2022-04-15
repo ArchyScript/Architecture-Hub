@@ -20,6 +20,7 @@
                   best of Tailus.
                 </h2>
               </div>
+
               <div class="mt-16 grid space-y-4">
                 <button
                   class="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
@@ -38,6 +39,7 @@
                     >
                   </div>
                 </button>
+
                 <button
                   class="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
                 >
