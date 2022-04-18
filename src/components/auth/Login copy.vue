@@ -133,6 +133,11 @@
                 </div>
               </div>
 
+              {{ user }} <br />
+              {{ double }}<br />
+              {{ increment }}<br />
+              {{ asyncIncrement }}<br />
+
               <div class="text-grey-dark my-6 text-right underline">
                 <router-link :to="{ name: 'ResetPassword' }">
                   Forgot Password?
@@ -166,46 +171,87 @@
 </template>
 
 <script>
-  // import { ref } from 'vue'
+  import { ref } from 'vue'
   import OtherSigninOptions from './OtherSigninOptions.vue'
-  import { mapGetters, mapActions } from 'vuex'
+  import { useStore, mapGetters } from 'vuex'
+  import { computed } from 'vue'
 
   export default {
     name: 'Login',
-    data: () => ({
-      otherLoginOptions: false,
-      loginWithEmail: true,
-      passwordVisibility: true,
-      email: '',
-      username: '',
-      password: '',
-    }),
-
-    methods: {
-      ...mapActions(['getAllUsers']),
-
-      toggleLoginOption: (event) => {
-        // console.log(store)
-        this.loginWithEmail.value = event === 'email' ? true : false
-      },
-
-      togglePasswordVisibility: () => {
-        this.passwordVisibility.value = !this.passwordVisibility.value
-      },
-
-      logUserIn: (event) => {
-        event.preventDefault()
-      },
-    },
 
     components: {
       OtherSigninOptions,
     },
 
-    computed: mapGetters(['allUsers']),
+    computed: {
+      ...mapGetters(['allUsers']),
+    },
 
     created() {
-      this.getAllUsers()
+      console.log(this.allUsers)
+    },
+    setup() {
+      const store = useStore()
+
+      const otherLoginOptions = ref(false)
+      const loginWithEmail = ref(true)
+      const passwordVisibility = ref(true)
+      const email = ref('')
+      const username = ref('')
+      const password = ref('')
+
+      // const testing = computed(() => {
+      //   return store
+      // }),
+      //
+      const user = computed(() => {
+        // console.log(store.state.allUsers)
+        return store.state.allUsers
+      })
+      // access a getter in computed function
+      const double = computed(() => store.getters.double)
+      // access a mutation
+      const increment = () => store.commit('increment')
+
+      // access an action
+      const asyncIncrement = () => store.dispatch('asyncIncrement')
+
+      // const loadStore = () => {}
+      // const checkoutStatus = computed(() => store.state.cart.checkoutStatus)
+      // const products = computed(() => store.getters['cart/cartProducts'])
+      // const total = computed(() => store.getters['cart/cartTotalPrice'])
+
+      const toggleLoginOption = (event) => {
+        // console.log(store)
+        loginWithEmail.value = event === 'email' ? true : false
+      }
+
+      const togglePasswordVisibility = () => {
+        passwordVisibility.value = !passwordVisibility.value
+      }
+
+      const logUserIn = (event) => {
+        event.preventDefault()
+      }
+      return {
+        email,
+        username,
+        password,
+        loginWithEmail,
+        toggleLoginOption,
+        logUserIn,
+        passwordVisibility,
+        togglePasswordVisibility,
+        otherLoginOptions,
+        // state
+        user,
+        // access a getter in computed function
+        double,
+        // access a mutation
+        increment,
+        // access an action
+        asyncIncrement,
+      }
     },
   }
 </script>

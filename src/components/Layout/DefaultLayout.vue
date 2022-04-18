@@ -11,18 +11,18 @@
 </template>
 
 <script>
-import Topbar from '../Layouts/Topbar.vue'
+  import Topbar from '../Layouts/Topbar.vue'
 
-export default {
-  name: 'DefaultLayout',
-  setup() {
-    return {}
-  },
+  export default {
+    name: 'DefaultLayout',
+    setup() {
+      return {}
+    },
 
-  components: {
-    Topbar,
-  },
-}
+    components: {
+      Topbar,
+    },
+  }
 </script>
 
 <style scoped></style>

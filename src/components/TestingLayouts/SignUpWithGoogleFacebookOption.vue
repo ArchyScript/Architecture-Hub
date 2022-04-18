@@ -35,7 +35,8 @@
                     />
                     <span
                       class="block w-max font-semibold tracking-wide text-gray-700 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base"
-                      >Continue with Google</span
+                    >
+                      Continue with Google</span
                     >
                   </div>
                 </button>
