@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="mt-16 mb-4 space-y-4 text-gray-600 text-center sm:-mb-8">
+    <div class="mt-16 mb-6 space-y-6 text-gray-600 text-center sm:-mb-8">
       <p class="text-xs">
         By proceeding, you agree to our
         <a href="#" class="underline">Terms of Use</a> and confirm you have read
@@ -47,7 +47,7 @@
     setup() {
       const signinOptions = ref([
         {
-          logo: `https://upload.wikimedia.org/wikipedia/en/0/04/Facebook_f_logo_%282021%29.svg`,
+          logo: `https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/2048px-Google_%22G%22_Logo.svg.png`,
           platform: 'Google',
           color: 'text-blue-500',
         },

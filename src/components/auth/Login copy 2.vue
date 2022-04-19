@@ -148,6 +148,8 @@
             </form>
           </div>
 
+          {{ password }}
+
           <div v-if="otherLoginOptions" class="my-12">
             <OtherSigninOptions />
           </div>
@@ -166,8 +168,9 @@
 </template>
 
 <script>
+  // import { ref } from 'vue'
   import OtherSigninOptions from './OtherSigninOptions.vue'
-  import { mapGetters, mapActions } from 'vuex'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'Login',
@@ -177,44 +180,27 @@
       passwordVisibility: true,
       email: '',
       username: '',
-      password: '',
-      loginToken: '',
+      password: 'vdffsfdf',
     }),
 
     methods: {
-      ...mapActions(['getAllUsers', 'updateLoggedInUser', 'updateUserToken']),
+      // ...mapActions(['getAllUsers']),
 
-      toggleLoginOption(event) {
+      toggleLoginOption: (event) => {
         // console.log(store)
-        if (!event) return
+        if (!event || event === undefined) return
         this.loginWithEmail.value = event === 'email' ? true : false
       },
 
-      togglePasswordVisibility() {
+      togglePasswordVisibility: () => {
         // this.toggleLoginOption()
         // console.log(this)
         // console.log(this.password)
-        this.passwordVisibility = !this.passwordVisibility
+        // passwordVisibility = !this.passwordVisibility
       },
 
-      logUserIn(event) {
-        // const router = useRouter()
+      logUserIn: (event) => {
         event.preventDefault()
-
-        if (!this.email || !this.password) return
-        this.allUsers.forEach((eachUser) => {
-          if (
-            eachUser.email === this.email &&
-            eachUser.password === this.password
-          ) {
-            this.loginToken = 'Test token'
-            this.updateUserToken(this.loginToken)
-            this.updateLoggedInUser(eachUser)
-            this.$router.push({ path: '/dashboard', replace: true })
-          } else {
-            return
-          }
-        })
       },
     },
 
@@ -225,8 +211,7 @@
     computed: mapGetters(['allUsers']),
 
     created() {
-      // const router = useRouter()
-      this.getAllUsers()
+      // this.getAllUsers()
     },
   }
 </script>

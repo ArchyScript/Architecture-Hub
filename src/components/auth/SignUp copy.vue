@@ -175,69 +175,43 @@
 </template>
 
 <script>
+  import { ref } from 'vue'
   import OtherSigninOptions from './OtherSigninOptions.vue'
-  import { mapGetters, mapActions } from 'vuex'
 
   export default {
     name: 'SignUp',
-    data: () => ({
-      otherLoginOptions: false,
-      passwordVisibility: true,
-      email: '',
-      username: '',
-      password: '',
-      confirm_password: '',
-      signupToken: '',
-    }),
+    setup() {
+      const otherLoginOptions = ref(false)
+      const passwordVisibility = ref(true)
+      const email = ref('')
+      const username = ref('')
+      const password = ref('')
+      const confirm_password = ref('')
 
-    methods: {
-      ...mapActions(['getAllUsers', 'updateLoggedInUser', 'updateUserToken']),
-
-      toggleLoginOption(event) {
-        if (!event) return
-        this.loginWithEmail.value = event === 'email' ? true : false
-      },
-
-      togglePasswordVisibility() {
-        this.passwordVisibility = !this.passwordVisibility
-      },
-
-      signUserUp(event) {
+      const signUserUp = (event) => {
         event.preventDefault()
 
-        if (
-          !this.email ||
-          !this.username ||
-          !this.password ||
-          !this.confirm_password
-        )
-          return console.log('Please fill  available info')
+        if (password.value !== confirm_password.value)
+          return alert('password not matching')
+      }
 
-        if (this.password !== this.confirm_password)
-          return console.log('password not matching')
-
-        this.allUsers.forEach((eachUser) => {
-          if (this.email === eachUser.email)
-            return console.log('This email has been taken')
-          if (this.username === eachUser.username)
-            return console.log('This username has been taken')
-
-          this.signupToken = 'Test token'
-          this.updateUserToken(this.signupToken)
-          this.updateLoggedInUser(eachUser)
-          this.$router.push({ path: '/dashboard', replace: true })
-        })
-      },
+      const togglePasswordVisibility = () => {
+        passwordVisibility.value = !passwordVisibility.value
+      }
+      return {
+        email,
+        username,
+        password,
+        confirm_password,
+        signUserUp,
+        passwordVisibility,
+        togglePasswordVisibility,
+        otherLoginOptions,
+      }
     },
 
     components: {
       OtherSigninOptions,
-    },
-
-    computed: mapGetters(['allUsers']),
-
-    created() {
-      this.getAllUsers()
     },
   }
 </script>
