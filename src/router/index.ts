@@ -1,38 +1,24 @@
 import store from '@/store'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-//
-// Layout
+// Default Layout and entry point
 const DefaultLayout = () => import('@/components/Layout/DefaultLayout.vue')
-const Dashboard = () => import('@/components/Layout/Dashboard.vue')
-const Profile = () => import('@/components/Layout/Profile.vue')
-// Dashboard
+//
+const HomePage = () => import('@/views/HomePage/index.vue')
+const Competitions = () => import('@/views/Competitions/index.vue')
+const Explore = () => import('@/views/Explore/index.vue')
+const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
+const Profile = () => import('@/views/Profile/index.vue')
+const Notifications = () => import('@/views/Notifications/index.vue')
+const More = () => import('@/views/More/index.vue')
+
 // User Authentication
-const AuthLayout = () => import('@/components/auth/AuthLayout.vue')
-const Login = () => import('@/components/auth/Login.vue')
-const SignUp = () => import('@/components/auth/SignUp.vue')
-const ResetPassword = () => import('@/components/auth/ResetPassword.vue')
+const AuthLayout = () => import('@/views/auth/AuthLayout.vue')
+const Login = () => import('@/views/auth/Login.vue')
+const SignUp = () => import('@/views/auth/SignUp.vue')
+const ResetPassword = () => import('@/views/auth/ResetPassword.vue')
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    redirect: '/dashboard',
-    name: 'DefaultLayout',
-    component: DefaultLayout,
-    meta: { requiredAuth: true },
-    children: [
-      {
-        path: '/dashboard',
-        name: 'Dashboard',
-        component: Dashboard,
-      },
-      {
-        path: '/profile',
-        name: 'Profile',
-        component: Profile,
-      },
-    ],
-  },
   {
     path: '/auth',
     redirect: '/auth/login',
@@ -57,6 +43,55 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: '/',
+    redirect: '/home',
+    name: 'DefaultLayout',
+    component: DefaultLayout,
+    meta: { requiredAuth: true },
+    children: [
+      {
+        path: '/home',
+        name: 'HomePage',
+        component: HomePage,
+      },
+      {
+        path: '/profile',
+        name: 'Profile',
+        component: Profile,
+      },
+      {
+        path: '/competitions',
+        name: 'Competitions',
+        component: Competitions,
+      },
+      {
+        path: '/explore',
+        name: 'Explore',
+        component: Explore,
+      },
+      {
+        path: '/news-update',
+        name: 'NewsUpdate',
+        component: NewsUpdate,
+      },
+      {
+        path: '/notifications',
+        name: 'Notifications',
+        component: Notifications,
+      },
+      {
+        path: '/more',
+        name: 'More',
+        component: More,
+      },
+      // {
+      //   path: '/',
+      //   name: '',
+      //   component: HomePage,
+      // },
+    ],
+  },
 ]
 
 const router = createRouter({
@@ -76,7 +111,7 @@ router.beforeEach((to, from, next) => {
   if (to.meta.requiredAuth && !store.state.token) {
     next({ name: 'Login' })
   } else if (store.state.token && to.meta.isGuest) {
-    next({ name: 'Dashboard' })
+    next({ name: 'HomePage' })
   } else {
     next()
   }

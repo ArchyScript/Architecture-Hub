@@ -7,11 +7,7 @@
       <nav class="flex justify-between items-center py-3">
         <div class="py-1 mx-2">
           <a href="dashboaord">
-            <!--<img
-              class="h-5 cursor-pointer"
-              :src="require('@/assets/mysquareroof/squareroof2.png')"
-              alt="logo"
-            /> -->
+            <img class="h-5 cursor-pointer" :src="image_link" alt="logo" />
           </a>
         </div>
 
@@ -24,7 +20,7 @@
             class="cursor-pointer"
           >
             <a
-              :href="navbar_link.liink"
+              :href="navbar_link.link"
               class="cursor-pointer text-gray-800 hover:text-archyhub-main"
             >
               {{ navbar_link.title }}
@@ -89,56 +85,55 @@
 -->
 
 <script>
-  import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 
-  export default {
-    setup() {
-      const scrollShadowBoolean = ref(true)
-      const navbarTogglerIsOpenBoolean = ref(false)
+export default {
+  name: 'Topbar',
+  setup() {
+    const scrollShadowBoolean = ref(true)
+    const navbarTogglerIsOpenBoolean = ref(false)
+    const image_link = ref("require('@/assets/mysquareroof/squareroof2.png')")
 
-      onBeforeMount(() => {
-        window.addEventListener('scroll', () => handleScroll())
-      })
+    onBeforeMount(() => {
+      window.addEventListener('scroll', () => handleScroll())
+    })
 
-      const handleScroll = () => {
-        if (window.pageYOffset > 0) {
-          // user is scrolled
-          if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
-        } else {
-          // user is at top of page
-          if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
-        }
+    const handleScroll = () => {
+      if (window.pageYOffset > 0) {
+        // user is scrolled
+        if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
+      } else {
+        // user is at top of page
+        if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
       }
-      const navbar_links = ref([
-        {
-          title: 'How it works',
-          link: 'https://www.mysquareroof.com/how-it-works',
-        },
-        {
-          title: 'Learn',
-          link: 'https://www.mysquareroof.com/learn',
-        },
-        {
-          title: 'About',
-          link: 'https://www.mysquareroof.com/about',
-        },
-        {
-          title: 'Contact',
-          link: 'https://www.mysquareroof.com/contact',
-        },
-      ])
+    }
+    const navbar_links = ref([
+      {
+        title: 'How it works',
+        link: 'https://www.mysquareroof.com/how-it-works',
+      },
+      {
+        title: 'Learn',
+        link: 'https://www.mysquareroof.com/learn',
+      },
+      {
+        title: 'About',
+        link: 'https://www.mysquareroof.com/about',
+      },
+      {
+        title: 'Contact',
+        link: 'https://www.mysquareroof.com/contact',
+      },
+    ])
 
-      return {
-        scrollShadowBoolean,
-        navbarTogglerIsOpenBoolean,
-        navbar_links,
-      }
-    },
-  }
+    return {
+      scrollShadowBoolean,
+      navbarTogglerIsOpenBoolean,
+      navbar_links,
+      image_link,
+    }
+  },
+}
 </script>
 
-<style scoped>
-  header.scrolled {
-    @apply shadow-lg;
-  }
-</style>
+<style scoped></style>

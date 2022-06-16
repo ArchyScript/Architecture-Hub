@@ -9,17 +9,8 @@
           class="my-10 bg-white px-6 py-8 shadow-lg text-black w-full rounded-tl-3xl rounded-tr-3xl"
         >
           <div>
-            <!-- <span class="flex justify-center items-center my-2">
-              <img
-                :src="require('@/assets/logo.png')"
-                loading="lazy"
-                class="w-16 flex items-center justify-center text-center"
-                alt="tailus logo"
-              />
-            </span> -->
-
             <h1 class="mb-8 text-3xl text-center font-semibold text-gray-700">
-              Login
+              Create Account
             </h1>
           </div>
 
@@ -46,53 +37,34 @@
           </div>
 
           <div v-if="!otherLoginOptions">
-            <form @submit="logUserIn">
-              <div class="">
-                <div class="mb-6 hidden">
-                  Login with
-                  <span
-                    title="Login with Username and password"
-                    class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                    :class="!loginWithEmail ? 'border-green-600  ' : ''"
-                    @click="toggleLoginOption('username')"
-                    >Username</span
-                  >
-                  or
-                  <span
-                    title="Login with Email and password"
-                    class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                    :class="loginWithEmail ? 'border-green-600 ' : ''"
-                    @click="toggleLoginOption('email')"
-                    >Email</span
-                  >
-                </div>
+            <form @submit="signUserUp">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600"
+                for="email"
+              >
+                Email
+              </label>
+              <input
+                type="email"
+                class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
+                name="email"
+                placeholder="Email"
+                v-model="email"
+              />
 
-                <div class="p-1 mb-3">
-                  <label
-                    class="block mb-1 mx-2 font-medium text-gray-600"
-                    for="email"
-                    >{{ loginWithEmail ? 'Email' : 'Username' }}</label
-                  >
-
-                  <input
-                    v-if="loginWithEmail"
-                    type="text"
-                    class="block border rounded-xl w-full p-3 outline-none"
-                    name="email"
-                    placeholder="Email"
-                    v-model="email"
-                  />
-
-                  <input
-                    v-if="!loginWithEmail"
-                    type="text"
-                    class="block border w-full p-3 rounded-xl outline-none"
-                    name="username"
-                    placeholder="Username"
-                    v-model="username"
-                  />
-                </div>
-              </div>
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600"
+                for="username"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
+                name="username"
+                placeholder="Username"
+                v-model="username"
+              />
 
               <div class="mb-3 p-1">
                 <label
@@ -119,31 +91,68 @@
                       :class="
                         passwordVisibility
                           ? 'fa fa-eye-slash text-gray-500'
-                          : ' fa-eye  text-gray-800'
+                          : ' fa-eye  text-gray-700'
                       "
                     ></i>
-                    <!-- <i
-                  class="fa fa-eye text-4xl"
-                  :class="
-                    passwordVisibility ? 'fa fa-eye text-gray-500' : 'text-gray-800'
-                  "
-                  @click="togglePasswordVisibility"
-                ></i> -->
                   </span>
                 </div>
               </div>
 
-              <div class="text-grey-dark my-6 text-right underline">
-                <router-link :to="{ name: 'ResetPassword' }">
-                  Forgot Password?
-                </router-link>
+              <div class="mb-3 p-1 relative">
+                <label
+                  class="block mb-1 mx-2 font-medium text-gray-600"
+                  for="confirm_password"
+                >
+                  Confirm Password
+                </label>
+
+                <div class="relative">
+                  <input
+                    :type="passwordVisibility ? 'text' : 'password'"
+                    class="block border w-full p-3 rounded-xl outline-none pr-14"
+                    name="confirm_password"
+                    placeholder="Confirm Password"
+                    v-model="confirm_password"
+                    title="toggle password visibility"
+                  />
+                  <span
+                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    @click="togglePasswordVisibility"
+                  >
+                    <i
+                      class="fa text-4xl"
+                      :class="
+                        passwordVisibility
+                          ? 'fa fa-eye-slash text-gray-500'
+                          : ' fa-eye  text-gray-700'
+                      "
+                    ></i>
+                  </span>
+                </div>
+              </div>
+
+              <div class="text-sm text-grey-dark my-6 px-2">
+                By signing up, you agree to the
+                <a
+                  class="no-underline border-b border-grey-dark text-grey-dark"
+                  href="#"
+                >
+                  Terms of Service
+                </a>
+                and
+                <a
+                  class="no-underline border-b border-grey-dark text-grey-dark"
+                  href="#"
+                >
+                  Privacy Policy
+                </a>
               </div>
 
               <button
                 type="submit"
                 class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
               >
-                Login
+                Create a free Account
               </button>
             </form>
           </div>
@@ -153,10 +162,10 @@
           </div>
 
           <div class="text-grey-dark mt-6 text-center">
-            Don't have an account?
+            Already have an account?
 
             <span class="underline ml-1">
-              <router-link :to="{ name: 'SignUp' }"> SignUp</router-link>
+              <router-link :to="{ name: 'Login' }"> Login</router-link>
             </span>
           </div>
         </div>
@@ -170,50 +179,59 @@
   import { mapGetters, mapActions } from 'vuex'
 
   export default {
-    name: 'Login',
+    name: 'SignUp',
     data: () => ({
       otherLoginOptions: false,
-      loginWithEmail: true,
       passwordVisibility: true,
       email: '',
       username: '',
       password: '',
-      loginToken: '',
+      confirm_password: '',
+      signupToken: '',
     }),
 
     methods: {
-      ...mapActions(['getAllUsers', 'updateLoggedInUser', 'updateUserToken']),
+      ...mapActions(['getAllUsers', 'addSignedInUser', 'updateUserToken']),
 
       toggleLoginOption(event) {
-        // console.log(store)
         if (!event) return
         this.loginWithEmail.value = event === 'email' ? true : false
       },
 
       togglePasswordVisibility() {
-        // this.toggleLoginOption()
-        // console.log(this)
-        // console.log(this.password)
         this.passwordVisibility = !this.passwordVisibility
       },
 
-      logUserIn(event) {
-        // const router = useRouter()
+      signUserUp(event) {
         event.preventDefault()
 
-        if (!this.email || !this.password) return
+        if (
+          !this.email ||
+          !this.username ||
+          !this.password ||
+          !this.confirm_password
+        )
+          return console.log('Please fill  available info')
+
+        if (this.password !== this.confirm_password)
+          return console.log('password not matching')
+
         this.allUsers.forEach((eachUser) => {
-          if (
-            eachUser.email === this.email &&
-            eachUser.password === this.password
-          ) {
-            this.loginToken = 'Test token'
-            this.updateUserToken(this.loginToken)
-            this.updateLoggedInUser(eachUser)
-            this.$router.push({ path: '/dashboard', replace: true })
-          } else {
-            return
+          if (this.email === eachUser.email)
+            return console.log('This email has been taken')
+          if (this.username === eachUser.username)
+            return console.log('This username has been taken')
+
+          const newUser = {
+            username: this.username,
+            email: this.email,
+            password: this.password,
           }
+
+          this.signupToken = 'Test token'
+          this.updateUserToken(this.signupToken)
+          this.addSignedInUser(newUser)
+          this.$router.push({ path: '/dashboard', replace: true })
         })
       },
     },
@@ -225,7 +243,6 @@
     computed: mapGetters(['allUsers']),
 
     created() {
-      // const router = useRouter()
       this.getAllUsers()
     },
   }

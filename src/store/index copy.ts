@@ -1,9 +1,9 @@
+import { UserWithToken } from '@/controller/typings/index'
 import { createStore } from 'vuex'
-import { UserWithToken, PostSchema } from '@/controller/typings/index'
-
+// import Users from './modules/Users'
+// console.log(Users)
 export type AppState = {
-  authUser: UserWithToken
-  posts: PostSchema[]
+  authUser: UserWithToken | {}
 }
 export type Mutations = 'setUser' | 'setCourses' | 'addToast' | 'removeToast'
 
@@ -30,7 +30,7 @@ export default createStore({
       email: '',
       password: '',
     },
-    token: 'null',
+    token: null,
   },
   getters: {
     authenticateUser(state) {
@@ -67,12 +67,12 @@ export default createStore({
       // Commit takes in two parameters... first is the mutation we want to call and the second one is the data we want to send
       commit('UPDATE_USER_TOKEN', response)
     },
-    async getSingleUsers({ commit }) {
-      const response = await Users
+    // async getSingleUsers({ commit }) {
+    //   const response = await Users
 
-      // Commit takes in two parameters... first is the mutation we want to call and the second one is the data we want to send
-      commit('getSingleUsers', response)
-    },
+    //   // Commit takes in two parameters... first is the mutation we want to call and the second one is the data we want to send
+    //   commit('getSingleUsers', response)
+    // },
   },
   mutations: {
     SET_USER(state, userData) {

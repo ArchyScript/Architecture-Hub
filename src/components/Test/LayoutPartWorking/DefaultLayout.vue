@@ -1,18 +1,14 @@
 <template>
-  <div class="conta iner mx-auto shadow-xl min-h-screen">
-    <div class="grid grid-cols-12">
-      <div class="hidden">
-        <TopNavbar @click="toggleLeftNav" />
-      </div>
-
+  <div class="cont ainer mx-auto shadow-xl min-h-screen">
+    <div class="grid grid-cols-12 gap-10">
       <div class="col-span-3">
         <LeftSideNav />
       </div>
 
       <!-- entry point -->
-      <main class="col-span-5">
+      <div class="col-span-5 py-20 overflow-auto">
         <router-view></router-view>
-      </main>
+      </div>
 
       <div class="col-span-4">
         <RightSideNav />
@@ -24,25 +20,17 @@
 <script>
 import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
-import TopNavbar from '../Layouts/TopNavbar.vue'
-import { ref } from 'vue'
+// import Topbar from '../Layouts/Topbar.vue'
 
 export default {
   name: 'DefaultLayout',
   setup() {
-    const toggleLeftNavBolean = ref(true)
-    const toggleLeftNav = () => {
-      toggleLeftNavBolean.value = false
-      console.log('na lahfn.mf;j')
-      return
-    }
-    return { toggleLeftNav, toggleLeftNavBolean }
+    return {}
   },
 
   components: {
     LeftSideNav,
     RightSideNav,
-    TopNavbar,
   },
 }
 </script>
