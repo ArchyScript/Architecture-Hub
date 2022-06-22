@@ -20,7 +20,7 @@ export const getErrorMessage = (error: AxiosError & Error) => {
   return error.message || 'Sorry, an error occurred'
 }
 
-export const HandleAuthRequest = async (
+export const HandleAxiosRequest = async (
   asyncMethod: AsyncFunction,
 ): Promise<AsyncResponse> => {
   try {
@@ -45,22 +45,23 @@ export const HandleAuthRequest = async (
   }
 }
 
-export const logDataToConsole = (...args: any[]) => {
-  if (location?.host.includes('localhost')) {
-    // console.log(...args)
-    // console.log('testing 3')
-  }
+export const logDataToConsole = (args: any[]) => {
+  // if (location?.host.includes('localhost')) {
+  // console.log('test')
+  // console.log(args)
+  // }
 }
 
-export const formatCurrency = (value: string) => {
-  const valueIsInvalid =
-    [null, undefined].includes(value as any) || isNaN(parseInt(value))
+export const formatNumbers = (number: number) => {
+  if (number > 999 && number < 1000000) return (number / 1000).toFixed(1) + 'K'
 
-  if (valueIsInvalid) {
-    return 'Not Available'
-  }
+  if (number > 1000000 && number < 1000000000)
+    return (number / 1000000).toFixed(1) + 'M'
 
-  const stringAsNumber = Number(value)
-  const formattedVAlue = new Intl.NumberFormat().format(stringAsNumber)
-  return '₦' + formattedVAlue
+  if (number > 1000000000 && number < 1000000000000)
+    return (number / 1000000000).toFixed(1) + 'B'
+
+  if (number > 1000000000000) return (number / 1000000000000).toFixed(1) + 'T'
+
+  if (number < 900) return number
 }

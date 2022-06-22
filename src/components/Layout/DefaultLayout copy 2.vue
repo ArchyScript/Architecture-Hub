@@ -1,26 +1,24 @@
 <template>
   <div class="conta iner mx-auto shadow-xl min-h-screen">
-    <div class="flex w-full ">
-
-      <div class="flex-1 grid grid-cols-12">
-      <div class=" col-span-3">
+    <div class="grid grid-cols-12">
+      <div class="col-span-3">
         <LeftSideNav />
       </div>
-        <!-- entry point -->
-        <main class="col-span-5">
-          <router-view></router-view>
-        </main>
 
-        <div class="col-span-4">
-          <RightSideNav />
-        </div>
-      </div>
+      <!-- entry point -->
+      <main class="col-span-full col">
+        <router-view></router-view>
+      </main>
+
+      <!-- <div class="col-span-4">
+        <RightSideNav />
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import RightSideNav from '../Layouts/RightSideNav/index.vue'
+// import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
 // import TopNavbar from '../Layouts/TopNavbar.vue'
 import { ref } from 'vue'
@@ -29,7 +27,7 @@ export default {
   name: 'DefaultLayout',
   components: {
     LeftSideNav,
-    RightSideNav,
+    // RightSideNav,
     // TopNavbar,
   },
   setup() {

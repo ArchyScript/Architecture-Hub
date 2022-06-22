@@ -3,8 +3,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 // Default Layout and entry point
 const DefaultLayout = () => import('@/components/Layout/DefaultLayout.vue')
-// const PageContentLayout = () => import('@/components/Layout/PageContentLayout.vue')
-
 //
 const HomePage = () => import('@/views/HomePage/index.vue')
 const Competitions = () => import('@/views/Competitions/index.vue')
@@ -117,14 +115,13 @@ router.beforeEach((to, from, next) => {
   // and redirect the user to his or her dashboard
   // OR better put check if the user is logged in and tries to access any auth page
   // ELSE go to the route the wants to access
-  console.log(store.state)
-  // if (to.meta.requiredAuth && !store.state.users.token) {
-  //   next({ name: 'Login' })
-  // } else if (store.state.users.token && to.meta.isGuest) {
-  //   next({ name: 'HomePage' })
-  // } else {
-  //   next()
-  // }
+  if (to.meta.requiredAuth && !store.state.token) {
+    next({ name: 'Login' })
+  } else if (store.state.token && to.meta.isGuest) {
+    next({ name: 'HomePage' })
+  } else {
+    next()
+  }
 })
 
 export default router

@@ -1,20 +1,24 @@
 <template>
   <div class="conta iner mx-auto shadow-xl min-h-screen">
-    <div class="flex w-full ">
+    <div class="grid grid-cols-4">
+      <div class="hidden">
+        <TopNavbar @click="toggleLeftNav" />
+      </div>
 
-      <div class="flex-1 grid grid-cols-12">
-      <div class=" col-span-3">
+      <div class="col-span-1 sticky overflow-y-scroll">
         <LeftSideNav />
       </div>
-        <!-- entry point -->
-        <main class="col-span-5">
+
+      <!-- entry point -->
+      <main class="col-span-3 grid grid-cols-10">
+        <div class="col-span-6">
           <router-view></router-view>
-        </main>
+        </div>
 
         <div class="col-span-4">
           <RightSideNav />
         </div>
-      </div>
+      </main>
     </div>
   </div>
 </template>
@@ -22,16 +26,11 @@
 <script>
 import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
-// import TopNavbar from '../Layouts/TopNavbar.vue'
+import TopNavbar from '../Layouts/TopNavbar.vue'
 import { ref } from 'vue'
 
 export default {
   name: 'DefaultLayout',
-  components: {
-    LeftSideNav,
-    RightSideNav,
-    // TopNavbar,
-  },
   setup() {
     const toggleLeftNavBolean = ref(true)
     const toggleLeftNav = () => {
@@ -40,6 +39,12 @@ export default {
       return
     }
     return { toggleLeftNav, toggleLeftNavBolean }
+  },
+
+  components: {
+    LeftSideNav,
+    RightSideNav,
+    TopNavbar,
   },
 }
 </script>

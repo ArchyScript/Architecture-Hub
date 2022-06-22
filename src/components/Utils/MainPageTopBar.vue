@@ -5,12 +5,13 @@
   >
     <div class="w-full flex justify-between items-center px-4">
       <h4 class="text-2xl font-bold px-2 text-gray-700">
-        Home
+        {{ title }}
       </h4>
 
       <span
         @click="toggleLeftNav"
-        class="fa fa-home text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
+        :class="icon"
+        class="text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>
   </nav>
@@ -20,8 +21,9 @@
 import { onBeforeMount, ref } from 'vue'
 
 export default {
-  name: 'MainPageTopbar',
-  setup() {
+  name: 'HomeTopbar',
+  props: { title: String, icon: String },
+  setup(context) {
     const scrollShadowBoolean = ref(true)
 
     onBeforeMount(() => {
@@ -39,7 +41,7 @@ export default {
     }
 
     const toggleLeftNav = () => {
-      return console.log('toggleLeftNav')
+      return context.emit('toggleLeftNav')
     }
 
     return {

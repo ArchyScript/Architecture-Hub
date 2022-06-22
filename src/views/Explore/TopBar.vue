@@ -5,12 +5,12 @@
   >
     <div class="w-full flex justify-between items-center px-4">
       <h4 class="text-2xl font-bold px-2 text-gray-700">
-        Home
+        Explore
       </h4>
 
       <span
         @click="toggleLeftNav"
-        class="fa fa-home text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
+        class="fa fa-bell text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>
   </nav>
@@ -20,11 +20,12 @@
 import { onBeforeMount, ref } from 'vue'
 
 export default {
-  name: 'HomeTopbar',
+  name: 'ExploreTopbar',
   setup(context) {
     const scrollShadowBoolean = ref(true)
 
     onBeforeMount(() => {
+      handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
 

@@ -5,7 +5,7 @@
   >
     <div class="w-full flex justify-between items-center px-4">
       <h4 class="text-2xl font-bold px-2 text-gray-700">
-        Home
+        News &amp; Update
       </h4>
 
       <span
@@ -20,11 +20,12 @@
 import { onBeforeMount, ref } from 'vue'
 
 export default {
-  name: 'HomeTopbar',
+  name: 'NewsUpdateTopbar',
   setup(context) {
     const scrollShadowBoolean = ref(true)
 
     onBeforeMount(() => {
+      handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
 

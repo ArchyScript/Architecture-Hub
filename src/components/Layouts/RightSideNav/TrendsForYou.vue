@@ -94,6 +94,7 @@
 
 <script lang="ts">
 import { ref } from 'vue'
+import { formatNumbers } from '@/controller/utilities'
 
 export default {
   name: 'WhoToFollow',
@@ -173,25 +174,8 @@ export default {
     }
 
     const numFormatter = (number_of_tweet: number) => {
-      if (number_of_tweet > 999 && number_of_tweet < 1000000) {
-        // convert to K for number from > 1000 < 1 million
-        return (number_of_tweet / 1000).toFixed(1) + 'K'
-      } else if (number_of_tweet > 1000000 && number_of_tweet < 1000000000) {
-        // convert to M for number from > 1 million
-        return (number_of_tweet / 1000000).toFixed(1) + 'M'
-      } else if (
-        number_of_tweet > 1000000000 &&
-        number_of_tweet < 1000000000000
-      ) {
-        // convert to M for number from > 1 million
-        return (number_of_tweet / 1000000000).toFixed(1) + 'B'
-      } else if (number_of_tweet > 1000000000000) {
-        // convert to M for number from > 1 million
-        return (number_of_tweet / 1000000000000).toFixed(1) + 'T'
-      } else if (number_of_tweet < 900) {
-        // if value < 1000, nothing to do
-        return number_of_tweet
-      }
+      return formatNumbers(number_of_tweet)
+      
     }
 
     return {

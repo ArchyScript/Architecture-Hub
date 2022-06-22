@@ -1,7 +1,7 @@
 <template>
   <section
     :class="{ scrolled: !scrollShadowBoolean }"
-    class="w-full sticky top-0 min-h-screen z-4 shadow-md bg-archyhub-light"
+    class="w-full top-0 min-h-screen sticky z-4 shadow-md bg-archyhub-light"
   >
     <div class="p-6">
       <NavLinks />

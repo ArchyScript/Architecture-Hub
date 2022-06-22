@@ -24,12 +24,11 @@
       </div>
 
       <div class="">
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
+        <EditBioVue v-if="toggle_active_profile_page_link === 'Bio'" />
+
+        <EditProfilePictureVue
+          v-if="toggle_active_profile_page_link === 'Picture'"
+        />
       </div>
     </div>
   </div>
@@ -39,31 +38,33 @@
 import { ref } from 'vue'
 import TopBarVue from './TopBar.vue'
 import ProfileHeaderVue from './ProfileHeader.vue'
-import PostContentVue from '@/components/Posts/PostContent.vue'
+import EditBioVue from './EditBio.vue'
+import EditProfilePictureVue from './EditProfilePicture.vue'
 
 export default {
   name: 'Profile',
   components: {
     TopBarVue,
     ProfileHeaderVue,
-    PostContentVue,
+    EditBioVue,
+    EditProfilePictureVue,
   },
   setup() {
     const test_ref = ref('testing')
-    const toggle_active_profile_page_link = ref('Posts')
+    const toggle_active_profile_page_link = ref('Bio')
 
     const profile_page_links = ref([
       {
-        title: 'Posts',
-        icon: 'fa fa-home',
+        title: 'Bio',
+        icon: 'fa fa-user',
+      },
+      {
+        title: 'Picture',
+        icon: 'fa fa-image',
       },
       {
         title: 'Bookmarked',
         icon: 'fa fa-bookmark-o',
-      },
-      {
-        title: 'Media',
-        icon: 'fa fa-image',
       },
     ])
     const toggleActiveProfilePageLink = (current_active: string) => {

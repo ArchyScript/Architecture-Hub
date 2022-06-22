@@ -25,6 +25,7 @@ export default {
     const scrollShadowBoolean = ref(true)
 
     onBeforeMount(() => {
+      handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
 

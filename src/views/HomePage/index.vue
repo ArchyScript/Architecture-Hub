@@ -1,8 +1,9 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
+    <!-- <TopBarVue /> -->
     <TopBarVue />
 
-    <body class="">
+    <div class="">
       <CreatePostVue />
 
       <PostContentVue />
@@ -14,18 +15,18 @@
 
       <PostContentWithFourPicturesVue />
       <PostContentVue />
-    </body>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import TopBarVue from './TopBar.vue'
-import CreatePostVue from './CreatePost.vue'
-import PostContentVue from './PostContent.vue'
-import PostContentWithOnePictureVue from './PostContentWithOnePicture.vue'
-import PostContentWithFourPicturesVue from './PostContentWithFourPictures.vue'
-import PostContentWithTwoPicturesVue from './PostContentWithTwoPictures.vue'
+import CreatePostVue from '@/views/HomePage/CreatePost.vue'
+import PostContentVue from '@/components/Posts/PostContent.vue'
+import PostContentWithOnePictureVue from '@/components/Posts/PostContentWithOnePicture.vue'
+import PostContentWithFourPicturesVue from '@/components/Posts/PostContentWithFourPictures.vue'
+import PostContentWithTwoPicturesVue from '@/components/Posts/PostContentWithTwoPictures.vue'
 
 export default {
   name: 'HomePage',
@@ -40,6 +41,9 @@ export default {
   setup() {
     const test_ref = ref('testing')
 
+    onBeforeMount(() => {
+      // window.pageYOffset = 0
+    })
     return { test_ref }
   },
 }

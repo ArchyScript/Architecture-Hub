@@ -30,6 +30,7 @@ export default {
     const post_value = ref('')
 
     onBeforeMount(() => {
+      handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
 

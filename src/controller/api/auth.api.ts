@@ -1,69 +1,36 @@
 import axios from 'axios'
-import { HandleAuthRequest } from '../utilities'
-// import { createAxiosInstance } from '.'
+const API_URL = 'http://localhost:4000/api/auth/'
+// import { HandleAxiosRequest } from '../utilities'
 
-/* 
-const http = createAxiosInstance()
-send a POST request
+// error handler
+// request payload validation
 
-axios({
-    method: 'post',
-    url: '/login',
-    data: {
-        firstName: 'Finn',
-        lastName: 'Williams'
-      }
-    });
-    
-    axios shorthand
-    axios.request(config)
-    axios.get(url[, config])
-    axios.delete(url[, config])
-    axios.head(url[, config])
-    axios.options(url[, config])
-    axios.post(url[, data[, config]])
-    axios.put(url[, data[, config]])
-    axios.patch(url[, data[, config]])
+// const validateLoginDetails = (email: string, password: string) => {
+//   // if (!email)
+// }
 
-
-    axios.post('/login', {
-      firstName: 'Finn',
-      lastName: 'Williams'
-    });
-    
-.then((response) => {
-  console.log(response);
-}, (error) => {
-  console.log(error);
-});
-    {
-  // `data` is the response that was provided by the server
-  data: {},
- 
-  // `status` is the HTTP status code from the server response
-  status: 200,
- 
-  // `statusText` is the HTTP status message from the server response
-  statusText: 'OK',
- 
-  // `headers` the headers that the server responded with
-  // All header names are lower cased
-  headers: {},
- 
-  // `config` is the config that was provided to `axios` for the request
-  config: {},
- 
-  // `request` is the request that generated this response
-  // It is the last ClientRequest instance in node.js (in redirects)
-  // and an XMLHttpRequest instance the browser
-  request: {}
+type LoginCredentialsType = {
+  email: string
+  password: string
 }
-    */
 
 export const AuthApiService = {
-  login(email: string, password: string) {
-    const request = () => axios.post('/auth/login', { email, password })
-    return HandleAuthRequest(request)
+  login(login_credentials: any) {
+    const { email, password } = login_credentials
+
+    const response = axios
+      .post(API_URL + 'login', {
+        email: email.value,
+        password: password.value,
+      })
+      .then(
+        (response) => response,
+        (error) => error,
+      )
+
+    // HandleAxiosRequest(response)
+
+    return response
   },
 
   register(payload: any) {

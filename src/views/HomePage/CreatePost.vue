@@ -6,10 +6,10 @@
       </div>
 
       <form class="w-full flex-1 ml-4" @submit="validatePostParams">
-        <div class="flex w-full items-center border-b-2 border-gray-300">
+        <div class="flex w-full items-center border-b-2 mb-3 border-gray-300">
           <textarea
-            class="w-full text-xl resize-none py-3 px-2 mb-3 text-gray-700 bg-archyhub-light bg-opacity-10 focus:outline-none rounded-2xl"
-            rows="2"
+            class="w-full text-xl resize-none py-3 px-2 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-2xl"
+            rows="4"
             placeholder="What's happening?"
           ></textarea>
         </div>

@@ -21,10 +21,17 @@
 
       <div class="flex flex-col space-y-2 mb-10">
         <div
-          class="cursor-pointer text-gray-500 hover:bg-archyhub-semi-light hover:text-gray-700 font-bold rounded-3xl"
           :key="navbar_link.title"
           v-for="navbar_link in navbar_links"
+          class="cursor-pointer text-gray-500 hover:bg-archyhub-semi-light hover:text-gray-700 font-bold rounded-3xl"
+          :class="
+            current_active_route === navbar_link.route
+              ? 'bg-archyhub-semi-light text-gray-700'
+              : 'hover:bg-opacity-60'
+          "
+          @click="toggleCurrentActiveNavLink(route.fullPath)"
         >
+          <!-- @click="toggleCurrentActiveNavLink(navbar_link.route)" -->
           <router-link :to="navbar_link.route">
             <div class="mb-1 flex justify-center items-center py-4 space-x-2">
               <span :class="navbar_link.icon" class="ml-4 px-2 text-2xl"></span>
@@ -34,6 +41,28 @@
           </router-link>
         </div>
       </div>
+
+      <!-- <div class="flex flex-col space-y-2 mb-10">
+        <div
+          :key="navbar_link.title"
+          v-for="navbar_link in navbar_links"
+          class="cursor-pointer text-gray-500 hover:bg-archyhub-semi-light hover:text-gray-700 font-bold rounded-3xl"
+          :class="
+            current_active_route === navbar_link.title
+              ? 'bg-archyhub-semi-light text-gray-700'
+              : 'hover:bg-opacity-60'
+          "
+          @click="toggleCurrentActiveNavLink(navbar_link.title)"
+        >
+          <router-link :to="navbar_link.route">
+            <div class="mb-1 flex justify-center items-center py-4 space-x-2">
+              <span :class="navbar_link.icon" class="ml-4 px-2 text-2xl"></span>
+
+              <span class="flex-1 text-xl">{{ navbar_link.title }}</span>
+            </div>
+          </router-link>
+        </div>
+      </div> -->
 
       <div class="w-full text-center mb-10">
         <button
@@ -48,7 +77,7 @@
 </template>
 
 <script lang="ts">
-import { onMounted, ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 export default {
@@ -57,16 +86,18 @@ export default {
     const search_value = ref('')
     const is_more_description_boolean = ref(true)
     const read_more_user_id = ref('')
+    const current_active_route = ref('/home')
+
     // get the current route
     const route = useRoute()
 
-    onMounted(() => {
-      console.log(route.params)
+    onBeforeMount(() => {
+      current_active_route.value = route.fullPath
     })
 
     const navbar_links = ref([
       {
-        route: '/',
+        route: '/home',
         title: 'Home',
         icon: 'fa fa-home',
       },
@@ -83,7 +114,7 @@ export default {
       {
         route: '/competitions',
         title: 'Competitions',
-        icon: 'fa fa-bell',
+        icon: 'fa fa-trophy',
       },
       {
         route: '/profile',
@@ -93,12 +124,11 @@ export default {
       {
         route: '/more',
         title: 'More',
-        icon: 'fa fa-user',
+        icon: 'fa fa-ellipsis-h',
       },
     ])
-
-    const viewNewsUpdateDetails = (user_id: string) => {
-      console.log(user_id)
+    const toggleCurrentActiveNavLink = (active_link_route: string) => {
+      current_active_route.value = active_link_route
     }
 
     const toggleDescriptionLength = (user_id: string) => {
@@ -117,8 +147,10 @@ export default {
       is_more_description_boolean,
       navbar_links,
       read_more_user_id,
-      viewNewsUpdateDetails,
+      current_active_route,
+      route,
       toggleDescriptionLength,
+      toggleCurrentActiveNavLink,
     }
   },
 }
