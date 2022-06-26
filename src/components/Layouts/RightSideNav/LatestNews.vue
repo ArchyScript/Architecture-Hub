@@ -70,7 +70,7 @@
 import { ref } from 'vue'
 
 export default {
-  name: 'WhoToFollow',
+  name: 'LatestNews',
   setup() {
     const search_value = ref('')
     const is_more_description_boolean = ref(true)

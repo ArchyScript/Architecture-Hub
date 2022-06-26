@@ -175,7 +175,6 @@ export default {
 
     const numFormatter = (number_of_tweet: number) => {
       return formatNumbers(number_of_tweet)
-      
     }
 
     return {

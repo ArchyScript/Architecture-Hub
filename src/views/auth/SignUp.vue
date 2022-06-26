@@ -14,7 +14,7 @@
             </h1>
           </div>
 
-          <div class="flex items-center mt-4 mb-8">
+          <!-- <div class="flex items-center mt-4 mb-8">
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
               :class="
@@ -23,7 +23,6 @@
               @click="otherLoginOptions = false"
             >
               Email
-              <!-- or Username -->
             </span>
 
             <span
@@ -32,8 +31,19 @@
                 otherLoginOptions ? 'border-green-600 text-green-600' : ''
               "
               @click="otherLoginOptions = true"
-              >Other Options</span
             >
+              Other Options
+            </span>
+          </div> -->
+
+          <div
+            v-if="message.type !== ''"
+            :class="
+              message.type === 'error' ? 'text-red-500' : 'text-green-500'
+            "
+            class="text-center font-medium mb-4"
+          >
+            {{ message.text }}
           </div>
 
           <div v-if="!otherLoginOptions">
@@ -49,7 +59,7 @@
                 class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
                 name="email"
                 placeholder="Email"
-                v-model="email"
+                v-model="payload.email"
               />
 
               <label
@@ -63,7 +73,7 @@
                 class="block border border-grey-light w-full p-3 rounded-xl mb-3 outline-none"
                 name="username"
                 placeholder="Username"
-                v-model="username"
+                v-model="payload.username"
               />
 
               <div class="mb-3 p-1">
@@ -79,7 +89,7 @@
                     class="block border w-full p-3 rounded-xl outline-none pr-14"
                     name="password"
                     placeholder="Password"
-                    v-model="password"
+                    v-model="payload.password"
                     title="toggle password visibility"
                   />
                   <span
@@ -112,7 +122,7 @@
                     class="block border w-full p-3 rounded-xl outline-none pr-14"
                     name="confirm_password"
                     placeholder="Confirm Password"
-                    v-model="confirm_password"
+                    v-model="payload.confirm_password"
                     title="toggle password visibility"
                   />
                   <span
@@ -152,7 +162,25 @@
                 type="submit"
                 class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
               >
-                Create a free Account
+                <div class="w-full flex justify-center items-center space-x-2">
+                  <span>Create a free Account</span>
+
+                  <svg
+                    v-if="is_loading"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-white animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
+                </div>
               </button>
             </form>
           </div>
@@ -165,7 +193,7 @@
             Already have an account?
 
             <span class="underline ml-1">
-              <router-link :to="{ name: 'Login' }"> Login</router-link>
+              <router-link :to="{ name: 'Login' }">Login</router-link>
             </span>
           </div>
         </div>
@@ -174,78 +202,101 @@
   </section>
 </template>
 
-<script>
-  import OtherSigninOptions from './OtherSigninOptions.vue'
-  import { mapGetters, mapActions } from 'vuex'
+<script lang="ts">
+import OtherSigninOptions from './OtherSigninOptions.vue'
+import { ref } from 'vue'
+import { AuthApiService } from '@/controller/api/auth.api'
+import { useStore } from 'vuex'
+import router from '@/router'
+import { HandleTokenResponse } from '@/controller/utilities/axios_return_response'
 
-  export default {
-    name: 'SignUp',
-    data: () => ({
-      otherLoginOptions: false,
-      passwordVisibility: true,
+export default {
+  name: 'Login',
+  components: {
+    OtherSigninOptions,
+  },
+  setup() {
+    const store = useStore()
+    const is_loading = ref(false)
+    const otherLoginOptions = ref(false)
+    const passwordVisibility = ref(true)
+    const payload = ref({
       email: '',
       username: '',
       password: '',
       confirm_password: '',
-      signupToken: '',
-    }),
+    })
 
-    methods: {
-      ...mapActions(['getAllUsers', 'addSignedInUser', 'updateUserToken']),
+    const message = ref({ type: '', text: '' })
 
-      toggleLoginOption(event) {
-        if (!event) return
-        this.loginWithEmail.value = event === 'email' ? true : false
-      },
+    const togglePasswordVisibility = () => {
+      passwordVisibility.value = !passwordVisibility.value
+    }
 
-      togglePasswordVisibility() {
-        this.passwordVisibility = !this.passwordVisibility
-      },
+    const updateResponseMessage = (type: string, text: string) => {
+      message.value.type = type
+      message.value.text = text
+    }
 
-      signUserUp(event) {
-        event.preventDefault()
+    const signUserUp = async (event: any) => {
+      event.preventDefault()
+      is_loading.value = true
+      updateResponseMessage('', '')
 
-        if (
-          !this.email ||
-          !this.username ||
-          !this.password ||
-          !this.confirm_password
-        )
-          return console.log('Please fill  available info')
+      const response: any = await AuthApiService.signup(payload.value)
+      const { error, data, status } = response
 
-        if (this.password !== this.confirm_password)
-          return console.log('password not matching')
+      if (error) {
+        updateResponseMessage('error', error)
+        is_loading.value = false
 
-        this.allUsers.forEach((eachUser) => {
-          if (this.email === eachUser.email)
-            return console.log('This email has been taken')
-          if (this.username === eachUser.username)
-            return console.log('This username has been taken')
+        return setTimeout(() => {
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
 
-          const newUser = {
-            username: this.username,
-            email: this.email,
-            password: this.password,
-          }
+      if (!status || status === 400) {
+        updateResponseMessage('error', 'Sorry, an unknown error occurred')
 
-          this.signupToken = 'Test token'
-          this.updateUserToken(this.signupToken)
-          this.addSignedInUser(newUser)
-          this.$router.push({ path: '/dashboard', replace: true })
-        })
-      },
-    },
+        return setTimeout(() => {
+          is_loading.value = false
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
 
-    components: {
-      OtherSigninOptions,
-    },
+      updateResponseMessage(
+        'success',
+        'Signup token successfully generated, please wait...',
+      )
 
-    computed: mapGetters(['allUsers']),
+      const token = data.token
+      const user_id = await HandleTokenResponse(token)
 
-    created() {
-      this.getAllUsers()
-    },
-  }
+      updateResponseMessage(
+        'success',
+        "You've successfully signed up and logged in, you'll be redirected in a moment",
+      )
+
+      await store.dispatch('users/getUser', user_id)
+      await store.dispatch('users/assignToken', token)
+
+      is_loading.value = false
+
+      return router.push('/')
+    }
+
+    return {
+      otherLoginOptions,
+      passwordVisibility,
+      is_loading,
+      payload,
+      message,
+      // toggleSignUpOption,
+      togglePasswordVisibility,
+      signUserUp,
+    }
+  },
+}
 </script>
 
 <style scoped></style>

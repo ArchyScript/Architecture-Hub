@@ -26,7 +26,8 @@
         "tests/**/*.tsx",
         "src/store/modules/Users.js",
         "src/common/auth/auth0-plugin.ts",
-        "src/store/modules/crypto.ts"
+        "src/store/modules/crypto.ts",
+        "src/controller/api/.api.ts"
     ],
     "exclude": ["node_modules"]
 }

@@ -5,7 +5,7 @@
         <div class="mb-16 flex items-center cursor-pointer">
           <img
             class="w-16 h-16 rounded-full border border-archyhub-semi-light"
-            src="@/assets/script.jpg"
+            :src="image"
           />
 
           <div class="flex-1 ml-2">
@@ -42,6 +42,8 @@
         </div>
       </div>
 
+      <!-- <img :src="image" alt="" /> -->
+
       <!-- <div class="flex flex-col space-y-2 mb-10">
         <div
           :key="navbar_link.title"
@@ -68,6 +70,7 @@
         <button
           class="w-full text-xl text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-3xl py-4 px-6"
         >
+          <!-- {{ image }} -->
           Create Post
           <span class="fa fa-retweet"></span>
         </button>
@@ -77,8 +80,9 @@
 </template>
 
 <script lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'NavLinks',
@@ -87,9 +91,12 @@ export default {
     const is_more_description_boolean = ref(true)
     const read_more_user_id = ref('')
     const current_active_route = ref('/home')
-
+    const store = useStore()
     // get the current route
+    const image = ref('')
     const route = useRoute()
+
+    // const image = computed(() => store.state.users.user.profile_picture.avatar)
 
     onBeforeMount(() => {
       current_active_route.value = route.fullPath
@@ -149,6 +156,7 @@ export default {
       read_more_user_id,
       current_active_route,
       route,
+      image,
       toggleDescriptionLength,
       toggleCurrentActiveNavLink,
     }

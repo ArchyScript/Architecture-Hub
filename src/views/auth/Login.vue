@@ -13,7 +13,7 @@
             </h1>
           </div>
 
-          <div class="flex items-center mt-4 mb-8">
+          <!-- <div class="flex items-center mt-4 mb-8">
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
               :class="
@@ -22,7 +22,6 @@
               @click="otherLoginOptions = false"
             >
               Email
-              <!-- or Username -->
             </span>
 
             <span
@@ -34,6 +33,16 @@
             >
               Other Options
             </span>
+          </div> -->
+
+          <div
+            v-if="message.type !== ''"
+            :class="
+              message.type === 'error' ? 'text-red-500' : 'text-green-500'
+            "
+            class="text-center font-medium mb-4"
+          >
+            {{ message.text }}
           </div>
 
           <div v-if="!otherLoginOptions">
@@ -74,7 +83,7 @@
                     class="block border rounded-xl w-full p-3 outline-none"
                     name="email"
                     placeholder="Email"
-                    v-model="email"
+                    v-model="payload.email"
                   />
 
                   <input
@@ -83,8 +92,8 @@
                     class="block border w-full p-3 rounded-xl outline-none"
                     name="username"
                     placeholder="Username"
-                    v-model="username"
                   />
+                  <!-- v-model="payload.username" -->
                 </div>
               </div>
 
@@ -101,7 +110,7 @@
                     class="block border w-full p-3 rounded-xl outline-none pr-14"
                     name="password"
                     placeholder="Password"
-                    v-model="password"
+                    v-model="payload.password"
                     title="toggle password visibility"
                   />
                   <span
@@ -130,7 +139,25 @@
                 type="submit"
                 class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
               >
-                Login
+                <div class="w-full flex justify-center items-center space-x-2">
+                  <span>Login</span>
+
+                  <svg
+                    v-if="is_loading"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-white animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
+                </div>
               </button>
             </form>
           </div>
@@ -152,24 +179,29 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import OtherSigninOptions from './OtherSigninOptions.vue'
-// import { mapGetters, mapActions } from 'vuex'
 import { ref } from 'vue'
 import { AuthApiService } from '@/controller/api/auth.api'
-// import { logDataToConsole } from '@/controller/utilities'
+import { useStore } from 'vuex'
+import router from '@/router'
+import { HandleTokenResponse } from '@/controller/utilities/axios_return_response'
 
 export default {
   name: 'Login',
+  components: {
+    OtherSigninOptions,
+  },
   setup() {
+    const store = useStore()
+    const is_loading = ref(false)
     const otherLoginOptions = ref(false)
     const loginWithEmail = ref(true)
     const passwordVisibility = ref(true)
-    const email = ref('')
-    const username = ref('')
-    const password = ref('')
+    const payload = ref({ email: '', password: '' })
+    const message = ref({ type: '', text: '' })
 
-    const toggleLoginOption = (event) => {
+    const toggleLoginOption = (event: any) => {
       if (!event)
         return (loginWithEmail.value = event === 'email' ? true : false)
     }
@@ -178,43 +210,72 @@ export default {
       passwordVisibility.value = !passwordVisibility.value
     }
 
-    const logUserIn = async (event) => {
+    const updateResponseMessage = (type: string, text: string) => {
+      message.value.type = type
+      message.value.text = text
+    }
+
+    const logUserIn = async (event: any) => {
       event.preventDefault()
+      is_loading.value = true
+      updateResponseMessage('', '')
 
-      const login_credentials = {
-        email,
-        password,
-      }
-
-      const response = await AuthApiService.login(login_credentials)
-
+      const response: any = await AuthApiService.login(payload.value)
       const { error, data, status } = response
 
-      // if (data) console.log('no data')
-      // if (!header) console.log('no header')
-      // if (status) console.log('no error')
+      if (error) {
+        updateResponseMessage('error', error)
+        is_loading.value = false
 
-      // logDataToConsole(response)
+        return setTimeout(() => {
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
 
-      console.log(data)
+      if (!status || status === 400 || !data) {
+        updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
 
-      return response
+        return setTimeout(() => {
+          is_loading.value = false
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
+
+      updateResponseMessage(
+        'success',
+        'Login token successfully generated, please wait...',
+      )
+
+      const token = data.token
+      const user_id = await HandleTokenResponse(token)
+
+      updateResponseMessage(
+        'success',
+        "You've successfully logged in, you'll be redirected in a moment",
+      )
+
+      await store.dispatch('users/getUser', user_id)
+      await store.dispatch('users/assignToken', token)
+
+      is_loading.value = false
+
+      return router.push('/')
     }
 
     return {
       otherLoginOptions,
       loginWithEmail,
       passwordVisibility,
-      password,
-      username,
-      email,
+      is_loading,
+      message,
+      payload,
       toggleLoginOption,
       togglePasswordVisibility,
       logUserIn,
     }
-  },
-  components: {
-    OtherSigninOptions,
   },
 }
 </script>

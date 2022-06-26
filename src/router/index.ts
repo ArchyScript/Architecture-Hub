@@ -117,14 +117,17 @@ router.beforeEach((to, from, next) => {
   // and redirect the user to his or her dashboard
   // OR better put check if the user is logged in and tries to access any auth page
   // ELSE go to the route the wants to access
-  console.log(store.state)
-  // if (to.meta.requiredAuth && !store.state.users.token) {
-  //   next({ name: 'Login' })
-  // } else if (store.state.users.token && to.meta.isGuest) {
-  //   next({ name: 'HomePage' })
-  // } else {
-  //   next()
-  // }
+  // console.log(store.state.users.token)
+
+  if (to.meta.requiredAuth && !store.state.users.token) {
+    router.push('/auth/login')
+    next({ name: 'Login' })
+  } else if (store.state.users.token && to.meta.isGuest) {
+    router.push('/')
+    next({ name: 'HomePage' })
+  } else {
+    next()
+  }
 })
 
 export default router

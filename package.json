@@ -16,6 +16,7 @@
         "axios": "^0.26.1",
         "core-js": "^3.6.5",
         "cors": "^2.8.5",
+        "jwt-decode": "^3.1.2",
         "postcss": "^7.0.39",
         "roboto-fontface": "*",
         "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",

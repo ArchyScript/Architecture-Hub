@@ -63,7 +63,7 @@ export default {
         icon: 'fa fa-image',
       },
       {
-        title: 'Bookmarked',
+        title: 'Acount',
         icon: 'fa fa-bookmark-o',
       },
     ])

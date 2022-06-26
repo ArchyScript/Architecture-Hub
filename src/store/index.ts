@@ -2,32 +2,15 @@ import { createStore } from 'vuex'
 import users from './modules/users'
 import crypto from './modules/crypto'
 
-// console.log(users)
-// const moduleA = {
-//   state: () => ({}),
-//   mutations: {},
-//   actions: {},
-//   getters: {},
-// }
+interface StoreInterface {
+  users: any
+  crypto: any
+}
 
-// const moduleB = {
-//   namespaced: true,
-//   state: () => ({}),
-//   mutations: {},
-//   actions: {},
-// }
-
-// interface StoreInterface {
-//   users: any
-//   // lastname: string
-// }
-
-// export default createStore<StoreInterface>({
-export default createStore({
+// export default createStore({
+export default createStore<StoreInterface>({
   modules: {
     users,
     crypto,
   },
 })
-
-// console.log()

@@ -1,56 +1,47 @@
 import axios from 'axios'
-const API_URL = 'http://localhost:4000/api/auth/'
-// import { HandleAxiosRequest } from '../utilities'
-
-// error handler
-// request payload validation
-
-// const validateLoginDetails = (email: string, password: string) => {
-//   // if (!email)
-// }
-
-type LoginCredentialsType = {
-  email: string
-  password: string
-}
+const API_URL = 'http://localhost:4000/api'
+import './index'
+import {
+  HandleAxiosResponse,
+  HandleAxiosError,
+} from '../utilities/axios_return_response'
+import router from '@/router'
 
 export const AuthApiService = {
-  login(login_credentials: any) {
-    const { email, password } = login_credentials
+  //
+  async login(payload: any) {
+    try {
+      const response = await axios
+        .post(`${API_URL}/auth/login`, payload)
+        .then(async (response) => response)
 
-    const response = axios
-      .post(API_URL + 'login', {
-        email: email.value,
-        password: password.value,
-      })
-      .then(
-        (response) => response,
-        (error) => error,
-      )
-
-    // HandleAxiosRequest(response)
-
-    return response
+      return HandleAxiosResponse(response)
+    } catch (error) {
+      return HandleAxiosError(error)
+    }
   },
 
-  register(payload: any) {
-    console.log('payload' + payload)
-    // const request = () => http.post('/auth/register', payload)
-    // console.log('request' + request)
-    // return HandleAuthRequest(request)
+  //
+  async signup(payload: any) {
+    try {
+      const response = await axios
+        .post(`${API_URL}/auth/signup`, payload)
+        .then(async (response) => response)
+
+      return HandleAxiosResponse(response)
+    } catch (error) {
+      return HandleAxiosError(error)
+    }
   },
 
+  //
   resetPasswoord(payload: any) {
-    // console.log('payload' + payload)
-    // const request = () => http.post('/auth/reset-password', payload)
-    // console.log('request' + request)
-    // return HandleAuthRequest(request)
+    console.log(payload)
   },
 
+  //
   logout(payload: any) {
-    // console.log('payload' + payload)
-    // const request = () => http.post('/auth/reset-password', payload)
-    // console.log('request' + request)
-    // return HandleAuthRequest(request)
+    localStorage.removeItem('user')
+    router.push('/auth/signup')
   },
 }
