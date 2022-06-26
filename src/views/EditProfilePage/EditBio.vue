@@ -172,7 +172,7 @@ export default {
         }, 5000)
       }
 
-      console.log(data)
+      // console.log(data)
 
       updateResponseMessage(
         'success',
@@ -182,7 +182,7 @@ export default {
       await store.dispatch('users/getUser', user_id)
       is_loading.value = false
 
-      console.log('test')
+      return data
     }
 
     return {
