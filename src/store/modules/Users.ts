@@ -32,8 +32,9 @@ export default {
     async getUser({ commit }: any, user_id: string) {
       const response: any = await getUser(user_id)
 
-      console.log(response)
-      commit('GET_USER', response.data)
+      const { data } = response
+
+      commit('GET_USER', data)
     },
     //
     async assignToken({ commit }: any, token: any) {
@@ -51,7 +52,7 @@ export default {
   mutations: {
     //
     SET_USER(state: any, userData: any) {
-      state.user = userData
+      return (state.user = userData)
     },
     //
     ASSIGN_TOKEN: (state: any, token: any) => {
