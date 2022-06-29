@@ -1,18 +1,19 @@
 import axios from 'axios'
-const API_URL = 'http://localhost:4000/api'
-import './index'
+import router from '@/router'
+import default_axios_instance from './axios_config'
 import {
   HandleAxiosResponse,
   HandleAxiosError,
 } from '../utilities/axios_return_response'
-import router from '@/router'
 
+//
 export const AuthApiService = {
   //
   async login(payload: any) {
+    // console.log(headers)
     try {
-      const response = await axios
-        .post(`${API_URL}/auth/login`, payload)
+      const response = await default_axios_instance
+        .post(`auth/login`, payload)
         .then(async (response) => response)
 
       return HandleAxiosResponse(response)
@@ -24,8 +25,8 @@ export const AuthApiService = {
   //
   async signup(payload: any) {
     try {
-      const response = await axios
-        .post(`${API_URL}/auth/signup`, payload)
+      const response = await default_axios_instance
+        .post(`auth/signup`, payload)
         .then(async (response) => response)
 
       return HandleAxiosResponse(response)
@@ -45,3 +46,6 @@ export const AuthApiService = {
     router.push('/auth/signup')
   },
 }
+
+// axios.defaults.baseURL = 'http://localhost:4000/api'
+// axios.defaults.headers.common = { 'X-Requested-Witwwewewh': 'XMLHttpRequest' }

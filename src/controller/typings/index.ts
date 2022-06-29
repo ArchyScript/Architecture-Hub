@@ -1,17 +1,17 @@
 // THIS FILE HOLDS ALL THE INTERFACES FOR THE APPLICATION
 export type AnyObject = any
-export type AsyncFunction = (headers?: AnyObject) => Promise<any>
+// export type AsyncFunction = (headers?: AnyObject) => Promise<any>
 export type DateString = string
 
 export interface AsyncResponse {
   data: any
-  error: string | string[] | null
+  error: string | string[] | null | ''
   status: number | string
 }
 
 export type LikeType = 'hand' | 'heart' | 'emoji'
 
-export type UserWithToken = User & { token: string }
+export type UserWithToken = User & { token: string | null }
 
 export type ProfilePictureSchema = {
   name: string
@@ -82,13 +82,15 @@ export type ProfilePicture = {
   cloudinary_id: string
 }
 
-export type User = {
-  _id: string
-  user_id: string
-  profile_picture?: ProfilePicture
-  bio?: Bio
-  posts?: Post[]
-  followers?: Followers[]
-  followings?: Followings[]
-  is_active: boolean
-}
+export type User =
+  | {
+      _id: string
+      user_id: string
+      profile_picture?: ProfilePicture
+      bio?: Bio
+      posts?: Post[]
+      followers?: Followers[]
+      followings?: Followings[]
+      is_active: boolean
+    }
+  | {}

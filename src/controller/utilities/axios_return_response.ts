@@ -1,7 +1,6 @@
 import { AxiosError, AxiosResponse } from 'axios'
 import JWT_DECODE from 'jwt-decode'
 import { useStore } from 'vuex'
-const store = useStore()
 
 //
 const setResponseReturn = (data: any, status: any, error: any) => {
@@ -17,8 +16,10 @@ export const HandleAxiosError = (error: AxiosError) => {
   const error_data = error.response?.data
   const status = error.response?.status
 
-  if (!error_data)
-    return setResponseReturn(null, status, 'Sorry, an error occurred')
+  console.log(error.response)
+
+  // if (!error_data)
+  //   return setResponseReturn(null, status, 'Sorry, an error occurred')
 
   if (error_data) {
     const errorIsArray = Array.isArray(error_data)
@@ -52,7 +53,8 @@ export const HandleTokenResponse = async (token: any) => {
   const decoded_token: any = JWT_DECODE(token)
   const { user_id } = decoded_token
 
-  //save token to localstorage
+  // save token to localstorage
+  localStorage.removeItem('user_token')
   localStorage.setItem('user_token', token)
 
   return user_id

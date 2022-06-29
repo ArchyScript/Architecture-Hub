@@ -93,10 +93,15 @@ export default {
     const current_active_route = ref('/home')
     const store = useStore()
     // get the current route
-    const image = ref('')
+    // const image = ref('')
     const route = useRoute()
 
-    // const image = computed(() => store.state.users.user.profile_picture.avatar)
+    const image = computed(() => {
+      // if (!store.state.users.user.profile_picture.avatar)
+      return ''
+
+      // return store.state.users.user.profile_picture.avatar
+    })
 
     onBeforeMount(() => {
       current_active_route.value = route.fullPath

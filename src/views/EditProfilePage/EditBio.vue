@@ -17,15 +17,15 @@
           <div class="mb-3 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-600"
-              for="email"
+              for="firstname"
             >
               Firstname
             </label>
             <input
-              type="email"
+              type="text"
               class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
-              name="email"
-              placeholder="Email"
+              name="firstname"
+              placeholder="Firstname"
               v-model="payload.bio.firstname"
             />
           </div>
@@ -33,7 +33,7 @@
           <div class="mb-3 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-600"
-              for="email"
+              for="lastname"
             >
               Lastname
             </label>
@@ -46,6 +46,49 @@
             />
           </div>
         </div>
+
+        <div class="grid gap-2 grid-cols-2">
+          <div class="mb-3 p-1">
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-600"
+              for="firstname"
+            >
+              Firstname
+            </label>
+            <input
+              type="text"
+              class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
+              name="firstname"
+              placeholder="Firstname"
+              v-model="payload.bio.firstname"
+            />
+          </div>
+
+          <div class="mb-3 p-1">
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-600"
+              for="lastname"
+            >
+              Lastname
+            </label>
+            <input
+              type="text"
+              class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
+              name="lastname"
+              placeholder="Lastname"
+              v-model="payload.bio.lastname"
+            />
+          </div>
+        </div>
+
+        <div>Selected: {{ selected_gender }}</div>
+
+        <select v-model="selected_gender">
+          <option disabled value="">Please select one</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Preferred not to say</option>
+        </select>
 
         <!-- <div class="mb-3 p-1">
           <label
@@ -117,12 +160,14 @@
           </div>
         </button>
       </form>
+
+      {{ user_data }}
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { updateUserData } from '@/controller/api/users.api'
 import { useStore } from 'vuex'
 
@@ -132,12 +177,15 @@ export default {
     const store = useStore()
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
+    const selected_gender = ref('')
     const payload = ref({
       bio: {
         firstname: '',
         lastname: '',
       },
     })
+
+    const user_data = computed(() => store.state.users)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -176,7 +224,7 @@ export default {
 
       updateResponseMessage(
         'success',
-        'Signup token successfully generated, please wait...',
+        'Profile successfully updated, please wait...',
       )
 
       await store.dispatch('users/getUser', user_id)
@@ -188,7 +236,9 @@ export default {
     return {
       payload,
       is_loading,
+      selected_gender,
       message,
+      user_data,
       UpdateAndSaveBio,
       updateResponseMessage,
     }

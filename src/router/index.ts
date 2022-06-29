@@ -1,4 +1,5 @@
 import store from '@/store'
+import axios from 'axios'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 // Default Layout and entry point
@@ -117,7 +118,8 @@ router.beforeEach((to, from, next) => {
   // and redirect the user to his or her dashboard
   // OR better put check if the user is logged in and tries to access any auth page
   // ELSE go to the route the wants to access
-  // console.log(store.state.users.token)
+  console.log(store.state.users)
+  console.log(store.state.users.token)
 
   if (to.meta.requiredAuth && !store.state.users.token) {
     router.push('/auth/login')

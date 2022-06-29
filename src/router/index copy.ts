@@ -107,6 +107,41 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  /*  const headers: any = {
+    'cache-control': 'no-cache',
+  }
+  const accessToken = localStorage.getItem('user_token')
+  console.log(accessToken)
+  if (accessToken && accessToken !== '') {
+    headers.Authorization = accessToken
+    console.log(headers)
+  }
+  const instance = axios.create({
+    baseURL: 'http://localhost:8086/',
+    headers: headers,
+  })
+
+  instance.interceptors.response.use(
+    (response) => {
+      if (response.status === 401) {
+        //add your code
+        alert('You are not authorized')
+      }
+
+      console.log(response)
+      return response
+    },
+    (error) => {
+      if (error.response && error.response.data) {
+        console.log(error.response)
+        //add your code
+        return Promise.reject(error.response.data)
+      }
+      return Promise.reject(error.message)
+    },
+  )
+
+  // return instance; */
   // to and from are both route objects. must call `next`.
   // First checks if the route we want to access requires a token (login or signup)
   // and as well checks if the user has a token (from the store => token can be goten when user login or signup)

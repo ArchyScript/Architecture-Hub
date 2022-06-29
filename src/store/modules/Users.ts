@@ -1,11 +1,19 @@
 import { getUser } from '@/controller/api/users.api'
+// import { User } from '@/controller/typings'
+
+// const user: User = {}
+const user = {}
+
+const state = {
+  user,
+  // token:
+  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjJhODhhOTY3NWE2NGU3YmExYTBjNDUxIiwiaWF0IjoxNjU2NDc4MTUyLCJleHAiOjE2NTY0NzgxNzJ9.eF4bRVJMmGyaOJ1Ru_KqrNn1CEXNaUYi3QruVqzIw2M',
+  token: null,
+}
 
 export default {
   namespaced: true,
-  state: {
-    token: 'null',
-    user: {},
-  },
+  state,
 
   //
   getters: {
@@ -22,6 +30,10 @@ export default {
       return state
     },
     //
+    getAuthUser: (state: any) => {
+      return state.user
+    },
+    //
     getUser: (state: any) => {
       return state.user
     },
@@ -33,6 +45,8 @@ export default {
       const response: any = await getUser(user_id)
 
       const { data } = response
+
+      console.log(data)
 
       commit('GET_USER', data)
     },

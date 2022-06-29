@@ -261,7 +261,9 @@ export default {
       await store.dispatch('users/assignToken', token)
 
       is_loading.value = false
+      updateResponseMessage('', '')
 
+      // return router.push('/auth/login')
       return router.push('/')
     }
 

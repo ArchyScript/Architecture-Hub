@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 //
-// HandleTokenResponse
+// HandleTokenResponse,m
 export const getUserData = async (user_id: any) => {
   const response = await axios.get(`http://localhost:4000/api/users/${user_id}`)
 
