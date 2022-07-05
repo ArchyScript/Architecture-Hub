@@ -54,7 +54,7 @@ const state = {
   // token: null,
 }
 
-export default {
+export const users = {
   namespaced: true,
   state,
 
