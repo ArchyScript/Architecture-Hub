@@ -1,16 +1,16 @@
 import { createStore } from 'vuex'
 import users from './modules/users'
-import crypto from './modules/crypto'
+import posts from './modules/posts'
 
 interface StoreInterface {
   users: any
-  crypto: any
+  posts: any
 }
 
 // export default createStore({
 export default createStore<StoreInterface>({
   modules: {
     users,
-    crypto,
+    posts,
   },
 })

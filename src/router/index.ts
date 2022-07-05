@@ -60,7 +60,7 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
-        path: '/profile',
+        path: '/profile/:_id',
         name: 'Profile',
         component: Profile,
       },
@@ -84,14 +84,14 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Notifications',
         component: Notifications,
       },
-      {
-        path: '/more',
-        name: 'More',
-        component: More,
-      },
+      // {
+      //   path: '/more',
+      //   name: 'More',
+      //   component: More,
+      // },
 
       {
-        path: '/profile/edit',
+        path: '/profile/:_id/edit',
         name: 'EditProfilePage',
         component: EditProfilePage,
       },

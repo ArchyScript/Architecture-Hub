@@ -11,7 +11,7 @@
 
       <form
         @submit="UpdateAndSaveBio"
-        class="bg-archyhub-main bg-opacity-10 p-3"
+        class="bg-archyhub-light bg-opacity-40 p-3"
       >
         <div class="grid gap-2 grid-cols-2">
           <div class="mb-3 p-1">
@@ -51,20 +51,40 @@
           <div class="mb-3 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-600"
-              for="firstname"
+              for="gender"
             >
-              Firstname
+              Gender: "{{ selected_gender }}"
             </label>
-            <input
+            <select
+              v-model="selected_gender"
+              class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none cursor-pointer rounded-2xl"
+            >
+              <option disabled value="">Please select one</option>
+              <option class="bg-archyhub-light bg-opacity-75 cursor-pointer">
+                Male
+              </option>
+              <option>Female</option>
+              <option>Preferred not to say</option>
+            </select>
+            <!-- <input
               type="text"
               class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
               name="firstname"
               placeholder="Firstname"
               v-model="payload.bio.firstname"
-            />
+            /> -->
           </div>
 
-          <div class="mb-3 p-1">
+          <!-- <div>Selected: {{ selected_gender }}</div>
+
+        <select v-model="selected_gender">
+          <option disabled value="">Please select one</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Preferred not to say</option>
+        </select> -->
+
+          <!-- <div class="mb-3 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-600"
               for="lastname"
@@ -78,17 +98,24 @@
               placeholder="Lastname"
               v-model="payload.bio.lastname"
             />
-          </div>
+          </div> -->
         </div>
 
-        <div>Selected: {{ selected_gender }}</div>
+        <div class="flex flex-col w-full mb-3 p-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-600"
+            for="about_me"
+          >
+            About Me
+          </label>
 
-        <select v-model="selected_gender">
-          <option disabled value="">Please select one</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Preferred not to say</option>
-        </select>
+          <textarea
+            class="w-full text-xl resize-none py-3 px-2 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
+            rows="4"
+            name="about_me"
+            placeholder="Describe yourself..."
+          ></textarea>
+        </div>
 
         <!-- <div class="mb-3 p-1">
           <label
@@ -134,55 +161,67 @@
             placeholder="What's happening?"
           ></textarea>
         </div> -->
+        <div class="my-2 px-1">
+          <button
+            type="submit"
+            class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none"
+          >
+            <div class="w-full flex justify-center items-center space-x-2">
+              <span>Update and Save</span>
 
-        <button
-          type="submit"
-          class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
-        >
-          <div class="w-full flex justify-center items-center space-x-2">
-            <span>Update and Save</span>
-
-            <svg
-              v-if="is_loading"
-              xmlns="http://www.w3.org/2000/svg"
-              class="w-6 h-6 text-white animate-spin"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1"
-                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-              />
-            </svg>
-          </div>
-        </button>
+              <svg
+                v-if="is_loading"
+                xmlns="http://www.w3.org/2000/svg"
+                class="w-6 h-6 text-white animate-spin"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1"
+                  d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                />
+              </svg>
+            </div>
+          </button>
+        </div>
       </form>
 
-      {{ user_data }}
+      <!-- {{ user_data }} -->
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import { updateUserData } from '@/controller/api/users.api'
+import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
   name: 'ProfileHeader',
   setup() {
     const store = useStore()
+    const route = useRoute()
     const is_loading = ref(false)
+    // const user_profile_id = ref('')
     const message = ref({ type: '', text: '' })
-    const selected_gender = ref('')
+    const selected_gender = ref('Male')
     const payload = ref({
       bio: {
         firstname: '',
         lastname: '',
       },
+    })
+    onBeforeMount(() => {
+      const { _id } = route.params
+
+      // user_profile_id.value = _id
+    })
+    const user = computed(() => {
+      return store.state.users.user
     })
 
     const user_data = computed(() => store.state.users)

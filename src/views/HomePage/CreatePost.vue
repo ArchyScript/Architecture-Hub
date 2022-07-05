@@ -14,10 +14,8 @@
           ></textarea>
         </div>
 
-        <!-- <button></button> -->
-
-        <div class="flex justify-between items-center">
-          <div class="flex">
+        <div class="flex justify-between items-center flex-row-reverse">
+          <!-- <div class="flex">
             <label for="post_image">
               <span
                 class="fa fa-image text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
@@ -31,7 +29,7 @@
               id="post_image"
               required
             />
-          </div>
+          </div> -->
 
           <div class="text-center">
             <button

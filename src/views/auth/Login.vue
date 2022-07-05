@@ -220,7 +220,7 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      const response: any = await AuthApiService.login(payload.value)
+      const response = await AuthApiService.login(payload.value)
       const { error, data, status } = response
 
       if (error) {

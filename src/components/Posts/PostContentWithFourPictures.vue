@@ -58,7 +58,7 @@
 
         <!-- <button></button> -->
 
-        <ReactionsVue />
+        <!-- <ReactionsVue /> -->
       </article>
     </div>
   </section>

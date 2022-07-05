@@ -9,26 +9,17 @@ export const getAuthHeaders = (): AxiosRequestHeaders & any => {
   let accessToken = localStorage.getItem('user_token')
   accessToken = !accessToken || accessToken === undefined ? '' : accessToken
 
-  //
-
   const headers = {
     'x-auth-token': accessToken,
     'X-Custom-Header': 'foofrtrtrtrtbar',
-    Authorization: '',
   }
-
-  console.log(headers)
-
-  // if (!accessToken || accessToken === undefined) {
-  //   return headers
-  // }
 
   return headers
 }
 
 const default_axios_instance = axios.create({
   baseURL: API_URL,
-  timeout: 1000,
+  // timeout: 1000,
   headers: getAuthHeaders(),
 })
 

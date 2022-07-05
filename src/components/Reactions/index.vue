@@ -11,7 +11,7 @@
         ></span>
 
         <span>
-          1
+          <!-- {{ reactions.no_of_comments < 1 ? '' : reactions.no_of_comments }} -->
         </span>
       </span>
 
@@ -23,17 +23,17 @@
         ></span>
 
         <span>
-          132
+          <!-- {{ reactions.no_of_likes < 1 ? '' : reactions.no_of_likes }} -->
         </span>
       </span>
 
-      <span
+      <!-- <span
         class="flex-1 flex space-x-1 items-center cursor-pointer text-center hover:text-red-700 text-gray-500 font-bold"
       >
         <span
           class="fa fa-bookmark-o text-2xl px-4 py-2 rounded-full hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10"
         ></span>
-      </span>
+      </span> -->
 
       <span
         class="flex-1 flex space-x-1 items-center cursor-pointer text-center hover:text-red-700 text-gray-500 font-bold"
@@ -51,6 +51,12 @@ import { ref } from 'vue'
 
 export default {
   name: 'Reactions',
+  props: {
+    reactions: {
+      type: Object,
+      required: true,
+    },
+  },
   setup() {
     const test_value = ref('')
 

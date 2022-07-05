@@ -1,6 +1,7 @@
 <template>
   <section class="flex inset-x-0 border-b p-4">
-    <div class="flex w-full">
+    <div class="flex flex-col w-full">
+      <!-- <div class="flex w-full" v-for="(post, index) in allPosts" :key="index"> -->
       <div class="flex-shrink-0 mr-1">
         <img class="w-12 h-12 rounded-full border" src="@/assets/script.jpg" />
       </div>
@@ -33,44 +34,60 @@
         <div class="px-2">
           <p class="text-base font-normal text-gray-500">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio
-            numquam
+            numquam at dicta ut voluptatibus alias eveniet, maxime temporibus
+            cumque culpa blanditiis quaerat explicabo officia dolores dolor eum!
+            Eius nulla consequatur cum aut reiciendis cupiditate hic, maxime
+            veniam non voluptas a expedita repellat rerum ducimus perferendis,
+            delectus officia, nobis dolor ab?
           </p>
         </div>
 
-        <div class="px-2 mt-2">
-          <img
-            class="w-full h-56 object-fill border rounded-xl"
-            src="@/assets/script.jpg"
-          />
-        </div>
+        {{ eachPost }}
 
         <!-- <button></button> -->
 
         <!-- <ReactionsVue /> -->
       </article>
     </div>
+    <!-- </div> -->
   </section>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script lang="ts">
+import { ref, onBeforeMount } from 'vue'
+import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
+import { PostSchema } from '@/controller/typings/index'
 
 export default {
-  name: 'PostContentWithOnePicture',
+  name: 'PostContent',
   components: { ReactionsVue },
+  props: {
+    eachPost: {
+      type: String,
+      // type: Object as PropType<PostSchema>,
+      required: true,
+    },
+  },
   setup() {
     const post_value = ref('')
 
-    const validatePostParams = (event) => {
-      event.preventDefault()
-
+    const validatePostParams = () => {
       console.log(`post value of ${post_value.value}`)
     }
 
+    const getPost = () => {
+      console.log(`post value of ${post_value.value}`)
+    }
+
+    onBeforeMount(() => {
+      //
+      // getAllPosts()
+    })
     return {
       post_value,
       validatePostParams,
+      // post
     }
   },
 }

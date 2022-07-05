@@ -12,12 +12,17 @@
         >
           <img
             class="w-full h-full rounded-full object-fill"
-            src="@/assets/script.jpg"
+            :src="
+              user.profile_picture
+                ? user.profile_picture.avatar
+                : '@/assets/script.jpg'
+            "
           />
+          <!-- src="@/assets/script.jpg" -->
         </span>
 
-        <div class="mt-2">
-          <router-link to="/profile/edit">
+        <div v-if="user_profile_id === user.auth_user._id" class="mt-2">
+          <router-link :to="`/profile/${user_profile_id}/edit`">
             <span
               class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
@@ -29,16 +34,15 @@
 
       <div class="flex-1 items-center px-2 mt-2 mb-2">
         <h4 class="text-2xl block font-bold text-gray-600">
-          Dasolu Daniel
+          {{ user.bio.display_name ? user.bio.display_name : '...' }}
         </h4>
         <span class="text-base block cursor-pointer text-gray-500 truncate">
-          @ArchyScript
+          @{{ user.auth_user.username }}
         </span>
       </div>
 
       <p class="text-base font-medium my-1 px-2 text-gray-500">
-        An Architecture Student || Front-end developer || JavaScript Lover || AI
-        enthusiast || Music lover 🎸|| African
+        {{ user.bio.about_me }}
       </p>
 
       <p class="text-base mt-2 px-2">
@@ -61,13 +65,27 @@
   </section>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script lang="ts">
+import { ref, computed, onBeforeMount } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'ProfileHeader',
   setup() {
-    return {}
+    const store = useStore()
+    const route = useRoute()
+    const user_profile_id: any = ref('')
+    const user = computed(() => {
+      return store.state.users.user
+    })
+    onBeforeMount(() => {
+      const { _id } = route.params
+
+      user_profile_id.value = _id
+    })
+
+    return { user, user_profile_id }
   },
 }
 </script>

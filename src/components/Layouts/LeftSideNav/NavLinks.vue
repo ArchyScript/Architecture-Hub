@@ -1,19 +1,19 @@
 <template>
   <section class="flex items-center rounded-2xl px-4 mt-10">
     <div class="w-full">
-      <router-link to="/profile">
+      <router-link :to="`/profile/${user.auth_user._id}`">
         <div class="mb-16 flex items-center cursor-pointer">
           <img
             class="w-16 h-16 rounded-full border border-archyhub-semi-light"
-            :src="image"
+            :src="user.profile_picture ? user.profile_picture.avatar : ''"
           />
 
           <div class="flex-1 ml-2">
             <span class="text-xl block font-semibold text-gray-700 truncate">
-              Dasaolu Daniel
+              {{ user.bio.display_name ? user.bio.display_name : '...' }}
             </span>
             <span class="text-sm block font-semibold text-gray-600 truncate">
-              @ArchyScript
+              @{{ user.auth_user.username }}
             </span>
           </div>
         </div>
@@ -29,10 +29,16 @@
               ? 'bg-archyhub-semi-light text-gray-700'
               : 'hover:bg-opacity-60'
           "
-          @click="toggleCurrentActiveNavLink(route.fullPath)"
+          @click="toggleCurrentActiveNavLink(navbar_link.route)"
         >
           <!-- @click="toggleCurrentActiveNavLink(navbar_link.route)" -->
-          <router-link :to="navbar_link.route">
+          <router-link
+            :to="
+              navbar_link.route === '/profile'
+                ? `${navbar_link.route}/${user.auth_user._id}`
+                : `${navbar_link.route}`
+            "
+          >
             <div class="mb-1 flex justify-center items-center py-4 space-x-2">
               <span :class="navbar_link.icon" class="ml-4 px-2 text-2xl"></span>
 
@@ -67,13 +73,14 @@
       </div> -->
 
       <div class="w-full text-center mb-10">
-        <button
-          class="w-full text-xl text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-3xl py-4 px-6"
-        >
-          <!-- {{ image }} -->
-          Create Post
-          <span class="fa fa-retweet"></span>
-        </button>
+        <router-link to="/home">
+          <button
+            class="w-full text-xl text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-3xl py-4 px-6"
+          >
+            Create Post
+            <span class="fa fa-retweet"></span>
+          </button>
+        </router-link>
       </div>
     </div>
   </section>
@@ -92,19 +99,14 @@ export default {
     const read_more_user_id = ref('')
     const current_active_route = ref('/home')
     const store = useStore()
-    // get the current route
-    // const image = ref('')
     const route = useRoute()
-
-    const image = computed(() => {
-      // if (!store.state.users.user.profile_picture.avatar)
-      return ''
-
-      // return store.state.users.user.profile_picture.avatar
-    })
 
     onBeforeMount(() => {
       current_active_route.value = route.fullPath
+    })
+
+    const user = computed(() => {
+      return store.state.users.user
     })
 
     const navbar_links = ref([
@@ -113,32 +115,33 @@ export default {
         title: 'Home',
         icon: 'fa fa-home',
       },
-      {
-        route: '/explore',
-        title: 'Explore',
-        icon: 'fa fa-home',
-      },
-      {
-        route: '/notifications',
-        title: 'Notifications',
-        icon: 'fa fa-bell',
-      },
+      // {
+      //   route: '/explore',
+      //   title: 'Explore',
+      //   icon: 'fa fa-home',
+      // },
+      // {
+      //   route: '/notifications',
+      //   title: 'Notifications',
+      //   icon: 'fa fa-bell',
+      // },
       {
         route: '/competitions',
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
       {
-        route: '/profile',
+        route: `/profile`,
         title: 'Profile',
         icon: 'fa fa-user',
       },
-      {
-        route: '/more',
-        title: 'More',
-        icon: 'fa fa-ellipsis-h',
-      },
+      // {
+      //   route: '/more',
+      //   title: 'More',
+      //   icon: 'fa fa-ellipsis-h',
+      // },
     ])
+
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
     }
@@ -151,7 +154,6 @@ export default {
 
       is_more_description_boolean.value = true
       read_more_user_id.value = user_id
-      console.log(user_id)
     }
 
     return {
@@ -161,7 +163,7 @@ export default {
       read_more_user_id,
       current_active_route,
       route,
-      image,
+      user,
       toggleDescriptionLength,
       toggleCurrentActiveNavLink,
     }

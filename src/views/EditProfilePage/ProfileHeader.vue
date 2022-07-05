@@ -32,12 +32,26 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'ProfileHeader',
   setup() {
-    return {}
+    const store = useStore()
+    const route = useRoute()
+    const user_profile_id = ref('')
+    const user = computed(() => {
+      return store.state.users.user
+    })
+    onBeforeMount(() => {
+      const { _id } = route.params
+
+      user_profile_id.value = _id
+    })
+
+    return { user, user_profile_id }
   },
 }
 </script>

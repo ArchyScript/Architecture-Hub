@@ -7,7 +7,7 @@ import {
 } from '../utilities/axios_return_response'
 
 //
-export const getAllUsers = async () => {
+export const fetchAllUsers = async () => {
   try {
     const response = await default_axios_instance
       .get(`users`)
@@ -22,12 +22,12 @@ export const getAllUsers = async () => {
 }
 
 //
-export const getUser = async (user_id: any) => {
+export const fetchSingleUser = async (user_id: any) => {
   try {
     const response = await default_axios_instance
       .get(`users/${user_id}`)
       .then(async (response) => response)
-    console.log(response)
+    // console.log(response)
 
     return HandleAxiosResponse(response)
   } catch (error) {
@@ -36,6 +36,18 @@ export const getUser = async (user_id: any) => {
   }
 }
 
+export const fetchSingleAuthUser = async (_id: any) => {
+  try {
+    const response = await default_axios_instance
+      .get(`auth/user/${_id}`)
+      .then(async (response) => response)
+
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    console.log(error.response)
+    return HandleAxiosError(error)
+  }
+}
 //
 export const updateUserCredentials = async (params: any, payload: any) => {
   const { user_id, user_password } = params
