@@ -10,7 +10,7 @@ interface StoreInterface {
 // export default createStore({
 export default createStore<StoreInterface>({
   modules: {
-    users,
-    posts,
+    users: users,
+    posts: posts,
   },
 })
