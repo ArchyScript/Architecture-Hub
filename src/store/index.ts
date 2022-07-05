@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
-import { users } from './reerer/users'
-import posts from './reerer/posts'
+import { users } from './modules/users'
+import posts from './modules/posts'
 
 interface StoreInterface {
   users: any
