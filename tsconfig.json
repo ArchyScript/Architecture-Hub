@@ -24,9 +24,9 @@
         "src/**/*.vue",
         "tests/**/*.ts",
         "tests/**/*.tsx",
-        "src/store/modules/Users.js",
+        "src/store/reerer/Users.js",
         "src/common/auth/auth0-plugin.ts",
-        "src/store/modules/crypto.ts",
+        "src/store/reerer/crypto.ts",
         "src/controller/api/.api.ts"
     ],
     "exclude": ["node_modules"]
