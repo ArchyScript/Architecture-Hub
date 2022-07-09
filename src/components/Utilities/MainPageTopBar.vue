@@ -1,7 +1,7 @@
 <template>
   <nav
     :class="{ scrolled: !scrollShadowBoolean }"
-    class="flex items-center top-0 inset-x-0 shadow-md pt-4 xl:pt-8 pb-4"
+    class="flex sticky items-center top-0 inset-x-0 shadow-md pt-4 xl:pt-8 pb-4"
   >
     <div class="w-full flex justify-between items-center px-4">
       <div class="flex items-center spacex-2">
@@ -25,14 +25,14 @@
           </svg>
         </span>
         <h4 class="text-xl sm:text-2xl px-2 font-bold text-gray-700">
-          Competitions
+          {{ props.page_title }}
         </h4>
       </div>
 
       <div class="flex justify-center items-start">
-        <!-- @click="toggleLeftNav" -->
         <span
-          class="fa fa-trophy hidden md:flex text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
+          :class="props.page_icon"
+          class="hidden md:flex text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
         ></span>
 
         <span
@@ -59,17 +59,25 @@
   </nav>
 </template>
 
-<script>
+<script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
   name: 'HomeTopbar',
-  setup(context) {
+  props: {
+    page_title: {
+      type: String,
+      required: true,
+    },
+    page_icon: {
+      type: String,
+      required: true,
+    },
+  },
+  setup(props: any) {
     const store = useStore()
     const scrollShadowBoolean = ref(true)
-
-    // const side_nav_toggler = computed(()=> store.state.component_handler)
 
     onBeforeMount(() => {
       handleScroll()
@@ -93,6 +101,7 @@ export default {
     return {
       scrollShadowBoolean,
       toggleLeftNav,
+      props,
       // side_nav_toggler
     }
   },
@@ -100,6 +109,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky h-16 md:h-20 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky z-20 h-16 md:h-20 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

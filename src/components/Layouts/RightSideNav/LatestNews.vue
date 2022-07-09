@@ -1,15 +1,15 @@
 <template>
   <section
-    class="flex items-center border-2 rounded-2xl border-gray-200 inset-x-0 pt-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl border-gray-200 inset-x-0 pt-4 shadow-sm md:shadow-none mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-bold mb-6 px-6 text-gray-700">
+      <h4 class="text-xl font-semibold mb-4 px-6 text-gray-600">
         Latest News
       </h4>
 
       <div class="flex flex-col space-y-6">
         <div
-          class="flex items -center space-x-4 shadow-sm px-4 py-2 rounded-md"
+          class="flex items -center space-x-4 shadow-sm px-4 py-2"
           :key="each_latest_news_update.category"
           v-for="each_latest_news_update in latest_news_updates"
         >
@@ -41,6 +41,7 @@
             </div>
 
             <p class="">
+              <!-- @click="toggleDescriptionLength(each_latest_news_update._id)" -->
               {{
                 is_more_description_boolean &&
                 read_more_user_id == each_latest_news_update._id
@@ -49,7 +50,7 @@
               }}
               <span
                 @click="toggleDescriptionLength(each_latest_news_update._id)"
-                class="py-1 pl-1 pr-3 font-semibold border-gray-200 cursor-pointer"
+                class="py-1 pl-1 pr-3 font-semibold text-gray-700 border-gray-200 cursor-pointer"
               >
                 {{
                   is_more_description_boolean &&

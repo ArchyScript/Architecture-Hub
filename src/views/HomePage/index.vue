@@ -1,14 +1,11 @@
 <template>
-  <div
-    class="w-full top-0 h-full bg-archyhub-semi-light bg-opacity-40 z-4 border-r border-l"
-  >
-    <TopBarVue />
+  <div class="w-full top-0 h-full z-4">
+    <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
+    <CreatePostVue class="hidden xl:blo ck" />
 
-    <CreatePostVue class="hidden" />
-
-    <div class="mt-4">
+    <div class="mt-10 pb-8">
       <div class="" v-if="allPosts.length < 1">
-        <div class="text-center font-medium mb-4">
+        <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No post found' }}</span>
         </div>
 
@@ -70,15 +67,17 @@
           </form>
         </div>
 
-        <div class="" v-for="(eachPost, index) in allPosts" :key="index">
+        <div class="hidden" v-for="(eachPost, index) in allPosts" :key="index">
           <PostContentVue :eachPost="eachPost" />
         </div>
-
-        <!-- {{ allPosts }} -->
       </div>
 
+      <div class="" v-for="x in 20" :key="x">
+        <PostContentTestVue :eachPost="{}" />
+      </div>
+      <!-- <CreatePostModalVue /> -->
+
       <!-- <allPostsContentVue />
-      <PostContentWithOnePictureVue />
       <PostContentVue />
       <PostContentWithTwoPicturesVue />
       <PostContentVue />
@@ -92,31 +91,37 @@
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
-import TopBarVue from './TopBar.vue'
+import { useStore } from 'vuex'
+import MainPageTopBarVue from '@/components/Utilities/MainPageTopBar.vue'
 import CreatePostVue from '@/views/HomePage/CreatePost.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
 // import PostContentWithOnePictureVue from '@/components/Posts/PostContentWithOnePicture.vue'
 // import PostContentWithFourPicturesVue from '@/components/Posts/PostContentWithFourPictures.vue'
 // import PostContentWithTwoPicturesVue from '@/components/Posts/PostContentWithTwoPictures.vue'
-import { useStore } from 'vuex'
 import { PostSchema } from '@/controller/typings'
 import { fetchAllPosts } from '@/controller/api/posts.api'
+import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
+// import CreatePostModalVue from '@/components/Modals/CreatePostModal.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    TopBarVue,
     CreatePostVue,
     PostContentVue,
+    // CreatePostModalVue,
     // PostContentWithOnePictureVue,
+    PostContentTestVue,
+
     // PostContentWithTwoPicturesVue,
     // PostContentWithFourPicturesVue,
+    MainPageTopBarVue,
   },
   setup() {
     const store = useStore()
     const allPosts = ref<PostSchema[]>([])
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
+    const topbar = ref({ title: 'Home', icon: 'fa fa-home' })
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -129,9 +134,11 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
+      console.log('hfk')
       const response = await fetchAllPosts()
 
       const { error, data, status } = response
+      console.log('hfeerek')
 
       if (error) {
         updateResponseMessage('error', error)
@@ -166,7 +173,7 @@ export default {
       //
       getAllPosts()
     })
-    return { allPosts, is_loading, message, getAllPosts }
+    return { allPosts, is_loading, message, topbar, getAllPosts }
   },
 }
 </script>

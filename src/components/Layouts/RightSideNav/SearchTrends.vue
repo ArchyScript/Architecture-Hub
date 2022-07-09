@@ -1,11 +1,11 @@
 <template>
   <section
     :class="{ scrolled: !scrollShadowBoolean }"
-    class="flex items-center top-0 inset-x-0 px-6 mb-8 pt-8"
+    class="flex items-center top-0 inset-x-0 px-6 mb-6 xl:mb-8 pt-6 xl:pt-8 pb-4"
   >
     <form class="w-full" @submit="validateSearchParams">
       <div
-        class="flex w-full items-center border-2 border-gray-200 py-3 px-5 rounded-3xl"
+        class="flex w-full items-center border border-gray-200 py-3 px-5 rounded-3xl"
       >
         <svg
           class="h-6 w-6 text-gray-400 pr-1"
@@ -72,6 +72,6 @@ export default {
 
 <style scoped>
 section.scrolled {
-  @apply sticky h-20 pt-0 bg-gradient-to-r from-archyhub-light   to-archyhub-semi-light  shadow-md;
+  @apply sticky h-16 md:h-20 pt-4 bg-gradient-to-r from-archyhub-light   to-archyhub-semi-light  shadow-md;
 }
 </style>

@@ -1,24 +1,24 @@
 <template>
   <section
     :class="{ scrolled: !scrollShadowBoolean }"
-    class="w-full top-0 min-h-screen sticky z-4 shadow-md bg-archyhub-light"
+    class="w-full top-0 min-h-screen h-full md:h-auto sticky z-4 shadow-md bg-archyhub-light"
   >
     <div class="p-6">
       <NavLinks />
-      <UserSection />
+      <!-- <UserSection /> -->
     </div>
   </section>
 </template>
 
 <script>
 import { onBeforeMount, ref } from 'vue'
-import UserSection from './UserSection.vue'
+// import UserSection from './UserSection.vue'
 import NavLinks from './NavLinks.vue'
 
 export default {
   name: 'LeftSideNav',
   components: {
-    UserSection,
+    // UserSection,
     NavLinks,
   },
 

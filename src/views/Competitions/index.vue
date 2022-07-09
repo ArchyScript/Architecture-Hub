@@ -1,8 +1,9 @@
 <template>
-  <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
+  <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
+    <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
     <TopBarVue />
 
-    <div class="pb-16">
+    <div class="pb-8">
       <CompetitionPostVue />
       <CompetitionPostVue />
       <CompetitionPostVue />
@@ -14,19 +15,21 @@
 
 <script>
 import { ref } from 'vue'
-import TopBarVue from './TopBar.vue'
+import MainPageTopBarVue from '@/components/Utilities/MainPageTopBar.vue'
 import CompetitionPostVue from '@/components/CompetitionPost.vue'
 
 export default {
   name: 'Competitions',
   components: {
-    TopBarVue,
+    MainPageTopBarVue,
     CompetitionPostVue,
   },
   setup() {
-    const test_ref = ref('testing')
+    const topbar = ref({ title: 'Competitions', icon: 'fa fa-trophy' })
 
-    return { test_ref }
+    return {
+      topbar,
+    }
   },
 }
 </script>

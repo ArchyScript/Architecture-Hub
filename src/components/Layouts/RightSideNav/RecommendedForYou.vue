@@ -1,9 +1,9 @@
 <template>
   <section
-    class="flex items-center border-2 rounded-2xl p-3 border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl p-3 border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-bold mb-6 px-2 text-gray-600">
+      <h4 class="text-xl font-semibold mb-6 px-2 text-gray-600">
         Recommended for You
       </h4>
 
@@ -15,7 +15,7 @@
         >
           <div class="flex-shrink-0">
             <img
-              class="w-16 h-16 rounded-full border border-gray-100"
+              class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-100"
               src="@/assets/script.jpg"
               :alt="person_to_follow.display_name"
             />

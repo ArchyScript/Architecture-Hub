@@ -38,8 +38,7 @@ export const AuthApiService = {
   },
 
   //
-  logout(payload: any) {
-    localStorage.removeItem('user')
-    console.log(payload)
+  logout() {
+    console.log(localStorage.getItem('user'))
   },
 }

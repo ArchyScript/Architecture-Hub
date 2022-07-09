@@ -1,8 +1,10 @@
 <template>
-  <section class="w-full sticky top-0 min-h-screen z-4 bg-archyhub-light">
+  <section
+    class="w-full sticky top-0 shadow-md min-h-screen z-4 bg-archyhub-light"
+  >
     <SearchTrendsVue />
 
-    <div class="p-6">
+    <div class="px-4 lg:p-4 xl:p-6">
       <RecommendedWhoToFollowVue />
       <LatestNewsVue />
       <WhoToFollowVue />

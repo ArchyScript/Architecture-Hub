@@ -46,7 +46,7 @@
           </div>
 
           <div v-if="!otherLoginOptions">
-            <form @submit="logUserIn">
+            <form @submit.prevent="logUserIn">
               <div class="">
                 <div class="mb-6 hidden">
                   Login with
@@ -181,11 +181,13 @@
 
 <script lang="ts">
 import OtherSigninOptions from './OtherSigninOptions.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { AuthApiService } from '@/controller/api/auth.api'
 import { useStore } from 'vuex'
+
 import router from '@/router'
 import { HandleTokenResponse } from '@/controller/utilities/axios_return_response'
+// import { useRouter } from 'vue-router'
 
 export default {
   name: 'Login',

@@ -1,9 +1,9 @@
 <template>
   <section
-    class="flex items-center border-2 rounded-2xl border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-bold mb-6 px-6 text-gray-700">
+      <h4 class="text-xl font-semibold mb-6 px-6 text-gray-700">
         Trends for You
       </h4>
 
@@ -26,7 +26,7 @@
                   {{ trend.category }} Trending
                 </span>
                 <span
-                  class="text-lg block font-bold text-gray-700 truncate dark:text-white"
+                  class="text-lg block font-semibold text-gray-700 truncate dark:text-white"
                 >
                   {{ trend.trend_topic }}
                 </span>
@@ -60,7 +60,7 @@
                   {{ trend.category }} Trending
                 </span>
                 <span
-                  class="text-lg block font-bold text-gray-700 truncate dark:text-white"
+                  class="text-lg block font-semibold text-gray-700 truncate dark:text-white"
                 >
                   {{ trend.trend_topic }}
                 </span>
@@ -80,7 +80,7 @@
         </section>
       </div>
 
-      <p class="mt-6 flex">
+      <p class="flex" :class="is_more_trends_boolean ? 'mt-12' : '-mt-4'">
         <span
           @click="is_more_trends_boolean = !is_more_trends_boolean"
           class="text-center w-full text-lg text-gray-600 hover:text-gray-800 font-semibold cursor-pointer"

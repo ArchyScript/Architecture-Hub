@@ -52,7 +52,7 @@
           </p>
         </div>
 
-        <ReactionsVue />
+        <!-- <ReactionsVue class="hidden" /> -->
       </article>
     </div>
   </section>
@@ -60,11 +60,11 @@
 
 <script>
 import { ref } from 'vue'
-import ReactionsVue from '@/components/Reactions/index.vue'
+// import ReactionsVue from '@/components/Reactions/index.vue'
 
 export default {
   name: 'PostContentWithOnePicture',
-  components: { ReactionsVue },
+  // components: { ReactionsVue },
   setup() {
     const is_more_description_boolean = ref(true)
     const lesser_description_length = ref(200)

@@ -8,7 +8,7 @@
     <section class="px-4">
       <div class="flex justify-between">
         <span
-          class="h-28 w-28 p-1 rounded-full -mt-14 block bg-archyhub-semi-light border"
+          class="h-24 w-24 md:h-28 md:w-28 xl:h-32 xl:w-32 -mt-12 md:-mt-14 xl:-mt-16 p-1 rounded-full block bg-archyhub-semi-light border"
         >
           <img
             class="w-full h-full rounded-full object-fill"
@@ -18,7 +18,6 @@
                 : '@/assets/script.jpg'
             "
           />
-          <!-- src="@/assets/script.jpg" -->
         </span>
 
         <div v-if="user_profile_id === user.auth_user._id" class="mt-2">

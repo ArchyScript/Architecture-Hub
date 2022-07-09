@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-archyhub-light">
     <router-view />
   </div>
 </template>
@@ -10,7 +10,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   name: 'App',
 
-  data () {
+  data() {
     return {
       //
     }

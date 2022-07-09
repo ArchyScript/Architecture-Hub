@@ -1,8 +1,8 @@
 <template>
-  <section class="flex w-full items-center mt-10">
-    <router-link to="/profile" class="w-full">
+  <section class="flex w-full items-center my-10">
+    <router-link to="/profile/user_id" class="w-full">
       <div
-        class="w-full mb-16 flex items-center cursor-pointer hover:bg-archyhub-semi-light rounded-3xl p-4"
+        class="w-full flex items-center cursor-pointer hover:bg-archyhub-semi-light rounded-3xl p-4"
       >
         <img class="w-14 h-14 rounded-full border" src="@/assets/script.jpg" />
 

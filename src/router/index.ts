@@ -14,7 +14,8 @@ const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
 const Notifications = () => import('@/views/Notifications/index.vue')
-const More = () => import('@/views/More/index.vue')
+// const More = () => import('@/views/More/index.vue')
+// const QuickSearch = () => import('@/components/Layouts/RightSideNav/index.vue')
 
 // User Authentication
 const AuthLayout = () => import('@/views/auth/AuthLayout.vue')
@@ -96,9 +97,9 @@ const routes: Array<RouteRecordRaw> = [
         component: EditProfilePage,
       },
       // {
-      //   path: '/',
-      //   name: '',
-      //   component: HomePage,
+      //   path: '/search',
+      //   name: 'QuickSearch',
+      //   component: QuickSearch,
       // },
     ],
   },

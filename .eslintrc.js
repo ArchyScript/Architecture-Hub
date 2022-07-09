@@ -9,8 +9,8 @@ module.exports = {
     '@vue/typescript/recommended',
   ],
   parserOptions: {
-    ecmaVersion: 2020,
     // parser: 'babel-eslint',
+    // ecmaVersion: 6,
   },
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',

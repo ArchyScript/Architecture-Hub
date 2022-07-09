@@ -35,10 +35,10 @@ export const fetchSinglePost = async (post_id: any) => {
 }
 
 //
-export const createNewPost = async (user_id: any, payload: any) => {
+export const createNewPost = async (post_id: string | number, payload: any) => {
   try {
     const response = await default_axios_instance
-      .post(`/users/${user_id}`, payload)
+      .post(`posts/new/${post_id}`, payload)
       .then((response) => response)
 
     return HandleAxiosResponse(response)

@@ -11,25 +11,28 @@
           @click="toggleActiveProfilePageLink(profile_page_link.title)"
           :class="
             toggle_active_profile_page_link === profile_page_link.title
-              ? 'border-b-4 border-red-400 text-red-500'
+              ? 'border-b-2 border-red-400 text-red-500'
               : ''
           "
-          class="flex-1 py-4 space-x-1 items-center cursor-pointer text-center hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10 text-gray-500 font-medium"
+          class="flex-1 py-2 sm:py-3 xl:py-4 space-x-1 sm:space-x-2 items-center cursor-pointer text-center hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10 text-gray-500 font-medium"
         >
-          <span :class="profile_page_link.icon" class="text-lg"></span>
-          <span class="text-lg px-2">
+          <span
+            :class="profile_page_link.icon"
+            class="text-sm md:text-base xl:text-lg hidden sm:inline-flex"
+          ></span>
+          <span class="text-sm md:text-base xl:text-lg px-2">
             {{ profile_page_link.title }}
           </span>
         </span>
       </div>
 
       <div class="">
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
-        <PostContentVue />
+        <PostContentTestVue />
+        <PostContentTestVue />
+        <PostContentTestVue />
+        <PostContentTestVue />
+        <PostContentTestVue />
+        <PostContentTestVue />
       </div>
     </div>
   </div>
@@ -39,14 +42,16 @@
 import { ref } from 'vue'
 import TopBarVue from './TopBar.vue'
 import ProfileHeaderVue from './ProfileHeader.vue'
-import PostContentVue from '@/components/Posts/PostContent.vue'
+// import PostContentVue from '@/components/Posts/PostContent.vue'
+import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
 
 export default {
   name: 'Profile',
   components: {
     TopBarVue,
     ProfileHeaderVue,
-    PostContentVue,
+    // PostContentVue,
+    PostContentTestVue,
   },
   setup() {
     const test_ref = ref('testing')

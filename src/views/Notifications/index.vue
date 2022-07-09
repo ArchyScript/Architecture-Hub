@@ -3,30 +3,9 @@
     <TopBarVue />
 
     <div class="pb-16 pt-4">
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
-      <BasicNotificationVue />
+      <div class="" v-for="x in 20" :key="x">
+        <BasicNotificationVue />
+      </div>
     </div>
   </div>
 </template>

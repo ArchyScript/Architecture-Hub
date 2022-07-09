@@ -1,10 +1,13 @@
 <template>
   <section
-    class="flex inset-x-0 border-b p-4 hover:bg-archyhub-semi-light bg-opacity-20"
+    class="flex inset-x-0 border-b p-4 hover:bg-archyhub-semi-light hover:bg-opacity-10"
   >
-    <div class="flex w-full" @click="logData('tesrerer;e;ej;ek;jjtejk')">
+    <div class="flex w-full">
       <div class="flex-shrink-0 mr-1" @click="logData('testejk')">
-        <img class="w-12 h-12 rounded-full border" src="@/assets/script.jpg" />
+        <img
+          class="w-12 h-12 rounded-full border"
+          src="@/assets/default_image.png"
+        />
         <!--
           src="@/assets/default_image.png"
         /> -->
@@ -18,13 +21,13 @@
             </span> -->
 
             <span class="text-lg font-medium text-gray-500 truncate">
-              @ArchyScript
+              @{{ post_info.username }}
             </span>
             <span class="text-lg font-medium text-gray-300 truncate">
               |
             </span>
             <span class="text-sm font-medium text-gray-500 truncate">
-              Jun 4, 2020
+              {{ post_info.date }} at {{ post_info.time }}
             </span>
           </div>
 
@@ -59,6 +62,7 @@ import { PostSchema } from '@/controller/typings/index'
 // import { fetchSinglePost } from '@/controller/api/posts.api'
 import { formatDateAndTime } from '@/controller/utilities/index'
 import { fetchSingleAuthUser } from '@/controller/api/users.api'
+// import default_image from '@/assets/default_image.png'
 
 export default {
   name: 'PostContent',
@@ -73,7 +77,6 @@ export default {
   setup(props: any) {
     // const message = ref({ type: '', text: '' })
     const post_info = ref({
-      display_name: '',
       username: '',
       profile_picture_avatar: '',
       time: '',
@@ -82,6 +85,7 @@ export default {
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
+      post_id: '',
     })
 
     // const updateResponseMessage = (type: string, text: string) => {
@@ -102,17 +106,21 @@ export default {
       //
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
+      reactions.value.post_id = _id
       //
       // post_info.value.display_name
       const response = await fetchSingleAuthUser(user_id)
       const { error, data, status } = response
 
+      if (error) return
       if (!data) return
 
-      // if ()
-      // post_info.value.display_name = data
-      console.log(_id)
-      console.log(data)
+      const { username } = data
+
+      post_info.value.username = username
+      post_info.value.time = formattedTime
+      post_info.value.date = formattedDate
+      // post_info.value.profile_picture_avatar = default_image
 
       // console.log(data)
 
