@@ -1,60 +1,97 @@
 export default {
   namespaced: true,
   state: {
-    show_left_nav: false,
-    show_new_post_modal: false,
-    show_new_competition_modal: false,
+    current_active_modal: '',
+    post_to_comment_on_id: '',
+    open_left_nav: false,
+    open_new_post_modal: false,
+    open_new_competition_modal: false,
+    open_new_comment_modal: false,
   },
 
   //
   getters: {
     getLeftNavVisibillity(state: any) {
-      return state.show_left_nav
+      return state.open_left_nav
+    },
+    getPostToCommentOnId(state: any) {
+      return state.post_to_comment_on_id
     },
     getNewPostVisibillity(state: any) {
-      return state.show_new_post_modal
+      return state.open_new_post_modal
     },
     getNewCompetitionVisibillity(state: any) {
-      return state.show_new_competition_modal
+      return state.open_new_competition_modal
+    },
+    getNewCommentVisibillity(state: any) {
+      return state.open_new_comment_modal
+    },
+    getCurrentActiveModal(state: any) {
+      return state.current_active_modal
     },
   },
 
   //
   actions: {
-    async toggleLeftNav({ commit }: any, current_state: string) {
-      commit('RESET_STATE_TO_DEFAULT')
-      commit('TOGGLE_SIDE_NAV', current_state)
+    async openActiveModal({ commit }: any, current_active_modal: string) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_ACTIVE_MODAL', current_active_modal)
     },
-    async toggleNewPostModal({ commit }: any, current_state: string) {
-      commit('RESET_STATE_TO_DEFAULT')
-      commit('TOGGLE_NEW_POST_MODAL', current_state)
+    async openLeftNav({ commit }: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_LEFT_NAV')
     },
-    async toggleNewCompetitionModal({ commit }: any, current_state: string) {
-      commit('RESET_STATE_TO_DEFAULT')
-      commit('TOGGLE_NEW_COMPETITION_MODAL', current_state)
+    async openNewPostModal({ commit }: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_NEW_POST_MODAL')
+    },
+    async openNewCompetitionModal({ commit }: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_NEW_COMPETITION_MODAL')
+    },
+    async openCommentModal({ commit }: any, post_to_comment_on_id: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_NEW_COMMENT_MODAL', post_to_comment_on_id)
+    },
+    async closeAllModals({ commit }: any) {
+      commit('CLOSE_ALL_MODALS')
     },
   },
 
   //
   mutations: {
-    TOGGLE_SIDE_NAV(state: any, current_state: string) {
-      if (current_state === 'opened') return (state.show_left_nav = false)
-      if (current_state === 'closed') return (state.show_left_nav = true)
+    OPEN_ACTIVE_MODAL(state: any, current_active_modal: string) {
+      return (state.current_active_modal = current_active_modal)
     },
-    TOGGLE_NEW_POST_MODAL(state: any, current_state: string) {
-      if (current_state === 'opened') return (state.show_new_post_modal = false)
-      if (current_state === 'closed') return (state.show_new_post_modal = true)
+    OPEN_LEFT_NAV(state: any) {
+      return (state.open_left_nav = true)
     },
-    TOGGLE_NEW_COMPETITION_MODAL(state: any, current_state: string) {
-      if (current_state === 'opened')
-        return (state.show_new_competition_modal = false)
-      if (current_state === 'closed')
-        return (state.show_new_competition_modal = true)
+    OPEN_NEW_POST_MODAL(state: any) {
+      return (state.open_new_post_modal = true)
     },
-    RESET_STATE_TO_DEFAULT(state: any) {
-      state.show_left_nav = false
-      state.show_new_post_modal = false
-      state.show_new_competition_modal = false
+    OPEN_NEW_COMPETITION_MODAL(state: any) {
+      return (state.open_new_competition_modal = true)
+    },
+    OPEN_NEW_COMMENT_MODAL(state: any, post_to_comment_on_id: any) {
+      state.post_to_comment_on_id = post_to_comment_on_id
+      return (state.open_new_comment_modal = true)
+    },
+
+    CLOSE_ALL_MODALS(state: any) {
+      state.open_left_nav = false
+      state.open_new_post_modal = false
+      state.open_new_competition_modal = false
+      state.open_new_comment_modal = false
     },
   },
 }
+
+/* 
+    OPEN_LEFT_NAV: (state: any) => (state.open_left_nav = true),
+    OPEN_NEW_POST_MODAL: (state: any) => (state.open_new_post_modal = true),
+    OPEN_NEW_COMPETITION_MODAL: (state: any) =>
+      (state.open_new_competition_modal = true),
+
+    OPEN_NEW_COMMENT_MODAL: (state: any) =>
+      (state.open_new_comment_modal = true),
+ */

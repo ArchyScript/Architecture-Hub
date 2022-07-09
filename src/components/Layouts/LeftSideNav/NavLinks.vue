@@ -122,7 +122,7 @@
 
         <div class="w-full text-center mb-10">
           <button
-            @click="openCreatePostModal"
+            @click="openNewPostModal"
             class="w-full text-lg lg:text-xl text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-semibold rounded-3xl py-3 sm:py-3"
           >
             Create Post
@@ -246,7 +246,7 @@ export default {
 
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
-      return store.dispatch('component_handler/toggleLeftNav', 'opened')
+      return store.dispatch('component_handler/toggleLeftNav')
     }
 
     const toggleDescriptionLength = (user_id: string) => {
@@ -259,9 +259,8 @@ export default {
       read_more_user_id.value = user_id
     }
 
-    const openCreatePostModal = () => {
-      store.dispatch('component_handler/toggleNewPostModal', 'closed')
-      // create_post_boolean.value = true
+    const openNewPostModal = () => {
+      store.dispatch('component_handler/openNewPostModal')
     }
 
     const logUserOut = async () => {
@@ -287,7 +286,7 @@ export default {
       is_loading,
       route,
       user,
-      openCreatePostModal,
+      openNewPostModal,
       toggleDescriptionLength,
       toggleCurrentActiveNavLink,
       logUserOut,

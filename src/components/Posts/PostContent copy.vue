@@ -2,54 +2,54 @@
   <section
     class="flex inset-x-0 border-b p-4 hover:bg-archyhub-semi-light hover:bg-opacity-10"
   >
-    <div class="flex -col w-full">
-      <!-- <div class="flex w-full" v-for="(post, index) in allPosts" :key="index"> -->
-      <div class="flex-shrink-0 mr-1" @click="viewUserProfile('user_id')">
+    <div class="flex w-full">
+      <div class="flex-shrink-0 mr-1" @click="logData('testejk')">
         <img
-          class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border"
-          src="@/assets/script.jpg"
+          class="w-12 h-12 rounded-full border"
+          src="@/assets/default_image.png"
         />
+        <!--
+          src="@/assets/default_image.png"
+        /> -->
       </div>
 
-      <article class="w-full flex-1 ml-1 sm:ml-2">
-        <div class="mb-1 flex flex-1 px-1">
-          <div class="flex-1 flex-col truncate">
-            <p class="items-center flex sm:space-x-2">
-              <span
-                class="text-base md:text-xl font-semibold text-gray-600 truncate"
-              >
-                {{ post_info.display_name }}
-              </span>
+      <article class="w-full flex-1 ml-2">
+        <div class="mb-1 flex flex-1 px-2">
+          <div class="flex-1 flex items-center space-x-2 truncate">
+            <!-- <span class="text-lg font-extrabold text-gray-600 truncate">
+              {{ post_info.display_name }}
+            </span> -->
 
-              <span
-                class="text-base md:text-lg font-normal text-gray-500 truncate"
-              >
-                @{{ post_info.username || '...' }}
-              </span>
-            </p>
-
-            <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
-              v-if="post_info.date || post_info.time"
-            >
-              <span class="">{{ post_info.date }}</span>
-
-              <span class="">
-                <strong class="font-semibold">@</strong>
-                {{ post_info.time }}
-              </span>
-            </p>
+            <span class="text-lg font-medium text-gray-500 truncate">
+              @{{ post_info.username }}
+            </span>
+            <span class="text-lg font-medium text-gray-300 truncate">
+              |
+            </span>
+            <span class="text-sm font-medium text-gray-500 truncate">
+              {{ post_info.date }} at {{ post_info.time }}
+            </span>
           </div>
+
+          <p class="text-gray-500 font-normal italic items-center text-sm">
+            <span
+              class="fa fa-ellipsis-h text-2xl px-3 py-1 cursor-pointer rounded-full"
+            ></span>
+          </p>
         </div>
 
-        <div class="px-1 sm:px-2 mt-2">
-          <p class="text-sm sm:text-base font-normal text-gray-500">
+        <div class="px-2">
+          <p class="text-base font-normal text-gray-500">
             {{ eachPost.content }}
           </p>
         </div>
 
+        <!-- {{ typeof eachPost }} -->
+        <!-- <button></button> -->
+
         <ReactionsVue :reactions="reactions" />
       </article>
+      <!-- </div> -->
     </div>
   </section>
 </template>
@@ -77,7 +77,6 @@ export default {
   setup(props: any) {
     // const message = ref({ type: '', text: '' })
     const post_info = ref({
-      // display_name: '',
       username: '',
       profile_picture_avatar: '',
       time: '',
@@ -94,7 +93,7 @@ export default {
     //   message.value.text = text
     // }
 
-    const viewUserProfile = (test: any) => {
+    const logData = (test: any) => {
       console.log(test)
     }
 
@@ -117,9 +116,7 @@ export default {
       if (!data) return
 
       const { username } = data
-      // console.log(data)
 
-      // post_info.value.display_name = display_name
       post_info.value.username = username
       post_info.value.time = formattedTime
       post_info.value.date = formattedDate
@@ -158,7 +155,7 @@ export default {
     return {
       post_info,
       reactions,
-      viewUserProfile,
+      logData,
       getPostDetails,
     }
   },

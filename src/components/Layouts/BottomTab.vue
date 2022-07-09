@@ -85,7 +85,7 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
 export default {
-  name: 'HomeTopbar',
+  name: 'BottomBar',
   setup() {
     const route = useRoute()
     const store = useStore()
@@ -102,7 +102,6 @@ export default {
         icon: 'fa fa-trophy',
       },
       {
-        // route: `/`,
         route: `/notifications`,
         title: 'Notifications',
         icon: 'fa fa-bell',
@@ -114,9 +113,7 @@ export default {
       },
     ])
 
-    const user = computed(() => {
-      return store.state.users.user
-    })
+    const user = computed(() => store.state.users.user)
 
     onBeforeMount(() => {
       current_active_route.value = route.fullPath
@@ -131,14 +128,9 @@ export default {
     const openTargettedModal = () => {
       console.log(current_active_route.value)
       if (current_active_route.value === '/home')
-        return store.dispatch('component_handler/toggleNewPostModal', 'closed')
+        return store.dispatch('component_handler/openNewPostModal')
       if (current_active_route.value === '/competitions')
-        return store.dispatch(
-          'component_handler/toggleNewCompetitionModal',
-          'closed',
-        )
-
-      // return store.dispatch('component_handler/sideNavVisibillity')
+        return store.dispatch('component_handler/openNewCompetitionModal')
     }
 
     return {

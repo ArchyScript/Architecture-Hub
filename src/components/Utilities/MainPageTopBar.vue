@@ -6,7 +6,7 @@
     <div class="w-full flex justify-between items-center px-4">
       <div class="flex items-center spacex-2">
         <span
-          @click="toggleLeftNav"
+          @click="openLeftNav"
           class="hidden md:flex lg:hidden p-2 mr-2 bg-archyhub-main cursor-pointer rounded-full"
         >
           <svg
@@ -36,7 +36,7 @@
         ></span>
 
         <span
-          @click="toggleLeftNav"
+          @click="openLeftNav"
           class="md:hidden p-2 sm:p-3 bg-archyhub-main cursor-pointer rounded-full"
         >
           <svg
@@ -94,13 +94,13 @@ export default {
       }
     }
 
-    const toggleLeftNav = () => {
-      return store.dispatch('component_handler/toggleLeftNav', 'closed')
+    const openLeftNav = () => {
+      return store.dispatch('component_handler/openLeftNav')
     }
 
     return {
       scrollShadowBoolean,
-      toggleLeftNav,
+      openLeftNav,
       props,
       // side_nav_toggler
     }

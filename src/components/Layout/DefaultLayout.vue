@@ -4,12 +4,12 @@
       <!-- smaller screen -->
       <div class="lg:hidden h-full">
         <nav
-          v-if="side_nav_toggler_boolean"
+          v-if="open_left_nav"
           class="top-0 bottom-0 z-30 bg-opacity-40 bg-red-500 h-full w-full"
-          :class="side_nav_toggler_boolean ? 'fixed' : 'hidden '"
+          :class="open_left_nav ? 'fixed' : 'hidden '"
           id="nav_modal"
         >
-          <!-- side_nav_toggler_boolean ? 'hidden md:block fixed' : 'hidden ' -->
+          <!-- open_left_nav ? 'hidden md:block fixed' : 'hidden ' -->
           <div class="w-3/4 sm:w-3/5 md:w-2/5 md: h-full shadow-md">
             <LeftSideNav />
           </div>
@@ -71,30 +71,15 @@
     </div>
 
     <ModalsDisplayVue />
-
-    <!-- modal box for -->
-    <!-- <div class="w-full h-full">
-      <section
-        v-if="side_nav_toggler_boolean"
-        class="top-0 bottom-0 z-30 bg-opacity-40 bg-black h-full w-full"
-        :class="side_nav_toggler_boolean ? 'fixed' : 'hidden'"
-        id="modal_content"
-      >
-        <CreatePostModalVue />
-      </section>
-    </div> -->
   </div>
 </template>
 
 <script lang="ts">
 import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
-
-// import TopNavbar from '../Layouts/TopNavbar.vue'
 import { useStore } from 'vuex'
 import { ref, computed } from 'vue'
 import BottomTabVue from '../Layouts/BottomTab.vue'
-// import CreatePostModalVue from '../Modals/CreatePostModal.vue'
 import ModalsDisplayVue from './ModalsDisplay.vue'
 
 export default {
@@ -107,8 +92,8 @@ export default {
   },
   setup() {
     const store = useStore()
-    const side_nav_toggler_boolean = computed(
-      () => store.state.component_handler.show_left_nav,
+    const open_left_nav = computed(
+      () => store.state.component_handler.open_left_nav,
     )
 
     window.addEventListener('click', (event: any) => {
@@ -118,12 +103,11 @@ export default {
       }
     })
 
-    const closeLeftNav = () => {
-      return store.dispatch('component_handler/toggleLeftNav', 'opened')
-    }
+    const closeLeftNav = () =>
+      store.dispatch('component_handler/closeAllModals')
 
     return {
-      side_nav_toggler_boolean,
+      open_left_nav,
       closeLeftNav,
     }
   },

@@ -1,13 +1,13 @@
 <template>
   <section
-    class="flex items-center rounded-2xl border-gray-200 inset-x-0 shadow-sm md:shadow-none mt-4"
+    class="flex items-center rounded-2xl border-gray-200 inset-x-0 mt-2 md:mt-4"
   >
     <div class="w-full flex items-center space-x-2 mt-2">
       <span
         class="flex-1 flex space-x-1 items-center cursor-pointer text-center text-gray-500 font-bold hover:text-green-700"
       >
         <span
-          class="fa fa-comment-o text-2xl px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
+          class="fa fa-comment-o text-lg lg:text-xl px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
           @click="commentOnPost(post_id)"
         ></span>
 
@@ -20,7 +20,7 @@
         class="flex-1 flex space-x-1 items-center cursor-pointer text-center text-gray-500 font-bold"
       >
         <span
-          class="fa fa-heart-o text-2xl px-3 py-2 rounded-full hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10"
+          class="fa fa-heart-o text-lg lg:text-xl px-3 py-2 rounded-full hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10"
           @click="likePost(post_id)"
         ></span>
 
@@ -28,8 +28,6 @@
           {{ reactions.no_of_likes }}
         </span>
       </span>
-
-      <CreatePostModalVue class="hidden" />
 
       <!-- <span
         class="flex-1 flex space-x-1 items-center cursor-pointer text-center hover:text-red-700 text-gray-500 font-bold"
@@ -52,7 +50,7 @@
 
 <script lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import CreatePostModalVue from '@/components/Modals/CreatePostModal.vue'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Reactions',
@@ -62,11 +60,9 @@ export default {
       required: true,
     },
   },
-  components: {
-    CreatePostModalVue,
-  },
   setup(props: any) {
     const post_id = ref('')
+    const store = useStore()
 
     const displayPostReactions = () => {
       props.reactions.no_of_comments < 1 ? '' : props.reactions.no_of_comments
@@ -80,6 +76,7 @@ export default {
     }
 
     const commentOnPost = (post_id: any) => {
+      store.dispatch('component_handler/openCommentModal', post_id)
       console.log(post_id)
     }
 

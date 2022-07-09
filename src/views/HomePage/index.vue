@@ -67,7 +67,7 @@
           </form>
         </div>
 
-        <div class="hidden" v-for="(eachPost, index) in allPosts" :key="index">
+        <div v-for="(eachPost, index) in allPosts" :key="index">
           <PostContentVue :eachPost="eachPost" />
         </div>
       </div>
