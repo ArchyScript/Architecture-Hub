@@ -2,6 +2,8 @@
   <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
     <TopBarVue />
 
+    <!--  -->
+
     <div class="pb-16 pt-4">
       <div class="" v-for="x in 20" :key="x">
         <BasicNotificationVue />
