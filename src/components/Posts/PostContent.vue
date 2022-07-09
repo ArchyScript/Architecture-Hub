@@ -3,8 +3,10 @@
     class="flex inset-x-0 border-b p-4 hover:bg-archyhub-semi-light hover:bg-opacity-10"
   >
     <div class="flex -col w-full">
-      <!-- <div class="flex w-full" v-for="(post, index) in allPosts" :key="index"> -->
-      <div class="flex-shrink-0 mr-1" @click="viewUserProfile('user_id')">
+      <div
+        class="flex-shrink-0 mr-1"
+        @click="viewUserProfile(post_info.user_id)"
+      >
         <img
           class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border"
           src="@/assets/script.jpg"
@@ -62,6 +64,7 @@ import { PostSchema } from '@/controller/typings/index'
 // import { fetchSinglePost } from '@/controller/api/posts.api'
 import { formatDateAndTime } from '@/controller/utilities/index'
 import { fetchSingleAuthUser } from '@/controller/api/users.api'
+import router from '@/router'
 // import default_image from '@/assets/default_image.png'
 
 export default {
@@ -78,6 +81,7 @@ export default {
     // const message = ref({ type: '', text: '' })
     const post_info = ref({
       // display_name: '',
+      user_id: '',
       username: '',
       profile_picture_avatar: '',
       time: '',
@@ -94,8 +98,9 @@ export default {
     //   message.value.text = text
     // }
 
-    const viewUserProfile = (test: any) => {
-      console.log(test)
+    const viewUserProfile = (user_id: any) => {
+      router.push(`/profile/${user_id}`)
+      console.log(user_id)
     }
 
     const getPostDetails = async () => {
@@ -121,6 +126,7 @@ export default {
 
       // post_info.value.display_name = display_name
       post_info.value.username = username
+      post_info.value.user_id = user_id
       post_info.value.time = formattedTime
       post_info.value.date = formattedDate
       // post_info.value.profile_picture_avatar = default_image
