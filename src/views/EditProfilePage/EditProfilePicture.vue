@@ -132,7 +132,7 @@ export default {
 
       is_loading.value = false
 
-      return router.push('/profile')
+      return router.push(`/profile/${user_id}`)
     }
 
     return {
