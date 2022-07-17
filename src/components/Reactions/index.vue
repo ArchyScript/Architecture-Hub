@@ -77,7 +77,7 @@ export default {
 
     const commentOnPost = (post_id: any) => {
       store.dispatch('component_handler/openCommentModal', post_id)
-      console.log(post_id)
+      // console.log(post_id)
     }
 
     onBeforeMount(() => {

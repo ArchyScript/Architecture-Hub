@@ -46,6 +46,11 @@ export type PostSchema = {
   title: string
   content: string
   edited: boolean
+  post_image: {
+    title: string
+    cloudinary_id: string
+    avatar: string
+  }
   comments: Comment[]
   likes: Like[]
 }
@@ -62,6 +67,8 @@ export type Bio = {
   lastname: string
   gender: string
   date_of_birth: string
+  display_name: string
+  description: string
 }
 
 export type Followers = {
@@ -70,6 +77,10 @@ export type Followers = {
 
 export type Followings = {
   following_id: string
+}
+
+export type BookmarkedPosts = {
+  post_id: string
 }
 
 export type Post = {
@@ -85,12 +96,29 @@ export type ProfilePicture = {
 export type User =
   | {
       _id: string
-      user_id: string
-      profile_picture?: ProfilePicture
-      bio?: Bio
+      profile_picture: ProfilePicture
+      bio: Bio
       posts?: Post[]
       followers?: Followers[]
       followings?: Followings[]
+      bookmarked_posts?: BookmarkedPosts[]
       is_active: boolean
+      createdAt: string
+      updatedAt: string
+    }
+  | {}
+
+export type UserSchema =
+  | {
+      _id: string
+      profile_picture: ProfilePicture
+      bio: Bio
+      posts?: Post[]
+      followers?: Followers[]
+      followings?: Followings[]
+      bookmarked_posts?: BookmarkedPosts[]
+      is_active: boolean
+      createdAt: string
+      updatedAt: string
     }
   | {}

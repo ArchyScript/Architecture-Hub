@@ -61,7 +61,7 @@ import ReactionsVue from '@/components/Reactions/index.vue'
 import { PostSchema } from '@/controller/typings/index'
 // import { fetchSinglePost } from '@/controller/api/posts.api'
 import { formatDateAndTime } from '@/controller/utilities/index'
-import { fetchSingleAuthUser } from '@/controller/api/users.api'
+// import { fetchSingleAuthUser } from '@/controller/api/users.api'
 // import default_image from '@/assets/default_image.png'
 
 export default {
@@ -109,41 +109,6 @@ export default {
       reactions.value.post_id = _id
       //
       // post_info.value.display_name
-      const response = await fetchSingleAuthUser(user_id)
-      const { error, data, status } = response
-
-      if (error) return
-      if (!data) return
-
-      const { username } = data
-
-      post_info.value.username = username
-      post_info.value.time = formattedTime
-      post_info.value.date = formattedDate
-      // post_info.value.profile_picture_avatar = default_image
-
-      // console.log(data)
-
-      // if (error) {
-      //   // updateResponseMessage('error', error)
-
-      //   return setTimeout(() => {
-      //     // return updateResponseMessage('', '')
-      //     // return
-      //   }, 5000)
-      // }
-
-      // if (!status || status === 400 || !data) {
-      //   updateResponseMessage(
-      //     'error',
-      //     'Sorry, an unknown error occurred... Check connection',
-      //   )
-
-      //   return setTimeout(() => {
-      //     is_loading.value = false
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
 
       return
     }

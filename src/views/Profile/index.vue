@@ -39,11 +39,13 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
 import TopBarVue from './TopBar.vue'
 import ProfileHeaderVue from './ProfileHeader.vue'
 // import PostContentVue from '@/components/Posts/PostContent.vue'
 import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
+import { useRoute } from 'vue-router'
+// import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 
 export default {
   name: 'Profile',
@@ -56,7 +58,7 @@ export default {
   setup() {
     const test_ref = ref('testing')
     const toggle_active_profile_page_link = ref('Posts')
-
+    const route = useRoute()
     const profile_page_links = ref([
       {
         title: 'Posts',
@@ -71,10 +73,24 @@ export default {
         icon: 'fa fa-image',
       },
     ])
+
+    onBeforeMount(async () => {
+      // const { username } = route.params
+      // const data = await getUserData(username)
+      // console.log(data)
+    })
+
+    const getUserData = async (username: string | string[]) => {
+      // const response = await fetchSingleUserByUsername(username)
+      // const { data, status, error } = response
+      // return data
+    }
+
     const toggleActiveProfilePageLink = (current_active: string) => {
       toggle_active_profile_page_link.value = current_active
       console.log(current_active)
     }
+
     return {
       test_ref,
       profile_page_links,

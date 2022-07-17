@@ -117,50 +117,6 @@
           ></textarea>
         </div>
 
-        <!-- <div class="mb-3 p-1">
-          <label
-            class="block mb-1 mx-2 font-medium text-gray-600"
-            for="username"
-          >
-            Email
-          </label>
-          <input
-            type="email"
-            readonly
-            class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl cursor-not-allowed"
-            name="email"
-            placeholder="Email"
-          />
-        </div> -->
-
-        <!-- <div class="mb-3 p-1">
-          <label
-            class="block mb-1 mx-2 font-medium text-gray-600"
-            for="username"
-          >
-            Username
-          </label>
-          <input
-            type="text"
-            class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
-            name="username"
-            placeholder="Username"
-          />
-        </div> -->
-
-        <!-- <div class="mb-3 p-1">
-          <label
-            class="block mb-1 mx-2 font-medium text-gray-600"
-            for="password"
-          >
-            About Me
-          </label>
-          <textarea
-            class="w-full text-xl resize-none py-3 px-3 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-2xl"
-            rows="5"
-            placeholder="What's happening?"
-          ></textarea>
-        </div> -->
         <div class="my-2 px-1">
           <button
             type="submit"
@@ -196,7 +152,7 @@
 
 <script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
-import { updateUserData } from '@/controller/api/users.api'
+// import { updateUserData } from '@/controller/api/users.api'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -238,38 +194,38 @@ export default {
 
       const user_id = '62a88b5875a64e7ba1a0c45d'
 
-      const response: any = await updateUserData(user_id, payload.value)
-      const { error, data, status } = response
+      // const response: any = await updateUserData(user_id, payload.value)
+      // const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      // if (error) {
+      //   updateResponseMessage('error', error)
+      //   is_loading.value = false
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      //   return setTimeout(() => {
+      //     return updateResponseMessage('', '')
+      //   }, 5000)
+      // }
 
-      if (!status || status === 400) {
-        updateResponseMessage('error', 'Sorry, an unknown error occurred')
+      // if (!status || status === 400) {
+      //   updateResponseMessage('error', 'Sorry, an unknown error occurred')
 
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      //   return setTimeout(() => {
+      //     is_loading.value = false
+      //     return updateResponseMessage('', '')
+      //   }, 5000)
+      // }
 
-      // console.log(data)
+      // // console.log(data)
 
-      updateResponseMessage(
-        'success',
-        'Profile successfully updated, please wait...',
-      )
+      // updateResponseMessage(
+      //   'success',
+      //   'Profile successfully updated, please wait...',
+      // )
 
-      await store.dispatch('users/getUser', user_id)
-      is_loading.value = false
+      // await store.dispatch('users/getUser', user_id)
+      // is_loading.value = false
 
-      return data
+      // return data
     }
 
     return {

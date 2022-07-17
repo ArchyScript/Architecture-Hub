@@ -53,21 +53,6 @@
                 : `${bottom_bar_link.route}`
             "
           >
-            <!-- <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-16 h-16  animate-spin py-4 mx-auto"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="1"
-              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-            />
-          </svg> -->
-
             <span
               :class="bottom_bar_link.icon"
               class="text-lg sm:text-xl p-3 sm:p-4 w-full font-extrabold h-full text-center"
@@ -96,13 +81,18 @@ export default {
         title: 'Home',
         icon: 'fa fa-home',
       },
+      // {
+      //   route: '/scholarships',
+      //   title: 'Scholarships',
+      //   icon: 'fa fa-users',
+      // },
       {
         route: '/competitions',
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
       {
-        route: `/notifications`,
+        route: '/notifications',
         title: 'Notifications',
         icon: 'fa fa-bell',
       },

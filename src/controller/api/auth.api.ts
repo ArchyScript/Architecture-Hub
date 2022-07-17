@@ -6,11 +6,21 @@ import {
 
 //
 export const AuthApiService = {
-  //
-  async login(payload: any) {
+  async loginWithEmail(payload: any) {
     try {
       const response = await default_axios_instance
-        .post(`auth/login`, payload)
+        .post(`auth/login/email`, payload)
+        .then(async (response) => response)
+      return HandleAxiosResponse(response)
+    } catch (error) {
+      return HandleAxiosError(error)
+    }
+  },
+
+  async loginWithUsername(payload: any) {
+    try {
+      const response = await default_axios_instance
+        .post(`auth/login/username`, payload)
         .then(async (response) => response)
 
       return HandleAxiosResponse(response)
@@ -33,12 +43,32 @@ export const AuthApiService = {
   },
 
   //
-  resetPasswoord(payload: any) {
-    console.log(payload)
+  async resetPasswoord() {
+    // _id  will be gotten from the store
+
+    try {
+      const response = await default_axios_instance
+        .post(`auth/reset-password/:_id`)
+        .then(async (response) => response)
+
+      return HandleAxiosResponse(response)
+    } catch (error) {
+      return HandleAxiosError(error)
+    }
   },
 
   //
-  logout() {
+  async logout() {
     console.log(localStorage.getItem('user'))
+
+    try {
+      const response = await default_axios_instance
+        .post(`auth/logout`)
+        .then(async (response) => response)
+
+      return HandleAxiosResponse(response)
+    } catch (error) {
+      return HandleAxiosError(error)
+    }
   },
 }

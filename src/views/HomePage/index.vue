@@ -1,10 +1,9 @@
 <template>
   <div class="w-full top-0 h-full z-4">
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
-    <CreatePostVue class="hidden xl:blo ck" />
 
     <div class="mt-10 pb-8">
-      <div class="" v-if="allPosts.length < 1">
+      <!-- <div class="" v-if="allPosts.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No post found' }}</span>
         </div>
@@ -36,10 +35,11 @@
             </button>
           </form>
         </div>
-      </div>
+      </div> -->
 
-      <div v-else>
-        <div class="text-center mb-8">
+      <!-- <div v-else> -->
+      <div>
+        <div class="hidden text-center mb-8">
           <form @submit.prevent="getAllPosts">
             <button
               class="text-md text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
@@ -72,7 +72,7 @@
         </div>
       </div>
 
-      <div class="" v-for="x in 20" :key="x">
+      <div class="hidden" v-for="x in 20" :key="x">
         <PostContentTestVue :eachPost="{}" />
       </div>
       <!-- <CreatePostModalVue /> -->
@@ -93,7 +93,7 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Utilities/MainPageTopBar.vue'
-import CreatePostVue from '@/views/HomePage/CreatePost.vue'
+// import CreatePostVue from '@/views/HomePage/CreatePost.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
 // import PostContentWithOnePictureVue from '@/components/Posts/PostContentWithOnePicture.vue'
 // import PostContentWithFourPicturesVue from '@/components/Posts/PostContentWithFourPictures.vue'
@@ -106,7 +106,7 @@ import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
 export default {
   name: 'HomePage',
   components: {
-    CreatePostVue,
+    // CreatePostVue,
     PostContentVue,
     // CreatePostModalVue,
     // PostContentWithOnePictureVue,

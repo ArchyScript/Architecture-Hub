@@ -186,19 +186,11 @@ export default {
         password,
       }
 
-      const response = await AuthApiService.login(login_credentials)
-
-      const { error, data, status } = response
-
       // if (data) console.log('no data')
       // if (!header) console.log('no header')
       // if (status) console.log('no error')
 
       // logDataToConsole(response)
-
-      console.log(data)
-
-      return response
     }
 
     return {

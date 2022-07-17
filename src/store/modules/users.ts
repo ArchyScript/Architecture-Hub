@@ -1,44 +1,30 @@
-import { fetchSingleUser } from '@/controller/api/users.api'
+import { fetchSingleUserById } from '@/controller/api/users.api'
 // import { User } from '@/controller/typings'
 
-// const user: User = {}
-// const user = {}
 const user = {
   auth_user: {
     _id: '62a88a9675a64e7ba1a0c451',
     email: 'archyscript@gmail.com',
     username: 'ArchyScript',
-    // password: '$2b$10$ergPB1hEOLFVk1e8OqEVTOphceNlA4k3OFvuaJ2bG8JmOKg8a8YmS',
-    createdAt: '2022-06-14T13:18:14.209Z',
-    updatedAt: '2022-06-14T13:18:14.209Z',
   },
-  _id: '62a88a9675a64e7ba1a0c453',
-  user_id: '62a88a9675a64e7ba1a0c451',
+  _id: '62cb0cabf71b79b564754d74',
   is_active: false,
   posts: [],
   followers: [],
-  followings: [
-    {
-      following_id: '62a88b4075a64e7ba1a0c457',
-    },
-    {
-      following_id: '62a88b4075a64e7ba1a0c457',
-    },
-    {
-      following_id: '62a88b4075a64e7ba1a0c457',
-    },
-    {
-      following_id: '62a88b4075a64e7ba1a0c457',
-    },
-  ],
+  followings: [],
+  bookmarked_posts: [],
   bio: {
-    firstname: 'Daniel',
-    lastname: 'Dasaolu',
-    display_name: 'Dasaolu Script',
-    gender: '',
-    about_me: `An Architecture Student || Front-end developer || JavaScript Lover || AI enthusiast || Music lover 🎸|| African`,
+    display_name: '',
+    description: 'wjbewelwewle;wewejhwijl',
+    date_of_birth: '',
+    firstname: 'Testimony',
+    lastname: 'Catfish',
+    gender: 'male',
   },
-  __v: 0,
+  email: 'scripticologist@gmail.com',
+  username: 'Scripticologist',
+  createdAt: '2022-07-10T17:30:20.016Z',
+  updatedAt: '2022-07-16T02:12:17.515Z',
   profile_picture: {
     title: 'profile-photo',
     cloudinary_id: 'h5msvmjtqocbnphob7yx',
@@ -85,13 +71,12 @@ export const users = {
   actions: {
     //
     async getUser({ commit }: any, user_id: string) {
-      const response: any = await fetchSingleUser(user_id)
-
+      const response: any = await fetchSingleUserById(user_id)
       const { data } = response
 
       console.log(data)
 
-      commit('GET_USER', data)
+      commit('SET_USER', data)
     },
     //
     async assignToken({ commit }: any, token: any) {

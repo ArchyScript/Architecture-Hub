@@ -9,8 +9,8 @@ const DefaultLayout = () => import('@/components/Layout/DefaultLayout.vue')
 //
 const HomePage = () => import('@/views/HomePage/index.vue')
 const Competitions = () => import('@/views/Competitions/index.vue')
-const Explore = () => import('@/views/Explore/index.vue')
-const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
+// const Explore = () => import('@/views/Explore/index.vue')
+// const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
 const Notifications = () => import('@/views/Notifications/index.vue')
@@ -61,7 +61,7 @@ const routes: Array<RouteRecordRaw> = [
         component: HomePage,
       },
       {
-        path: '/profile/:_id',
+        path: '/profile/:username',
         name: 'Profile',
         component: Profile,
       },
@@ -70,16 +70,16 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Competitions',
         component: Competitions,
       },
-      {
-        path: '/explore',
-        name: 'Explore',
-        component: Explore,
-      },
-      {
-        path: '/news-update',
-        name: 'NewsUpdate',
-        component: NewsUpdate,
-      },
+      // {
+      //   path: '/explore',
+      //   name: 'Explore',
+      //   component: Explore,
+      // },
+      // {
+      //   path: '/news-update',
+      //   name: 'NewsUpdate',
+      //   component: NewsUpdate,
+      // },
       {
         path: '/notifications',
         name: 'Notifications',
@@ -92,7 +92,7 @@ const routes: Array<RouteRecordRaw> = [
       // },
 
       {
-        path: '/profile/:_id/edit',
+        path: '/profile/:username/edit',
         name: 'EditProfilePage',
         component: EditProfilePage,
       },

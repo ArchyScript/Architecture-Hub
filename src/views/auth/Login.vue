@@ -13,13 +13,11 @@
             </h1>
           </div>
 
-          <!-- <div class="flex items-center mt-4 mb-8">
+          <div class="flex items-center mt-4 mb-8">
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
-              :class="
-                otherLoginOptions ? ' ' : 'border-green-600   text-green-600'
-              "
-              @click="otherLoginOptions = false"
+              :class="login_with_email ? 'border-green-600 text-green-600' : ''"
+              @click="login_with_email = true"
             >
               Email
             </span>
@@ -27,13 +25,13 @@
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tr-lg rounded-br-lg border bordder-solid border-gray-300"
               :class="
-                otherLoginOptions ? 'border-green-600 text-green-600' : ''
+                login_with_email ? ' ' : 'border-green-600   text-green-600'
               "
-              @click="otherLoginOptions = true"
+              @click="login_with_email = false"
             >
-              Other Options
+              Username
             </span>
-          </div> -->
+          </div>
 
           <div
             v-if="message.type !== ''"
@@ -45,56 +43,40 @@
             {{ message.text }}
           </div>
 
-          <div v-if="!otherLoginOptions">
+          <div>
             <form @submit.prevent="logUserIn">
-              <div class="">
-                <div class="mb-6 hidden">
-                  Login with
-                  <span
-                    title="Login with Username and password"
-                    class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                    :class="!loginWithEmail ? 'border-green-600  ' : ''"
-                    @click="toggleLoginOption('username')"
-                  >
-                    Username
-                  </span>
-                  or
-                  <span
-                    title="Login with Email and password"
-                    class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
-                    :class="loginWithEmail ? 'border-green-600 ' : ''"
-                    @click="toggleLoginOption('email')"
-                  >
-                    Email
-                  </span>
-                </div>
+              <div class="p-1 mb-3" v-if="login_with_email">
+                <label
+                  class="block mb-1 mx-2 font-medium text-gray-600"
+                  for="email"
+                >
+                  Email
+                </label>
 
-                <div class="p-1 mb-3">
-                  <label
-                    class="block mb-1 mx-2 font-medium text-gray-600"
-                    for="email"
-                  >
-                    {{ loginWithEmail ? 'Email' : 'Username' }}
-                  </label>
+                <input
+                  type="text"
+                  class="block border rounded-xl w-full p-3 outline-none"
+                  name="email"
+                  placeholder="Email"
+                  v-model="payload.email"
+                />
+              </div>
 
-                  <input
-                    v-if="loginWithEmail"
-                    type="text"
-                    class="block border rounded-xl w-full p-3 outline-none"
-                    name="email"
-                    placeholder="Email"
-                    v-model="payload.email"
-                  />
+              <div class="p-1 mb-3" v-if="!login_with_email">
+                <label
+                  class="block mb-1 mx-2 font-medium text-gray-600"
+                  for="username"
+                >
+                  Username
+                </label>
 
-                  <input
-                    v-if="!loginWithEmail"
-                    type="text"
-                    class="block border w-full p-3 rounded-xl outline-none"
-                    name="username"
-                    placeholder="Username"
-                  />
-                  <!-- v-model="payload.username" -->
-                </div>
+                <input
+                  type="text"
+                  class="block border rounded-xl w-full p-3 outline-none"
+                  name="username"
+                  placeholder="Username"
+                  v-model="payload.username"
+                />
               </div>
 
               <div class="mb-3 p-1">
@@ -106,7 +88,7 @@
                 </label>
                 <div class="relative">
                   <input
-                    :type="passwordVisibility ? 'text' : 'password'"
+                    :type="password_visibility ? 'text' : 'password'"
                     class="block border w-full p-3 rounded-xl outline-none pr-14"
                     name="password"
                     placeholder="Password"
@@ -120,7 +102,7 @@
                     <i
                       class="fa text-4xl"
                       :class="
-                        passwordVisibility
+                        password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
                           : ' fa-eye  text-gray-800'
                       "
@@ -162,10 +144,6 @@
             </form>
           </div>
 
-          <div v-if="otherLoginOptions" class="my-12">
-            <OtherSigninOptions />
-          </div>
-
           <div class="text-grey-dark mt-6 text-center">
             Don't have an account?
 
@@ -180,79 +158,87 @@
 </template>
 
 <script lang="ts">
-import OtherSigninOptions from './OtherSigninOptions.vue'
 import { computed, ref } from 'vue'
-import { AuthApiService } from '@/controller/api/auth.api'
-import { useStore } from 'vuex'
-
 import router from '@/router'
+import { useStore } from 'vuex'
+import { AuthApiService } from '@/controller/api/auth.api'
 import { HandleTokenResponse } from '@/controller/utilities/axios_return_response'
-// import { useRouter } from 'vue-router'
 
 export default {
   name: 'Login',
-  components: {
-    OtherSigninOptions,
-  },
+
   setup() {
     const store = useStore()
     const is_loading = ref(false)
-    const otherLoginOptions = ref(false)
-    const loginWithEmail = ref(true)
-    const passwordVisibility = ref(true)
-    const payload = ref({ email: '', password: '' })
+    const login_with_email = ref(true)
+    const login_method = ref('')
+    const password_visibility = ref(true)
+    const payload = ref({ email: '', username: '', password: '' })
     const message = ref({ type: '', text: '' })
 
-    const toggleLoginOption = (event: any) => {
-      if (!event)
-        return (loginWithEmail.value = event === 'email' ? true : false)
-    }
-
     const togglePasswordVisibility = () => {
-      passwordVisibility.value = !passwordVisibility.value
+      password_visibility.value = !password_visibility.value
     }
 
     const updateResponseMessage = (type: string, text: string) => {
+      if (message.value.type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
+
+      return setTimeout(() => {
+        return updateResponseMessage('', '')
+      }, 5000)
     }
 
     const logUserIn = async (event: any) => {
       event.preventDefault()
       is_loading.value = true
       updateResponseMessage('', '')
+      login_method.value =
+        login_with_email.value === true ? 'email' : 'username'
 
-      const response = await AuthApiService.login(payload.value)
-      const { error, data, status } = response
+      let token = ''
+      let user_id = ''
+      const { email, username, password } = payload.value
+      const email_login_payload = { email, password }
+      const username_login_payload = { username, password }
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
-
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      if (!status || status === 400 || !data) {
-        updateResponseMessage(
-          'error',
-          'Sorry, an unknown error occurred... Check connection',
+      if (login_method.value === 'email') {
+        const response = await AuthApiService.loginWithEmail(
+          email_login_payload,
         )
+        const { data, status, error } = response
 
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
+        if (error) return updateResponseMessage('error', error)
+
+        if (!status || status === 400 || !data)
+          return updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+        token = data.token
+        user_id = await HandleTokenResponse(token)
       }
 
-      updateResponseMessage(
-        'success',
-        'Login token successfully generated, please wait...',
-      )
+      if (login_method.value === 'username') {
+        const response = await AuthApiService.loginWithUsername(
+          username_login_payload,
+        )
+        const { data, status, error } = response
 
-      const token = data.token
-      const user_id = await HandleTokenResponse(token)
+        if (error) return updateResponseMessage('error', error)
+
+        if (!status || status === 400 || !data)
+          return updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+        token = data.token
+        user_id = await HandleTokenResponse(token)
+      }
 
       updateResponseMessage(
         'success',
@@ -265,18 +251,15 @@ export default {
       is_loading.value = false
       updateResponseMessage('', '')
 
-      // return router.push('/auth/login')
       return router.push('/')
     }
 
     return {
-      otherLoginOptions,
-      loginWithEmail,
-      passwordVisibility,
+      login_with_email,
+      password_visibility,
       is_loading,
       message,
       payload,
-      toggleLoginOption,
       togglePasswordVisibility,
       logUserIn,
     }

@@ -2,7 +2,6 @@
   <section class="flex flex-col top-0 mb-6 inset-x-0 pb-4">
     <div class="h-60 w-full">
       <span class="h-full w-full block bg-blue-400 border"></span>
-      <!-- <img class="w-full h-60 object-fill border" src="@/assets/script.jpg" /> -->
     </div>
 
     <section class="px-4">
@@ -13,7 +12,7 @@
           <img
             class="w-full h-full rounded-full object-fill"
             :src="
-              user.profile_picture
+              user.profile_picture.avatar !== ''
                 ? user.profile_picture.avatar
                 : '@/assets/script.jpg'
             "
@@ -33,15 +32,15 @@
 
       <div class="flex-1 items-center px-2 mt-2 mb-2">
         <h4 class="text-2xl block font-bold text-gray-600">
-          {{ user.bio.display_name ? user.bio.display_name : '...' }}
+          {{ user.bio.display_name ? user.bio.display_name : user.username }}
         </h4>
         <span class="text-base block cursor-pointer text-gray-500 truncate">
-          @{{ user.auth_user.username }}
+          @{{ user.username }}
         </span>
       </div>
 
       <p class="text-base font-medium my-1 px-2 text-gray-500">
-        {{ user.bio.about_me }}
+        {{ user.bio.description }}
       </p>
 
       <p class="text-base mt-2 px-2">
@@ -68,21 +67,41 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import { fetchSingleUserByUsername } from '@/controller/api/users.api'
+// import { UserSchema } from '@/controller/typings/index'
 
 export default {
   name: 'ProfileHeader',
-  setup() {
+  // props: {
+  //   username: {
+  //     type: String,
+  //     default: '',
+  //   },
+  // },
+  setup(props: any) {
     const store = useStore()
     const route = useRoute()
     const user_profile_id: any = ref('')
-    const user = computed(() => {
-      return store.state.users.user
-    })
-    onBeforeMount(() => {
+    const user = computed(() => store.state.users.user)
+    // const userD = ref<UserSchema>()
+
+    onBeforeMount(async () => {
+      const { username } = route.params
+
+      const data = await getUserData(username)
+
       const { _id } = route.params
 
       user_profile_id.value = _id
     })
+
+    const getUserData = async (username: string | string[]) => {
+      const response = await fetchSingleUserByUsername(username)
+
+      const { data, status, error } = response
+
+      return data
+    }
 
     return { user, user_profile_id }
   },

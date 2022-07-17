@@ -9,7 +9,7 @@
         <img class="w-20 h-20 rounded-full border" src="@/assets/script.jpg" />
       </div>
 
-      <form class="w-full flex-1" @submit="commentOnPost">
+      <form class="w-full flex-1" @submit="newComment">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
@@ -23,7 +23,7 @@
             class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-2xl"
             rows="4"
             placeholder="Drop your comment..."
-            v-model="comment"
+            v-model="payload.comment"
           ></textarea>
         </div>
 
@@ -68,8 +68,8 @@
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
-import { createNewPost } from '@/controller/api/posts.api'
 import { useStore } from 'vuex'
+import { commentOnPost } from '@/controller/api/reactions.api'
 
 export default {
   name: 'CreatePostModal',
@@ -77,31 +77,31 @@ export default {
   setup() {
     const store = useStore()
     const post_id = ref('')
-    const comment = ref('')
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const scrollShadowBoolean = ref(true)
     const side_nav_toggler_boolean = ref(true)
+    const payload = ref({ comment: '' })
     const post_to_comment_on_id = computed(
       () => store.state.component_handler.post_to_comment_on_id,
     )
-
-    comment.value = post_to_comment_on_id.value
-    console.log(post_to_comment_on_id.value)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
       message.value.text = text
     }
 
-    const commentOnPost = async (event: any) => {
+    const newComment = async (event: any) => {
       event.preventDefault()
       is_loading.value = true
-
-      const user_id = store.state.users.user.user_id
       updateResponseMessage('', '')
 
-      const response = await createNewPost(user_id, comment.value)
+      const params = {
+        commenter_id: store.state.users.user._id,
+        post_id: post_to_comment_on_id.value,
+      }
+
+      const response = await commentOnPost(params, payload.value)
       const { error, data, status } = response
 
       if (error) {
@@ -113,7 +113,10 @@ export default {
         }, 5000)
       }
 
-      //  return context.emit('commentOnPost')
+      updateResponseMessage('success', data)
+
+      store.dispatch('component_handler/closeAllModals')
+      // return router.push('/')
     }
 
     // close create post modal
@@ -138,7 +141,7 @@ export default {
     //   }
     // }
 
-    // const commentOnPost = (post_id: any) => {
+    // const newComment = (post_id: any) => {
     //   console.log(post_id)
     // }
 
@@ -156,13 +159,13 @@ export default {
     return {
       post_id,
       // likePost,
-      // commentOnPost,
+      // newComment,
       scrollShadowBoolean,
       is_loading,
-      comment,
+      payload,
       side_nav_toggler_boolean,
       message,
-      commentOnPost,
+      newComment,
       test,
     }
   },
