@@ -13,8 +13,6 @@ export const fetchAllPosts = async () => {
       .get(`/posts`)
       .then(async (response) => response)
 
-    console.log(response)
-
     return HandleAxiosResponse(response)
   } catch (error) {
     return HandleAxiosError(error)
@@ -22,10 +20,10 @@ export const fetchAllPosts = async () => {
 }
 
 //
-export const fetchSinglePost = async (post_id: any) => {
+export const fetchSinglePost = async (_id: any) => {
   try {
     const response = await default_axios_instance
-      .get(`/posts/${post_id}`)
+      .get(`/posts/${_id}`)
       .then(async (response) => response)
 
     return HandleAxiosResponse(response)

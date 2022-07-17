@@ -15,7 +15,7 @@
 
 <script>
 import { ref } from 'vue'
-import MainPageTopBarVue from '@/components/Utilities/MainPageTopBar.vue'
+import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import CompetitionPostVue from '@/components/CompetitionPost.vue'
 
 export default {

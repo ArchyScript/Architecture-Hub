@@ -1,8 +1,8 @@
 <template>
   <section
-    class="flex inset-x-0 border-b p-4 hover:bg-archyhub-semi-light hover:bg-opacity-10"
+    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
   >
-    <div class="flex -col w-full">
+    <div class="flex -col w-full p-2 sm:p-3 xl:p-4 pb-2">
       <div class="flex-shrink-0 mr-1">
         <router-link :to="`/profile/${post_info.username}`">
           <img
@@ -17,7 +17,7 @@
           <div class="flex-1 flex-col truncate">
             <p class="items-center flex sm:space-x-2">
               <span
-                class="text-base md:text-xl font-semibold text-gray-600 truncate"
+                class="text-sm md:text-base font-semibold text-gray-600 truncate"
               >
                 {{
                   post_info.display_name
@@ -27,7 +27,7 @@
               </span>
 
               <span
-                class="text-base md:text-lg font-normal text-gray-500 truncate"
+                class="text-sm md:text-base font-normal text-gray-500 truncate"
               >
                 @{{ post_info.username || '...' }}
               </span>
@@ -47,22 +47,24 @@
           </div>
         </div>
 
-        <div class="px-1 sm:px-2 mt-2" v-if="eachPost.post_image.avatar !== ''">
-          <img
-            class="w-full h-56 object-fill border rounded-xl"
-            :src="eachPost.post_image.avatar"
-          />
-        </div>
-
         <div class="px-1 sm:px-2 mt-2">
-          <p class="text-sm sm:text-base font-normal text-gray-500">
-            {{ eachPost.content }}
-          </p>
-        </div>
+          <!-- @click="viewSinglePost(reactions.post_id)" -->
+          <router-link :to="`/post/${reactions.post_id}`">
+            <p class="text-sm xl:text-base font-normal text-gray-500">
+              {{ eachPost.content }}
+            </p>
 
-        <ReactionsVue :reactions="reactions" />
+            <img
+              v-if="eachPost.post_image.avatar !== ''"
+              class="w-full h-52 mt-2 sm:h-56 lg:h-64 object-fill border rounded-xl"
+              :src="eachPost.post_image.avatar"
+            />
+          </router-link>
+        </div>
       </article>
     </div>
+
+    <ReactionsVue :reactions="reactions" />
   </section>
 </template>
 
@@ -74,9 +76,7 @@ import { PostSchema } from '@/controller/typings/index'
 import { formatDateAndTime } from '@/controller/utilities/index'
 import router from '@/router'
 import { fetchSingleUserById } from '@/controller/api/users.api'
-
 import { default_images } from '@/controller/utils/index'
-// import default_image from '@/assets/default_image.png'
 
 export default {
   name: 'PostContent',
@@ -149,6 +149,10 @@ export default {
       return
     }
 
+    const viewSinglePost = (post_id: any) => {
+      router.push(`/post/${post_id}`)
+    }
+
     onBeforeMount(async () => {
       //
       await getPostDetails()
@@ -158,6 +162,7 @@ export default {
       reactions,
       viewUserProfile,
       getPostDetails,
+      viewSinglePost,
     }
   },
 }

@@ -24,7 +24,7 @@
             />
           </svg>
         </span>
-        <h4 class="text-xl sm:text-2xl px-2 font-bold text-gray-700">
+        <h4 class="text-xl px-2 font-bold text-gray-700">
           {{ props.page_title }}
         </h4>
       </div>

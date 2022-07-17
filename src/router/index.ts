@@ -14,7 +14,12 @@ const Competitions = () => import('@/views/Competitions/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
 const Notifications = () => import('@/views/Notifications/index.vue')
-// const More = () => import('@/views/More/index.vue')
+
+//
+const PostDetails = () => import('@/views/PostDetails/index.vue')
+// const SinglePostDetails = () =>
+//   import('@/views/Profile copy/SinglePostDetails.vue')
+
 // const QuickSearch = () => import('@/components/Layouts/RightSideNav/index.vue')
 
 // User Authentication
@@ -96,11 +101,23 @@ const routes: Array<RouteRecordRaw> = [
         name: 'EditProfilePage',
         component: EditProfilePage,
       },
-      // {
-      //   path: '/search',
-      //   name: 'QuickSearch',
-      //   component: QuickSearch,
-      // },
+      {
+        path: '/post/:_id',
+        name: 'PostDetails',
+        component: PostDetails,
+        children: [
+          // {
+          //   path: '/view/post/:_id',
+          //   name: 'SinglePostDetails',
+          //   component: SinglePostDetails,
+          // },
+          // {
+          //   path: '/profile/:username/edit',
+          //   name: 'EditProfilePage',
+          //   component: EditProfilePage,
+          // },
+        ],
+      },
     ],
   },
 ]

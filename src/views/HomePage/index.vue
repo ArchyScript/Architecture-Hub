@@ -3,7 +3,7 @@
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
-      <!-- <div class="" v-if="allPosts.length < 1">
+      <div class="" v-if="allPosts.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No post found' }}</span>
         </div>
@@ -35,10 +35,10 @@
             </button>
           </form>
         </div>
-      </div> -->
+      </div>
 
-      <!-- <div v-else> -->
-      <div>
+      <div v-else>
+        <!-- <div> -->
         <div class="hidden text-center mb-8">
           <form @submit.prevent="getAllPosts">
             <button
@@ -75,16 +75,6 @@
       <div class="hidden" v-for="x in 20" :key="x">
         <PostContentTestVue :eachPost="{}" />
       </div>
-      <!-- <CreatePostModalVue /> -->
-
-      <!-- <allPostsContentVue />
-      <PostContentVue />
-      <PostContentWithTwoPicturesVue />
-      <PostContentVue />
-      <PostContentWithOnePictureVue />
-
-      <PostContentWithFourPicturesVue />
-      <PostContentVue /> -->
     </div>
   </div>
 </template>
@@ -92,28 +82,17 @@
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
-import MainPageTopBarVue from '@/components/Utilities/MainPageTopBar.vue'
-// import CreatePostVue from '@/views/HomePage/CreatePost.vue'
+import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
-// import PostContentWithOnePictureVue from '@/components/Posts/PostContentWithOnePicture.vue'
-// import PostContentWithFourPicturesVue from '@/components/Posts/PostContentWithFourPictures.vue'
-// import PostContentWithTwoPicturesVue from '@/components/Posts/PostContentWithTwoPictures.vue'
 import { PostSchema } from '@/controller/typings'
 import { fetchAllPosts } from '@/controller/api/posts.api'
 import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
-// import CreatePostModalVue from '@/components/Modals/CreatePostModal.vue'
 
 export default {
   name: 'HomePage',
   components: {
-    // CreatePostVue,
     PostContentVue,
-    // CreatePostModalVue,
-    // PostContentWithOnePictureVue,
     PostContentTestVue,
-
-    // PostContentWithTwoPicturesVue,
-    // PostContentWithFourPicturesVue,
     MainPageTopBarVue,
   },
   setup() {
