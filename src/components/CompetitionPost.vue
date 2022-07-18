@@ -173,6 +173,7 @@ export default {
       if (error) return
       if (!data) return
       if (status === 400) return
+
       console.log(data)
 
       const {
@@ -202,7 +203,7 @@ export default {
 
     onBeforeMount(async () => {
       //
-      // await getPostDetails()
+      await getPostDetails()
     })
     return {
       competition_info,
