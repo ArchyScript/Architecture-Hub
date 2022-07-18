@@ -34,9 +34,12 @@
 <script lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import type { PropType } from 'vue'
-import { formatDateAndTime } from '@/controller/utilities/index'
+import {
+  formatDateAndTime,
+  getDisplayProfilePicture,
+} from '@/controller/utilities/index'
 import { fetchSingleUserById } from '@/controller/api/users.api'
-import { default_images } from '@/controller/utils/index'
+// import { default_images } from '@/controller/utils/index'
 import router from '@/router'
 
 type CommentSchema =
@@ -101,21 +104,17 @@ export default {
         profile_picture: { avatar },
       } = data
 
+      const profile_picture_avatar: any = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
       post_info.value.display_name = display_name
       post_info.value.username = username
       post_info.value.poster_id = poster_id
       post_info.value.time = formattedTime
       post_info.value.date = formattedDate
-      if (avatar !== '') {
-        post_info.value.profile_picture_avatar = avatar
-      } else {
-        if (gender === 'male') {
-          post_info.value.profile_picture_avatar = default_images.male
-        }
-        if (gender === 'female') {
-          post_info.value.profile_picture_avatar = default_images.female
-        } else post_info.value.profile_picture_avatar = default_images.random
-      }
+      post_info.value.profile_picture_avatar = profile_picture_avatar
 
       return
     }

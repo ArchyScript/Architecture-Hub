@@ -94,9 +94,12 @@
 import { ref, onBeforeMount, Comment } from 'vue'
 import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
-import { formatDateAndTime } from '@/controller/utilities/index'
+import {
+  formatDateAndTime,
+  getDisplayProfilePicture,
+} from '@/controller/utilities/index'
 import router from '@/router'
-import { default_images } from '@/controller/utils/index'
+// import { default_images } from '@/controller/utils/index'
 import { useRoute } from 'vue-router'
 import { fetchSinglePost } from '@/controller/api/posts.api'
 import { singleCommentOnPost } from '@/controller/api/reactions.api'
@@ -179,21 +182,18 @@ export default {
           profile_picture: { avatar },
         } = data
 
+        const poster_picture: any = await getDisplayProfilePicture(
+          avatar,
+          gender,
+        )
         post_info.value.display_name = display_name
         post_info.value.username = username
-
-        if (avatar !== '') {
-          post_info.value.poster_picture = avatar
-        } else {
-          if (gender === 'male') {
-            post_info.value.poster_picture = default_images.male
-          }
-          if (gender === 'female') {
-            post_info.value.poster_picture = default_images.female
-          } else post_info.value.poster_picture = default_images.random
-        }
+        post_info.value.poster_picture = poster_picture
       }
       getPostInfo()
+
+      //
+      if (!data.comments || data.comments === undefined) return
 
       // Handle comment component data
       if (data.comments <= 0) return (does_have_comment.value = false)
@@ -212,22 +212,16 @@ export default {
         )
 
         const result = await fetchSingleUserById(data.commenter_id)
-
         const commenter_info = result.data
 
-        let avatar = ''
-        if (commenter_info.profile_picture.avatar !== '') {
-          avatar = commenter_info.profile_picture.avatar
-        } else {
-          if (commenter_info.bio.gender === 'male') avatar = default_images.male
-          if (commenter_info.bio.gender === 'female')
-            avatar = default_images.female
-          else avatar = default_images.random
-        }
+        const commenter_image: any = await getDisplayProfilePicture(
+          commenter_info.profile_picture.avatar,
+          commenter_info.bio.gender,
+        )
 
         const post_comment_info = {
           comment: data.comment,
-          commenter_image: avatar,
+          commenter_image,
           commneter_username: commenter_info.username,
           date: formattedDate,
           time: formattedTime,

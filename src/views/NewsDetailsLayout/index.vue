@@ -3,10 +3,6 @@
     <TopBarVue />
 
     <router-view></router-view>
-
-    <div class="">
-      <SinglePostDetailsVue />
-    </div>
   </div>
 </template>
 
@@ -14,13 +10,11 @@
 import { onBeforeMount, ref } from 'vue'
 import TopBarVue from './TopBar.vue'
 import { useRoute } from 'vue-router'
-import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
 
 export default {
   name: 'Profile',
   components: {
     TopBarVue,
-    SinglePostDetailsVue,
   },
   setup() {
     const test_ref = ref('testing')

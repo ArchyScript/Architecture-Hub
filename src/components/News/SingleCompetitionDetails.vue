@@ -2,18 +2,18 @@
   <section
     class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20 pb-16"
   >
-    <div class="" v-if="post_info.creator_username === ''">
+    <div class="" v-if="competition_info.creator_username === ''">
       <AnimatedSingleContentVue />
     </div>
-    dbd jek;emleln,
-    <div class="" v-if="post_info.creator_username !== ''">
+
+    <div class="" v-if="competition_info.creator_username !== ''">
       <div class="flex-col w-full p-2 sm:p-3 xl:p-4 pb-2">
         <div class="flex justify-center items-center">
           <span class="flex-shrink-0 mr-3">
-            <router-link :to="`/profile/${post_info.creator_username}`">
+            <router-link :to="`/profile/${competition_info.creator_username}`">
               <img
                 class="w-14 h-14 sm:h-16 sm:w-16 rounded-full border cursor-pointer"
-                :src="post_info.poster_picture"
+                :src="competition_info.creator_image"
               />
             </router-link>
           </span>
@@ -24,44 +24,85 @@
                 class="text-base md:text-lg font-semibold text-gray-600 truncate"
               >
                 {{
-                  post_info.link ? post_info.link : post_info.creator_username
+                  competition_info.display_name
+                    ? competition_info.display_name
+                    : competition_info.creator_username
                 }}
               </span>
 
               <span
                 class="text-sm md:text-base font-normal text-gray-500 truncate"
               >
-                @{{ post_info.creator_username || '...' }}
+                @{{ competition_info.creator_username || '...' }}
               </span>
             </p>
 
             <p
               class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
-              v-if="post_info.date || post_info.time"
+              v-if="competition_info.date || competition_info.time"
             >
-              <span class="">{{ post_info.date }}</span>
+              <span class="">{{ competition_info.date }}</span>
 
               <span class="">
                 <strong class="font-semibold">@</strong>
-                {{ post_info.time }}
+                {{ competition_info.time }}
               </span>
             </p>
           </div>
         </div>
 
-        <article class="w-full flex-1 mt-4">
-          <div class="px-1 sm:px-2 mt-2">
-            <p
-              class="text-base sm:text-lg xl:text-xl font-normal text-gray-500"
-            >
-              {{ post_info.content }}
+        <article class="w-full flex-1 px-1 sm:px-2 mt-6 md:mt-8">
+          <div class="mt-2 flex-col space-y-1 sm:space-y-2">
+            <span class="text-lg block sm:text-xl font-semibold text-gray-500">
+              {{ competition_info.title }}
+            </span>
+
+            <span class="block pb-4 h-52 sm:h-56 lg:h-72">
+              <img
+                v-if="competition_info.competition_image !== ''"
+                class="w-full h-full object-fill border rounded-xl"
+                :src="competition_info.competition_image"
+              />
+            </span>
+
+            <p class="text-sm flex space-x-2 sm:text-base text-gray-500">
+              <span class="font-medium">Host :</span>
+              <span class="font-normal flex-wrap break-all">
+                {{ competition_info.host }}
+              </span>
             </p>
 
-            <img
-              v-if="post_info.competition_image !== ''"
-              class="w-full h-52 mt-4 sm:h-56 lg:h-72 object-fill border rounded-xl"
-              :src="post_info.competition_image"
-            />
+            <p class="text-sm flex space-x-2 sm:text-base text-gray-500">
+              <span class="font-medium">Title:</span>
+              <span class="font-normal flex-wrap break-all">
+                {{ competition_info.title }}
+              </span>
+            </p>
+
+            <p class="text-sm flex space-x-2 sm:text-base text-gray-500">
+              <span class="font-medium">Description:</span>
+              <span class="font-normal flex-wrap break-all">
+                {{ competition_info.description }}
+              </span>
+            </p>
+
+            <p class="text-sm flex space-x-2 sm:text-base text-gray-500">
+              <span class="font-medium">Content:</span>
+              <span class="font-normal flex-wrap break-all">
+                {{ competition_info.content }}
+              </span>
+            </p>
+
+            <p class="text-sm flex space-x-2 sm:text-base text-gray-500">
+              <span class="font-medium">Apply Now:</span>
+              <a
+                class="font-normal flex-wrap break-all"
+                target="_blank"
+                :href="competition_info.link"
+              >
+                {{ competition_info.link }}
+              </a>
+            </p>
           </div>
         </article>
       </div>
@@ -70,7 +111,7 @@
         <ReactionsVue :reactions="reactions" />
       </div>
 
-      <div class="mt-6">
+      <div class="mt-6 hidden">
         <div class="" v-if="!does_have_comment">
           <span class="block text-center">No comment found</span>
         </div>
@@ -78,7 +119,7 @@
         <div
           class=""
           v-else
-          v-for="post_comment in post_comments"
+          v-for="post_comment in competition_comments"
           :key="post_comment.creator_username"
         >
           <CommentVue :eachPostComment="post_comment" />
@@ -92,11 +133,13 @@
 import { ref, onBeforeMount, Comment } from 'vue'
 import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
-import { formatDateAndTime } from '@/controller/utilities/index'
+import {
+  formatDateAndTime,
+  getDisplayProfilePicture,
+} from '@/controller/utilities/index'
 import router from '@/router'
-import { default_images } from '@/controller/utils/index'
+// import { default_images } from '@/controller/utils/index'
 import { useRoute } from 'vue-router'
-import { fetchSinglePost } from '@/controller/api/posts.api'
 import { singleCommentOnPost } from '@/controller/api/reactions.api'
 import CommentVue from '@/components/Comments/Comment.vue'
 import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
@@ -120,20 +163,21 @@ export default {
   setup() {
     const route = useRoute()
     const does_have_comment = ref(false)
-    const post_info = ref({
+    const competition_info = ref({
       link: '',
-      poster_picture: '',
+      creator_image: '',
       competition_image: '',
       content: '',
       title: '',
       host: '',
       description: '',
       creator_username: '',
+      display_name: '',
       time: '',
       date: '',
     })
 
-    const post_comments = ref<CommentSchema[]>([])
+    const competition_comments = ref<CommentSchema[]>([])
 
     const reactions = ref({
       no_of_likes: 0,
@@ -149,56 +193,55 @@ export default {
 
       console.log(data)
 
-      // const getPostInfo = async () => {
-      //   const {
-      //     _id,
-      //     poster_id,
-      //     createdAt,
-      //     comments,
-      //     likes,
-      //     content,
-      //     competition_image,
-      //   } = response.data
-      //   const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+      const {
+        creator_id,
+        title,
+        link,
+        host,
+        createdAt,
+        description,
+        competition_image,
+        content,
+      } = data
 
-      //   //
-      //   reactions.value.no_of_comments = comments.length
-      //   reactions.value.no_of_likes = likes.length
-      //   reactions.value.post_id = _id
+      const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      //   //
-      //   post_info.value.time = formattedTime
-      //   post_info.value.date = formattedDate
-      //   post_info.value.competition_image = competition_image.avatar
-      //   post_info.value.content = content
-      //   //
-      //   const result = await fetchSingleUserById(poster_id)
-      //   const { error, data, status } = result
+      //
+      competition_info.value.title = title
+      competition_info.value.content = content
+      competition_info.value.link = link
+      competition_info.value.host = host
+      competition_info.value.time = formattedTime
+      competition_info.value.date = formattedDate
+      competition_info.value.description = description
+      competition_info.value.competition_image = competition_image.avatar
 
-      //   if (error || status === 400 || !data || typeof data === 'string') return
+      const getCreatorsInfo = async () => {
+        const result = await fetchSingleUserById(creator_id)
+        const { error, data, status } = result
 
-      //   const {
-      //     creator_username,
-      //     bio: { link, gender },
-      //     profile_picture: { avatar },
-      //   } = data
+        if (error || status === 400 || !data || typeof data === 'string') return
 
-      //   post_info.value.link = link
-      //   post_info.value.creator_username = creator_username
+        const {
+          username,
+          bio: { gender, display_name },
+          profile_picture: { avatar },
+        } = data
 
-      //   if (avatar !== '') {
-      //     post_info.value.poster_picture = avatar
-      //   } else {
-      //     if (gender === 'male') {
-      //       post_info.value.poster_picture = default_images.male
-      //     }
-      //     if (gender === 'female') {
-      //       post_info.value.poster_picture = default_images.female
-      //     } else post_info.value.poster_picture = default_images.random
-      //   }
-      // }
-      // getPostInfo()
+        // get profile image
+        const creator_image: any = await getDisplayProfilePicture(
+          avatar,
+          gender,
+        )
 
+        competition_info.value.creator_image = creator_image
+        competition_info.value.creator_username = username
+        competition_info.value.display_name = display_name
+      }
+      getCreatorsInfo()
+
+      //
+      if (!data.comments || data.comments === undefined) return
       // Handle comment component data
       // if (data.comments <= 0) return (does_have_comment.value = false)
 
@@ -219,25 +262,20 @@ export default {
 
       //   const commenter_info = result.data
 
-      //   let avatar = ''
-      //   if (commenter_info.profile_picture.avatar !== '') {
-      //     avatar = commenter_info.profile_picture.avatar
-      //   } else {
-      //     if (commenter_info.bio.gender === 'male') avatar = default_images.male
-      //     if (commenter_info.bio.gender === 'female')
-      //       avatar = default_images.female
-      //     else avatar = default_images.random
-      //   }
+      // const commenter_image: any = await getDisplayProfilePicture(
+      //   commenter_info.profile_picture.avatar,
+      //   commenter_info.bio.gender,
+      // )
 
       //   const post_comment_info = {
       //     comment: data.comment,
-      //     commenter_image: avatar,
+      //     commenter_image,
       //     commneter_username: commenter_info.creator_username,
       //     date: formattedDate,
       //     time: formattedTime,
       //   }
 
-      //   post_comments.value.push(post_comment_info)
+      //   competition_comments.value.push(post_comment_info)
       // })
 
       return
@@ -248,8 +286,8 @@ export default {
       await getPostDetails(_id)
     })
     return {
-      post_info,
-      post_comments,
+      competition_info,
+      competition_comments,
       reactions,
       does_have_comment,
       getPostDetails,

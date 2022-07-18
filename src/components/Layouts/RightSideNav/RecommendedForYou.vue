@@ -71,8 +71,9 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import { fetchAllUsers } from '@/controller/api/users.api'
-import { default_images } from '@/controller/utils'
+// import { default_images } from '@/controller/utils'
 import AnimatedRecommendedVue from '@/components/Animation/AnimatedRecommended.vue'
+import { getDisplayProfilePicture } from '@/controller/utilities'
 
 type RecommendedSchema =
   | {
@@ -99,36 +100,33 @@ export default {
         return user_2.followers.length - user_1.followers.length
       })
 
-      sortedByMostFollowers.forEach((recommended_user: any, index: number) => {
-        if (index <= 2) {
-          const {
-            _id,
-            bio: { display_name },
-            username,
-            profile_picture: { avatar },
-            bio: { gender },
-          } = recommended_user
+      sortedByMostFollowers.forEach(
+        async (recommended_user: any, index: number) => {
+          if (index <= 2) {
+            const {
+              _id,
+              bio: { display_name },
+              username,
+              profile_picture: { avatar },
+              bio: { gender },
+            } = recommended_user
 
-          let profile_image = ''
+            const profile_image: any = await getDisplayProfilePicture(
+              avatar,
+              gender,
+            )
 
-          if (avatar !== '') {
-            profile_image = avatar
-          } else {
-            if (gender === 'male') profile_image = default_images.male
-            if (gender === 'female') profile_image = default_images.female
-            else profile_image = default_images.random
+            const people_to_follow = {
+              _id,
+              display_name,
+              username,
+              profile_image,
+            }
+
+            recommended_people_to_follow.value.push(people_to_follow)
           }
-
-          const people_to_follow = {
-            _id,
-            display_name,
-            username,
-            profile_image,
-          }
-
-          recommended_people_to_follow.value.push(people_to_follow)
-        }
-      })
+        },
+      )
     }
 
     const followRecommended = (user_id: string) => {
