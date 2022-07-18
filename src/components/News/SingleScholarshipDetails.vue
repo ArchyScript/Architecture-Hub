@@ -2,18 +2,18 @@
   <section
     class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20 pb-16"
   >
-    <div class="" v-if="competition_info.creator_username === ''">
+    <div class="" v-if="scholarship_info.creator_username === ''">
       <AnimatedSingleContentVue />
     </div>
 
-    <div class="" v-if="competition_info.creator_username !== ''">
+    <div class="" v-if="scholarship_info.creator_username !== ''">
       <div class="flex-col w-full p-2 sm:p-3 xl:p-4 pb-2">
         <div class="flex justify-center items-center">
           <span class="flex-shrink-0 mr-3">
-            <router-link :to="`/profile/${competition_info.creator_username}`">
+            <router-link :to="`/profile/${scholarship_info.creator_username}`">
               <img
                 class="w-14 h-14 sm:h-16 sm:w-16 rounded-full border cursor-pointer"
-                :src="competition_info.creator_image"
+                :src="scholarship_info.creator_image"
               />
             </router-link>
           </span>
@@ -24,28 +24,28 @@
                 class="text-base md:text-lg font-semibold text-gray-600 truncate"
               >
                 {{
-                  competition_info.display_name
-                    ? competition_info.display_name
-                    : competition_info.creator_username
+                  scholarship_info.display_name
+                    ? scholarship_info.display_name
+                    : scholarship_info.creator_username
                 }}
               </span>
 
               <span
                 class="text-sm md:text-base font-normal text-gray-500 truncate"
               >
-                @{{ competition_info.creator_username || '...' }}
+                @{{ scholarship_info.creator_username || '...' }}
               </span>
             </p>
 
             <p
               class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
-              v-if="competition_info.date || competition_info.time"
+              v-if="scholarship_info.date || scholarship_info.time"
             >
-              <span class="">{{ competition_info.date }}</span>
+              <span class="">{{ scholarship_info.date }}</span>
 
               <span class="">
                 <strong class="font-semibold">@</strong>
-                {{ competition_info.time }}
+                {{ scholarship_info.time }}
               </span>
             </p>
           </div>
@@ -54,53 +54,53 @@
         <article class="w-full flex-1 px-1 sm:px-2 mt-6 md:mt-8">
           <div class="mt-2 flex-col space-y-1 sm:space-y-2">
             <span class="text-lg block sm:text-xl font-semibold text-gray-600">
-              {{ competition_info.title }}
+              {{ scholarship_info.title }}
             </span>
 
-            <span class="block pb-4 h-52 sm:h-56 lg:h-72 xl:h-96">
+            <span class="block pb-4 h-52 sm:h-56 lg:h-72">
               <img
-                v-if="competition_info.competition_image !== ''"
+                v-if="scholarship_info.scholarship_image !== ''"
                 class="w-full h-full object-fill border rounded-xl"
-                :src="competition_info.competition_image"
+                :src="scholarship_info.scholarship_image"
               />
             </span>
 
             <p class="text-sm space-x-2 sm:text-base text-gray-500">
               <span class="font-medium mr-1">Host:</span>
-              <span class="font-light flex-wrap break-all">
-                {{ competition_info.host }}
+              <span class="font-normal flex-wrap break-all">
+                {{ scholarship_info.host }}
               </span>
             </p>
 
             <p class="text-sm space-x-2 sm:text-base text-gray-500">
               <span class="font-medium">Title:</span>
-              <span class="font-light flex-wrap break-all">
-                {{ competition_info.title }}
+              <span class="font-normal flex-wrap break-all">
+                {{ scholarship_info.title }}
               </span>
             </p>
 
             <p class="text-sm space-x-2 sm:text-base text-gray-500">
               <span class="font-medium">Description:</span>
-              <span class="font-light flex-wrap break-all">
-                {{ competition_info.description }}
+              <span class="font-normal flex-wrap break-all">
+                {{ scholarship_info.description }}
               </span>
             </p>
 
             <p class="text-sm space-x-2 sm:text-base text-gray-500">
               <span class="font-medium">Content:</span>
-              <span class="font-light flex-wrap break-all">
-                {{ competition_info.content }}
+              <span class="font-normal flex-wrap break-all">
+                {{ scholarship_info.content }}
               </span>
             </p>
 
             <p class="text-sm space-x-2 sm:text-base text-gray-500">
               <span class="font-medium">Link:</span>
               <a
-                class="font-light flex-wrap break-all hover:underline"
+                class="font-normal flex-wrap break-all hover:underline"
                 target="_blank"
-                :href="competition_info.link"
+                :href="scholarship_info.link"
               >
-                {{ competition_info.link }}
+                {{ scholarship_info.link }}
               </a>
             </p>
           </div>
@@ -119,7 +119,7 @@
         <div
           class=""
           v-else
-          v-for="post_comment in competition_comments"
+          v-for="post_comment in scholarship_comments"
           :key="post_comment.creator_username"
         >
           <CommentVue :eachPostComment="post_comment" />
@@ -145,6 +145,7 @@ import CommentVue from '@/components/Comments/Comment.vue'
 import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import { fetchSingleUserById } from '@/controller/api/users.api'
 import { fetchSingleCompetition } from '@/controller/api/competitions'
+import { fetchSingleScholarship } from '@/controller/api/scholarships'
 
 type CommentSchema =
   | {
@@ -163,10 +164,10 @@ export default {
   setup() {
     const route = useRoute()
     const does_have_comment = ref(false)
-    const competition_info = ref({
+    const scholarship_info = ref({
       link: '',
       creator_image: '',
-      competition_image: '',
+      scholarship_image: '',
       content: '',
       title: '',
       host: '',
@@ -177,7 +178,7 @@ export default {
       date: '',
     })
 
-    const competition_comments = ref<CommentSchema[]>([])
+    const scholarship_comments = ref<CommentSchema[]>([])
 
     const reactions = ref({
       no_of_likes: 0,
@@ -186,7 +187,7 @@ export default {
     })
 
     const getPostDetails = async (_id: any) => {
-      const response = await fetchSingleCompetition(_id)
+      const response = await fetchSingleScholarship(_id)
       const { error, data, status } = response
 
       if (error || status === 400 || !data || typeof data === 'string') return
@@ -200,21 +201,21 @@ export default {
         host,
         createdAt,
         description,
-        competition_image,
+        scholarship_image,
         content,
       } = data
 
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
       //
-      competition_info.value.title = title
-      competition_info.value.content = content
-      competition_info.value.link = link
-      competition_info.value.host = host
-      competition_info.value.time = formattedTime
-      competition_info.value.date = formattedDate
-      competition_info.value.description = description
-      competition_info.value.competition_image = competition_image.avatar
+      scholarship_info.value.title = title
+      scholarship_info.value.content = content
+      scholarship_info.value.link = link
+      scholarship_info.value.host = host
+      scholarship_info.value.time = formattedTime
+      scholarship_info.value.date = formattedDate
+      scholarship_info.value.description = description
+      scholarship_info.value.scholarship_image = scholarship_image.avatar
 
       const getCreatorsInfo = async () => {
         const result = await fetchSingleUserById(creator_id)
@@ -234,9 +235,9 @@ export default {
           gender,
         )
 
-        competition_info.value.creator_image = creator_image
-        competition_info.value.creator_username = username
-        competition_info.value.display_name = display_name
+        scholarship_info.value.creator_image = creator_image
+        scholarship_info.value.creator_username = username
+        scholarship_info.value.display_name = display_name
       }
       getCreatorsInfo()
 
@@ -275,7 +276,7 @@ export default {
       //     time: formattedTime,
       //   }
 
-      //   competition_comments.value.push(post_comment_info)
+      //   scholarship_comments.value.push(post_comment_info)
       // })
 
       return
@@ -286,8 +287,8 @@ export default {
       await getPostDetails(_id)
     })
     return {
-      competition_info,
-      competition_comments,
+      scholarship_info,
+      scholarship_comments,
       reactions,
       does_have_comment,
       getPostDetails,

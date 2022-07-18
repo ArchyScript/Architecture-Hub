@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount, computed } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
@@ -105,8 +105,6 @@ export default {
       message.value.type = type
       message.value.text = text
     }
-
-    // computed(() => getAllPosts)
 
     const getAllPosts = async () => {
       is_loading.value = true

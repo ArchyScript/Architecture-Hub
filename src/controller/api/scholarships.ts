@@ -18,7 +18,7 @@ export const fetchAllScholarships = async () => {
 }
 
 //
-export const fetchSingleCompetition = async (scholarships_id: any) => {
+export const fetchSingleScholarship = async (scholarships_id: any) => {
   try {
     const response = await default_axios_instance
       .get(`scholarships/${scholarships_id}`)
@@ -31,7 +31,7 @@ export const fetchSingleCompetition = async (scholarships_id: any) => {
 }
 
 //
-export const createCompetition = async (creator_id: any, payload: any) => {
+export const createScholarship = async (creator_id: any, payload: any) => {
   try {
     const response = await default_axios_instance
       .post(`scholarships/${creator_id}`, payload)
@@ -44,7 +44,7 @@ export const createCompetition = async (creator_id: any, payload: any) => {
 }
 
 //
-export const updateCompetition = async (params: any, payload: any) => {
+export const updateScholarship = async (params: any, payload: any) => {
   const { scholarships_id, creator_id } = params
 
   try {
@@ -58,7 +58,7 @@ export const updateCompetition = async (params: any, payload: any) => {
   }
 }
 //
-export const deleteCompetition = async (params: any) => {
+export const deleteScholarship = async (params: any) => {
   const { scholarships_id, creator_id } = params
   try {
     const response = await default_axios_instance

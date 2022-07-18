@@ -16,11 +16,11 @@ const Notifications = () => import('@/views/Notifications/index.vue')
 
 //
 const PostDetails = () => import('@/views/PostDetails/index.vue')
-const NewsDetailsLayout = () => import('@/views/NewsDetailsLayout/index.vue')
+const NewsDetailsLayout = () => import('@/views/NewsDetails/index.vue')
 const CompetitionDetails = () =>
-  import('@/views/NewsDetailsLayout/CompetitionDetails.vue')
+  import('@/views/NewsDetails/CompetitionDetails.vue')
 const ScholarshipDetails = () =>
-  import('@/views/NewsDetailsLayout/ScholarshipDetails.vue')
+  import('@/views/NewsDetails/ScholarshipDetails.vue')
 // const SinglePostDetails = () =>
 //   import('@/views/Profile copy/SinglePostDetails.vue')
 

@@ -6,15 +6,24 @@
       <div class="flex-shrink-0 mr-1">
         <router-link :to="`/profile/${post_info.username}`">
           <img
+            v-if="post_info.profile_picture_avatar !== ''"
             class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
             :src="post_info.profile_picture_avatar"
           />
         </router-link>
+
+        <span
+          v-if="post_info.profile_picture_avatar === ''"
+          class="block w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer bg-gray-500 animate-pulse"
+        ></span>
       </div>
 
       <article class="w-full flex-1 ml-1 sm:ml-2">
         <div class="mb-1 flex flex-1 px-1">
-          <div class="flex-1 flex-col truncate">
+          <div
+            v-if="post_info.username !== ''"
+            class="flex-1 flex-col truncate"
+          >
             <p class="items-center flex sm:space-x-2">
               <span
                 class="text-sm md:text-base font-semibold text-gray-600 truncate"
@@ -45,11 +54,25 @@
               </span>
             </p>
           </div>
+
+          <div v-if="post_info.username === ''" class="animate-pulse w-full">
+            <div
+              class="h-1 sm:h-2 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
+            ></div>
+
+            <div class="grid grid-cols-8 gap-2">
+              <div
+                class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"
+              ></div>
+              <div
+                class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"
+              ></div>
+            </div>
+          </div>
         </div>
 
         <div class="px-1 sm:px-2 mt-2">
-          <!-- @click="viewSinglePost(reactions.post_id)" -->
-          <router-link :to="`/post/${reactions.post_id}`">
+          <router-link :to="`/post/${eachPost._id}`">
             <p class="text-sm xl:text-base font-normal text-gray-500">
               {{ eachPost.content }}
             </p>

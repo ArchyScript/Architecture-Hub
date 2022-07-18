@@ -1,20 +1,22 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
-    <div class="">
-      <SingleCompetitionDetailsVue />
-    </div>
+    <TopBarVue />
+
+    <section>
+      <router-view></router-view>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
+import TopBarVue from './TopBar.vue'
 import { useRoute } from 'vue-router'
-// import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
-import SingleCompetitionDetailsVue from '@/components/News/SingleCompetitionDetails.vue'
+
 export default {
   name: 'Profile',
   components: {
-    SingleCompetitionDetailsVue,
+    TopBarVue,
   },
   setup() {
     const test_ref = ref('testing')

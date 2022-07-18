@@ -1,7 +1,7 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
     <div class="">
-      <SinglePostDetailsVue />
+      <SingleScholarshipDetailsVue />
     </div>
   </div>
 </template>
@@ -9,12 +9,12 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
+import SingleScholarshipDetailsVue from '@/components/News/SingleScholarshipDetails.vue'
 
 export default {
-  name: 'Profile',
+  name: 'ScholarshipDetails',
   components: {
-    SinglePostDetailsVue,
+    SingleScholarshipDetailsVue,
   },
   setup() {
     const test_ref = ref('testing')

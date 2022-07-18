@@ -151,11 +151,11 @@ export default {
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
-      {
-        route: '/notifications',
-        title: 'Notifications',
-        icon: 'fa fa-bell',
-      },
+      // {
+      //   route: '/notifications',
+      //   title: 'Notifications',
+      //   icon: 'fa fa-bell',
+      // },
       {
         route: `/profile/${user.value.username}`,
         title: 'Profile',

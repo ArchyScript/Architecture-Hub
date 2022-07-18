@@ -33,7 +33,6 @@
               <router-link :to="`/scholarships/${scholarship._id}`">
                 <span
                   class="btn py-1 italic text-gray-700 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
-                  @click="viewNewsUpdateDetails(scholarship._id)"
                 >
                   more details
                 </span>
@@ -77,14 +76,14 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
-import { fetchAllCompetitions } from '@/controller/api/competitons'
+import { fetchAllScholarships } from '@/controller/api/scholarships'
 // import { default_images } from '@/controller/utils'
 // import { fetchSingleUserById } from '@/controller/api/users.api'
 
 type ScholarshipSchema =
   | {
       _id: any
-      // competition_image: string
+      // scholarship_image: string
       creator_id: any
       content: string
       title: string
@@ -92,16 +91,12 @@ type ScholarshipSchema =
   | any
 
 export default {
-  name: 'LatestCompetitions',
+  name: 'LatestScholarships',
   components: { AnimatedLatestVue },
   setup() {
     const scholarships = ref<ScholarshipSchema[]>([])
     const is_more_description_boolean = ref(true)
     const read_more_user_id = ref('')
-
-    const viewNewsUpdateDetails = (user_id: string) => {
-      console.log(user_id)
-    }
 
     const toggleDescriptionLength = (user_id: string) => {
       if (read_more_user_id.value === user_id) {
@@ -114,8 +109,8 @@ export default {
       console.log(user_id)
     }
 
-    const getCompetitions = async () => {
-      const response = await fetchAllCompetitions()
+    const getScholarships = async () => {
+      const response = await fetchAllScholarships()
       const { error, data, status } = response
 
       if (error || status === 400 || !data || typeof data === 'string') return
@@ -126,8 +121,8 @@ export default {
         if (index <= 1) {
           const { _id, creator_id, content, title } = scholarship
 
-          // competition_image: { avatar },
-          // let competition_image = ''
+          // scholarship_image: { avatar },
+          // let scholarship_image = ''
 
           // const getUser = async () => {
           //   const user = await fetchSingleUserById(creator_id)
@@ -138,36 +133,36 @@ export default {
           //     bio: { gender },
           //   } = data
           //   if (avatar !== '') {
-          //     competition_image = avatar
+          //     scholarship_image = avatar
           //   } else {
-          //     if (gender === 'male') competition_image = default_images.male
-          //     if (gender === 'female') competition_image = default_images.female
-          //     else competition_image = default_images.random
+          //     if (gender === 'male') scholarship_image = default_images.male
+          //     if (gender === 'female') scholarship_image = default_images.female
+          //     else scholarship_image = default_images.random
           //   }
           // }
           // getUser()
 
-          const latest_competitions = {
+          const latest_scholarships = {
             _id,
             creator_id,
             content,
             title,
           }
 
-          scholarships.value.push(latest_competitions)
+          scholarships.value.push(latest_scholarships)
         }
       })
     }
 
     onBeforeMount(() => {
-      getCompetitions()
+      getScholarships()
     })
 
     return {
       is_more_description_boolean,
       scholarships,
       read_more_user_id,
-      viewNewsUpdateDetails,
+
       toggleDescriptionLength,
     }
   },

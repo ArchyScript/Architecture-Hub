@@ -55,6 +55,38 @@ export type PostSchema = {
   likes: Like[]
 }
 
+export type CompetitionSchema = {
+  _id: string
+  title: string
+  content: string
+  link: string
+  host: string
+  description: string
+  competition_image: {
+    title: string
+    cloudinary_id: string
+    avatar: string
+  }
+  comments: Comment[]
+  likes: Like[]
+}
+
+export type ScholarshipSchema = {
+  _id: string
+  title: string
+  content: string
+  link: string
+  host: string
+  description: string
+  competition_image: {
+    title: string
+    cloudinary_id: string
+    avatar: string
+  }
+  comments: Comment[]
+  likes: Like[]
+}
+
 export type AuthUser = {
   _id: string
   email: string

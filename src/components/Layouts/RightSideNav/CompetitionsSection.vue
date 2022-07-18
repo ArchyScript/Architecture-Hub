@@ -77,9 +77,7 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
-import { fetchAllCompetitions } from '@/controller/api/competitons'
-// import { default_images } from '@/controller/utils'
-// import { fetchSingleUserById } from '@/controller/api/users.api'
+import { fetchAllCompetitions } from '@/controller/api/competitions'
 
 type CompetitonSchema =
   | {
