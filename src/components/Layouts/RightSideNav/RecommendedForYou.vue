@@ -7,17 +7,26 @@
         Recommended for You
       </h4>
 
-      <div class="flex flex-col space-y-6">
+      <div v-if="recommended_people_to_follow.length < 1">
+        <div v-for="x in 3" :key="x">
+          <AnimatedRecommendedVue />
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col space-y-6"
+        v-if="recommended_people_to_follow.length >= 1"
+      >
         <div
           class="flex items -center space-x-4"
-          :key="person_to_follow._id"
-          v-for="person_to_follow in people_to_follow"
+          :key="recommended._id"
+          v-for="recommended in recommended_people_to_follow"
         >
           <div class="flex-shrink-0">
             <img
               class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-100"
-              src="@/assets/script.jpg"
-              :alt="person_to_follow.display_name"
+              :src="recommended.profile_image"
+              :alt="recommended.display_name"
             />
           </div>
 
@@ -27,18 +36,22 @@
                 <span
                   class="text-lg block font-medium text-gray-900 truncate dark:text-white"
                 >
-                  {{ person_to_follow.display_name }}
+                  {{
+                    recommended.display_name !== ''
+                      ? recommended.display_name
+                      : recommended.username
+                  }}
                 </span>
                 <span
                   class="text-sm block text-gray-500 truncate dark:text-gray-400"
                 >
-                  {{ `@${person_to_follow.username}` }}
+                  {{ `@${recommended.username}` }}
                 </span>
               </div>
 
               <span
                 class="btn py-1 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
-                @click="goToProfile(person_to_follow._id)"
+                @click="followRecommended(recommended._id)"
               >
                 follow
               </span>
@@ -56,33 +69,79 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { onBeforeMount, ref } from 'vue'
+import { fetchAllUsers } from '@/controller/api/users.api'
+import { default_images } from '@/controller/utils'
+import AnimatedRecommendedVue from '@/components/Animation/AnimatedRecommended.vue'
+
+type RecommendedSchema =
+  | {
+      profile_image: string
+      _id: any
+      username: string
+      display_name: string
+    }
+  | any
 
 export default {
   name: 'RecommendedForYou',
+  components: { AnimatedRecommendedVue },
   setup() {
-    const people_to_follow = ref([
-      {
-        _id: 'badjnfajafjakaj',
-        display_name: 'Dasaolu Daniel',
-        username: 'ArchyScript',
-        description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt molestias corrupti cumque, deleniti delectus culpa repudiandae tempora`,
-      },
-      {
-        _id: 'nslijiilwervwrweh',
-        display_name: 'Ooni of Tech',
-        username: 'Scriptocurrency',
-        description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt molestias corrupti cumque, deleniti delectus culpa repudiandae tempora`,
-      },
-    ])
+    const recommended_people_to_follow = ref<RecommendedSchema[]>([])
 
-    const goToProfile = (user_id: string) => {
+    const getRecommendedPeople = async () => {
+      const response = await fetchAllUsers()
+      const { error, data, status } = response
+
+      if (error || status === 400 || !data || typeof data === 'string') return
+
+      const sortedByMostFollowers = data.sort((user_1: any, user_2: any) => {
+        return user_2.followers.length - user_1.followers.length
+      })
+
+      sortedByMostFollowers.forEach((recommended_user: any, index: number) => {
+        if (index <= 2) {
+          const {
+            _id,
+            bio: { display_name },
+            username,
+            profile_picture: { avatar },
+            bio: { gender },
+          } = recommended_user
+
+          let profile_image = ''
+
+          if (avatar !== '') {
+            profile_image = avatar
+          } else {
+            if (gender === 'male') profile_image = default_images.male
+            if (gender === 'female') profile_image = default_images.female
+            else profile_image = default_images.random
+          }
+
+          const people_to_follow = {
+            _id,
+            display_name,
+            username,
+            profile_image,
+          }
+
+          recommended_people_to_follow.value.push(people_to_follow)
+        }
+      })
+    }
+
+    const followRecommended = (user_id: string) => {
       console.log(user_id)
     }
 
+    onBeforeMount(() => {
+      getRecommendedPeople()
+    })
+
     return {
-      people_to_follow,
-      goToProfile,
+      recommended_people_to_follow,
+      followRecommended,
     }
   },
 }

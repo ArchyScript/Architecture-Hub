@@ -11,7 +11,7 @@
         <div class="text-center">
           <form @submit.prevent="getAllPosts">
             <button
-              class="text-md text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
+              class="text-md text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>{{ is_loading ? 'Loading' : 'Reload' }}</span>
@@ -35,10 +35,13 @@
             </button>
           </form>
         </div>
+
+        <div class="" v-for="x in 10" :key="x">
+          <AnimatedPostContentVue />
+        </div>
       </div>
 
       <div v-else>
-        <!-- <div> -->
         <div class="hidden text-center mb-8">
           <form @submit.prevent="getAllPosts">
             <button
@@ -71,10 +74,6 @@
           <PostContentVue :eachPost="eachPost" />
         </div>
       </div>
-
-      <div class="hidden" v-for="x in 20" :key="x">
-        <PostContentTestVue :eachPost="{}" />
-      </div>
     </div>
   </div>
 </template>
@@ -86,14 +85,14 @@ import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
 import { PostSchema } from '@/controller/typings'
 import { fetchAllPosts } from '@/controller/api/posts.api'
-import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
+import AnimatedPostContentVue from '@/components/Animation/AnimatedPostContent.vue'
 
 export default {
   name: 'HomePage',
   components: {
     PostContentVue,
-    PostContentTestVue,
     MainPageTopBarVue,
+    AnimatedPostContentVue,
   },
   setup() {
     const store = useStore()

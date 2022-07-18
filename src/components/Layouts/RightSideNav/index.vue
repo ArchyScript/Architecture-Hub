@@ -6,9 +6,10 @@
 
     <div class="px-4 lg:p-4 xl:p-6">
       <RecommendedWhoToFollowVue />
-      <LatestNewsVue />
-      <WhoToFollowVue />
-      <TrendsForYouVue />
+      <CompetitionSectionVue />
+      <ScholarshipsSectionVue />
+      <WhoToFollowVue class="hidden" />
+      <TrendsForYouVue class="hidden" />
     </div>
   </section>
 </template>
@@ -19,7 +20,8 @@ import SearchTrendsVue from '../RightSideNav/SearchTrends.vue'
 import WhoToFollowVue from './WhoToFollow.vue'
 import RecommendedWhoToFollowVue from './RecommendedForYou.vue'
 import TrendsForYouVue from './TrendsForYou.vue'
-import LatestNewsVue from './LatestNews.vue'
+import CompetitionSectionVue from './CompetitionsSection.vue'
+import ScholarshipsSectionVue from './ScholarshipsSection.vue'
 
 export default {
   name: 'RightSideNav',
@@ -28,15 +30,12 @@ export default {
     WhoToFollowVue,
     RecommendedWhoToFollowVue,
     TrendsForYouVue,
-    LatestNewsVue,
+    CompetitionSectionVue,
+    ScholarshipsSectionVue,
   },
 
   setup() {
-    const image_link = ref("require('@/assets/mysquareroof/squareroof2.png')")
-
-    return {
-      image_link,
-    }
+    return {}
   },
 }
 </script>

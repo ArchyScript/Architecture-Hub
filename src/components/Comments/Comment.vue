@@ -1,19 +1,33 @@
 <template>
-  <section
-    class="flex justify-center items-center inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
-  >
-    <span class="flex-shrink-0 mr-1">
-      <router-link :to="`/profile/${eachPostComment.commneter_username}`">
-        <img
-          class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
-          :src="eachPostComment.commenter_image"
-        />
-      </router-link>
-    </span>
+  <section class="inset-x-0 border-b hover:bg-red-300 hover:bg-opacity-20">
+    <div class="flex py-2 px-4">
+      <span class="flex-shrink-0 mr-1">
+        <router-link :to="`/profile/${eachPostComment.commneter_username}`">
+          <img
+            class="w-10 h-10 sm:h-12 sm:w-12 rounded-full border cursor-pointer"
+            :src="eachPostComment.commenter_image"
+          />
+        </router-link>
+      </span>
 
-    <p class="flex-1 px-2 text-sm">
-      Lorem, ipsum dolor. Lorem ipsum dolor sit amet consectetur.
-    </p>
+      <div class="flex-col flex-1 ml-2 sm:ml-3">
+        <p class="flex-1 text-xs sm:text-sm my-2 sm:mb-3 flex-wrap break-all">
+          {{ eachPostComment.comment }}
+        </p>
+
+        <p
+          class="flex justify-end items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
+          v-if="eachPostComment.date || eachPostComment.time"
+        >
+          <span class="">{{ eachPostComment.date }}</span>
+
+          <span class="">
+            <strong class="font-semibold">@</strong>
+            {{ eachPostComment.time }}
+          </span>
+        </p>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -25,12 +39,15 @@ import { fetchSingleUserById } from '@/controller/api/users.api'
 import { default_images } from '@/controller/utils/index'
 import router from '@/router'
 
-type CommentSchema = {
-  comment: string
-  commenter_image: string
-  commneter_username: string
-  dateCreated: string
-}
+type CommentSchema =
+  | {
+      comment: string
+      commenter_image: string
+      commneter_username: string
+      date: string
+      time: string
+    }
+  | any
 
 export default {
   name: 'PostComment',
@@ -103,11 +120,6 @@ export default {
       return
     }
 
-    const viewUserProfile = (username: any) => {
-      router.push(`/profile/${username}`)
-      console.log(username)
-    }
-
     onBeforeMount(async () => {
       //
       await getPostCommentDetails()
@@ -115,7 +127,6 @@ export default {
     return {
       post_info,
       reactions,
-      viewUserProfile,
     }
   },
 }

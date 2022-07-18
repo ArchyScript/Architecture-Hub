@@ -1,5 +1,4 @@
 import store from '@/store'
-import axios from 'axios'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 // Default Layout and entry point
@@ -17,6 +16,11 @@ const Notifications = () => import('@/views/Notifications/index.vue')
 
 //
 const PostDetails = () => import('@/views/PostDetails/index.vue')
+const NewsDetailsLayout = () => import('@/views/NewsDetailsLayout/index.vue')
+const CompetitionDetails = () =>
+  import('@/views/NewsDetailsLayout/CompetitionDetails.vue')
+const ScholarshipDetails = () =>
+  import('@/views/NewsDetailsLayout/ScholarshipDetails.vue')
 // const SinglePostDetails = () =>
 //   import('@/views/Profile copy/SinglePostDetails.vue')
 
@@ -75,26 +79,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Competitions',
         component: Competitions,
       },
-      // {
-      //   path: '/explore',
-      //   name: 'Explore',
-      //   component: Explore,
-      // },
-      // {
-      //   path: '/news-update',
-      //   name: 'NewsUpdate',
-      //   component: NewsUpdate,
-      // },
       {
         path: '/notifications',
         name: 'Notifications',
         component: Notifications,
       },
-      // {
-      //   path: '/more',
-      //   name: 'More',
-      //   component: More,
-      // },
 
       {
         path: '/profile/:username/edit',
@@ -105,12 +94,22 @@ const routes: Array<RouteRecordRaw> = [
         path: '/post/:_id',
         name: 'PostDetails',
         component: PostDetails,
+      },
+      {
+        path: '/news',
+        name: 'NewsDetailsLayout',
+        component: NewsDetailsLayout,
         children: [
-          // {
-          //   path: '/view/post/:_id',
-          //   name: 'SinglePostDetails',
-          //   component: SinglePostDetails,
-          // },
+          {
+            path: '/competitions/:_id',
+            name: 'CompetitionDetails',
+            component: CompetitionDetails,
+          },
+          {
+            path: '/scholarships/:_id',
+            name: 'ScholarshipDetails',
+            component: ScholarshipDetails,
+          },
           // {
           //   path: '/profile/:username/edit',
           //   name: 'EditProfilePage',

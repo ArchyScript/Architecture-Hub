@@ -20,6 +20,18 @@ export const commentOnPost = async (params: any, payload: any) => {
 }
 
 //
+export const singleCommentOnPost = async (comment_id: any) => {
+  try {
+    const response = await default_axios_instance
+      .get(`reactions/comments/${comment_id}`)
+      .then(async (response) => response)
+
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    return HandleAxiosError(error)
+  }
+}
+//
 export const deleteComment = async (params: any) => {
   const { commenter_id, comment_id } = params
   try {
