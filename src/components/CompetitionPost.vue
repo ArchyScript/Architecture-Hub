@@ -94,14 +94,13 @@
       <ReactionsVue :reactions="reactions" />
     </div>
 
-    <p class="py-2 w-full font-normal text-gray-500 space-x-2 italic">
+    <p class="py-2 w-f ull font-normal text-gray-500 space-x-2 italic">
       <a
         :href="eachCompetition.link"
         target="_blank"
-        class="flex justify-center items-center hover:underline"
+        class="flex justify-center items-center space-x-1 sm:space-x-2 hover:underline"
       >
-        apply
-        <span class="fa fa-edit text-lg"></span>
+        apply now
       </a>
     </p>
   </section>
@@ -149,16 +148,7 @@ export default {
     }
 
     const getPostDetails = async () => {
-      const {
-        _id,
-        creator_id,
-        createdAt,
-        title,
-        link,
-        host,
-        content,
-        description,
-      } = props.eachCompetition
+      const { creator_id, createdAt } = props.eachCompetition
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
       //

@@ -13,11 +13,20 @@
     <div class="flex-1 items-center px-2">
       <h4 class="text-xl block font-bold text-gray-600">
         Dasolu Daniel
+        {{
+          user_data.display_name === ''
+            ? user_data.username
+            : user_data.display_name
+        }}
       </h4>
       <span
         class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
       >
-        700 posts
+        {{
+          user_data.no_of_posts === 0
+            ? ` ${user_data.no_of_posts} post`
+            : ` ${user_data.no_of_posts} posts`
+        }}
       </span>
     </div>
   </nav>
@@ -26,18 +35,31 @@
 <script>
 import { onBeforeMount, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 
 export default {
   name: 'ProfileTopbar',
-  setup(context) {
+  setup() {
     const scrollShadowBoolean = ref(true)
-
     const router = useRouter()
+    const user_data = ref({
+      no_of_posts: 0,
+      display_name: '',
+      username: '',
+    })
 
-    onBeforeMount(() => {
+    onBeforeMount(async () => {
       handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
+
+    // const getUserData = async (username: any) => {
+    //   const response = await fetchSingleUserByUsername(username)
+    //   const { data, status, error } = response
+
+    //   if (error || status === 400 || !data || typeof data === 'string')
+    //     return router.push(`/profile/${username}`)
+    // }
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -49,20 +71,16 @@ export default {
       }
     }
 
-    const toggleLeftNav = () => {
-      return context.emit('toggleLeftNav')
-    }
-
     return {
       scrollShadowBoolean,
-      toggleLeftNav,
       router,
+      user_data,
     }
   },
 }
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky h-20 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

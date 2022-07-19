@@ -1,5 +1,5 @@
 import { createStore } from 'vuex'
-import { users } from './modules/users'
+import { users } from './modules/auth_users'
 import posts from './modules/posts'
 import component_handler from './modules/component_handler'
 

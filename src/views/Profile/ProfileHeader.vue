@@ -10,17 +10,19 @@
           class="h-24 w-24 md:h-28 md:w-28 xl:h-32 xl:w-32 -mt-12 md:-mt-14 xl:-mt-16 p-1 rounded-full block bg-archyhub-semi-light border"
         >
           <img
+            v-if="user_profile.profile_picture !== ''"
             class="w-full h-full rounded-full object-fill"
-            :src="
-              user.profile_picture.avatar !== ''
-                ? user.profile_picture.avatar
-                : '@/assets/script.jpg'
-            "
+            :src="user_profile.profile_picture"
           />
+
+          <div
+            v-if="user_profile.profile_picture === ''"
+            class="w-full h-full bg-gray-400 rounded-full animate-pulse"
+          ></div>
         </span>
 
-        <div v-if="user_profile_id === user.auth_user._id" class="mt-2">
-          <router-link :to="`/profile/${user_profile_id}/edit`">
+        <div v-if="user_profile._id === active_user._id" class="mt-2">
+          <router-link :to="`/profile/${user_profile._id}/edit`">
             <span
               class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
@@ -30,35 +32,100 @@
         </div>
       </div>
 
-      <div class="flex-1 items-center px-2 mt-2 mb-2">
-        <h4 class="text-2xl block font-bold text-gray-600">
-          {{ user.bio.display_name ? user.bio.display_name : user.username }}
-        </h4>
-        <span class="text-base block cursor-pointer text-gray-500 truncate">
-          @{{ user.username }}
-        </span>
+      <div class="">
+        <div
+          v-if="user_profile.username === ''"
+          class="flex-1 animate-pulse my-4"
+        >
+          <div
+            class="h-2 sm:h-3 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-2"
+          ></div>
+          <div
+            class="h-2 sm:h-3 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-1 sm:mb-2"
+          ></div>
+
+          <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl mb-1"></div>
+          <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl mb-1"></div>
+          <div
+            class="h-1 sm:h-2 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-1"
+          ></div>
+
+          <div class="grid grid-cols-8 gap-2 mt-4">
+            <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+            <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          </div>
+        </div>
+
+        <div class="" v-if="user_profile.username !== ''">
+          <div
+            v-if="user_profile.username !== ''"
+            class="fl ex-1 items-center px-2 mt-2 mb-2"
+          >
+            <h4
+              class="text-base sm:text-lg lg:text-xl block font-semibold text-gray-600"
+            >
+              {{
+                user_profile.display_name
+                  ? user_profile.display_name
+                  : user_profile.username
+              }}
+            </h4>
+            <span
+              class="text-sm sm:text-base block cursor-pointer text-gray-500 truncate"
+            >
+              @{{ user_profile.username }}
+            </span>
+          </div>
+
+          <p class="text-base font-medium my-1 px-2 text-gray-500">
+            {{ user_profile.description }}
+          </p>
+
+          <p class="text-base mt-2 px-2">
+            <span class="fa fa-calendar text-xl mr-2 text-gray-400"></span>
+            <span class="text-gray-500">
+              Joined {{ user_profile.date_joined }}
+            </span>
+          </p>
+
+          <p class="flex items-center text-base mt-2 px-2 space-x-8">
+            <span class="flex space-x-2">
+              <span class="text-gray-600 font-bold">
+                {{ user_profile.no_of_followings }}
+              </span>
+              <span
+                v-if="user_profile.no_of_followings <= 1"
+                class="text-gray-500"
+              >
+                following
+              </span>
+              <span
+                v-if="user_profile.no_of_followings > 1"
+                class="text-gray-500"
+              >
+                followings
+              </span>
+            </span>
+            <span class="flex space-x-2">
+              <span class="text-gray-600 font-bold">
+                {{ user_profile.no_of_followers }}
+              </span>
+              <span
+                v-if="user_profile.no_of_followers <= 1"
+                class="text-gray-500"
+              >
+                follower
+              </span>
+              <span
+                v-if="user_profile.no_of_followers > 1"
+                class="text-gray-500"
+              >
+                followers
+              </span>
+            </span>
+          </p>
+        </div>
       </div>
-
-      <p class="text-base font-medium my-1 px-2 text-gray-500">
-        {{ user.bio.description }}
-      </p>
-
-      <p class="text-base mt-2 px-2">
-        <span class="fa fa-calendar text-xl mr-2 text-gray-400"></span>
-        <span class="text-gray-500">Joined August 2020</span>
-      </p>
-
-      <p class="flex items-center text-base mt-2 px-2 space-x-8">
-        <span class="flex space-x-2">
-          <span class="text-gray-600 font-bold">500</span>
-          <span class="text-gray-500">Following</span>
-        </span>
-
-        <span class="flex space-x-2">
-          <span class="text-gray-600 font-bold">500</span>
-          <span class="text-gray-500">followers</span>
-        </span>
-      </p>
     </section>
   </section>
 </template>
@@ -68,42 +135,74 @@ import { ref, computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { fetchSingleUserByUsername } from '@/controller/api/users.api'
-// import { UserSchema } from '@/controller/typings/index'
+import router from '@/router'
+import {
+  formatDateAndTime,
+  getDisplayProfilePicture,
+} from '@/controller/utilities'
 
 export default {
   name: 'ProfileHeader',
-  // props: {
-  //   username: {
-  //     type: String,
-  //     default: '',
-  //   },
-  // },
-  setup(props: any) {
+  setup() {
     const store = useStore()
     const route = useRoute()
     const user_profile_id: any = ref('')
-    const user = computed(() => store.state.users.user)
-    // const userD = ref<UserSchema>()
+    const user_profile = ref({
+      _id: '',
+      display_name: '',
+      username: '',
+      profile_picture: '',
+      description: '',
+      time: '',
+      date_joined: '',
+      no_of_followers: 0,
+      no_of_followings: 0,
+    })
+
+    const active_user = computed(() => store.state.users.user)
 
     onBeforeMount(async () => {
       const { username } = route.params
-
-      const data = await getUserData(username)
-
-      const { _id } = route.params
-
-      user_profile_id.value = _id
+      console.log(username)
+      await getUserData(username)
     })
 
-    const getUserData = async (username: string | string[]) => {
+    const getUserData = async (username: any) => {
       const response = await fetchSingleUserByUsername(username)
-
       const { data, status, error } = response
 
-      return data
+      if (error || status === 400 || !data || typeof data === 'string')
+        return router.push(`/profile/${username}`)
+
+      const {
+        _id,
+        createdAt,
+        followers,
+        followings,
+        bio: { display_name, gender, description },
+        profile_picture: { avatar },
+      } = data
+      const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+
+      const profile_picture: any = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      user_profile.value._id = _id
+      user_profile.value.display_name = display_name
+      user_profile.value.username = username
+      user_profile.value.profile_picture = profile_picture
+      user_profile.value.description = description
+      user_profile.value.time = formattedTime
+      user_profile.value.date_joined = formattedDate
+      user_profile.value.no_of_followers = followers.length
+      user_profile.value.no_of_followings = followings.length
+
+      return
     }
 
-    return { user, user_profile_id }
+    return { active_user, user_profile_id, user_profile }
   },
 }
 </script>

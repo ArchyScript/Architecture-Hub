@@ -18,16 +18,18 @@
         v-if="recommended_people_to_follow.length >= 1"
       >
         <div
-          class="flex items -center space-x-4"
+          class="flex space-x-4"
           :key="recommended._id"
           v-for="recommended in recommended_people_to_follow"
         >
           <div class="flex-shrink-0">
-            <img
-              class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-100"
-              :src="recommended.profile_image"
-              :alt="recommended.display_name"
-            />
+            <router-link :to="`/profile/${recommended.username}`">
+              <img
+                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-100"
+                :src="recommended.profile_image"
+                :alt="recommended.username"
+              />
+            </router-link>
           </div>
 
           <div class="flex-1">

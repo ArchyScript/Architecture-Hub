@@ -45,6 +45,7 @@ import ProfileHeaderVue from './ProfileHeader.vue'
 // import PostContentVue from '@/components/Posts/PostContent.vue'
 import PostContentTestVue from '@/components/Posts/PostContentTest.vue'
 import { useRoute } from 'vue-router'
+import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 // import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 
 export default {
@@ -81,9 +82,10 @@ export default {
     })
 
     const getUserData = async (username: string | string[]) => {
-      // const response = await fetchSingleUserByUsername(username)
-      // const { data, status, error } = response
-      // return data
+      const response = await fetchSingleUserByUsername(username)
+      const { data, status, error } = response
+
+      return data
     }
 
     const toggleActiveProfilePageLink = (current_active: string) => {
