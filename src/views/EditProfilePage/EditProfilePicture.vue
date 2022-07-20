@@ -1,6 +1,6 @@
 <template>
   <section class="mb-6 inset-x-0 pb-4">
-    <div class="flex justify-center z-0">
+    <div class="flex justify-center ">
       <input
         @change="onFileChange"
         class="hidden"
@@ -11,7 +11,7 @@
       />
     </div>
 
-    <form @submit="uploadPicture">
+    <form @submit.prevent="uploadPicture">
       <div class="w-full mt-16 px-4">
         <div class="h-96 w-full border shadow-md bg-archyhub-light rounded-3xl">
           <img
@@ -95,8 +95,7 @@ export default {
       image_url.value = URL.createObjectURL(file)
     }
 
-    const uploadPicture = async (event: any) => {
-      event.preventDefault()
+    const uploadPicture = async () => {
       is_loading.value = true
       updateResponseMessage('', '')
 

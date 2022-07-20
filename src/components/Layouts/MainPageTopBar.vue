@@ -31,6 +31,7 @@
 
       <div class="flex justify-center items-start">
         <span
+          @click="openTargettedModal(props.page_title)"
           :class="props.page_icon"
           class="hidden md:flex text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
         ></span>
@@ -108,6 +109,14 @@ export default {
       }
     }
 
+    const openTargettedModal = (title: string) => {
+      if (title.toLowerCase() === 'home') return
+      if (title.toLowerCase() === 'competitions')
+        return store.dispatch('component_handler/openNewCompetitionModal')
+      if (title.toLowerCase() === 'scholarships')
+        return store.dispatch('component_handler/openNewScholarshipModal')
+    }
+
     const openLeftNav = () => {
       return store.dispatch('component_handler/openLeftNav')
     }
@@ -117,6 +126,7 @@ export default {
       openLeftNav,
       props,
       user,
+      openTargettedModal,
       // side_nav_toggler
     }
   },
@@ -124,6 +134,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky z-20 h-16 md:h-20 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky z-20 h-16   pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

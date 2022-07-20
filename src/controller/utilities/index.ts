@@ -29,8 +29,24 @@ export const formatDateAndTime = (createAt: string) => {
     'Nov',
     'Dec',
   ]
+
+  const fullMonthsTexts = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ]
   const year = created_date.getFullYear()
   const month = months[created_date.getMonth()]
+  const fullMonthsText = fullMonthsTexts[created_date.getMonth()]
   let date: any = created_date.getDate()
   let hours: any = created_date.getHours()
   let minutes: any = created_date.getMinutes()
@@ -47,10 +63,11 @@ export const formatDateAndTime = (createAt: string) => {
   minutes = minutes <= 9 ? `0${minutes}` : minutes
   seconds = seconds <= 9 ? `0${seconds}` : seconds
 
-  const formattedDate = `${month} ${date}, ${year}`
+  const formattedDate = `${month} ${date}, '${year.toString().slice(2)}`
+  const formattedFullDate = `${fullMonthsText} ${date}, ${year}`
   const formattedTime = `${hours}:${minutes} ${am_or_pm}`
 
-  return { formattedDate, formattedTime }
+  return { formattedDate, formattedTime, formattedFullDate }
 }
 
 export const getDisplayProfilePicture = (profile_image: any, gender: any) => {

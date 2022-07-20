@@ -70,7 +70,6 @@ export type CompetitionSchema = {
   comments: Comment[]
   likes: Like[]
 }
-
 export type ScholarshipSchema = {
   _id: string
   title: string

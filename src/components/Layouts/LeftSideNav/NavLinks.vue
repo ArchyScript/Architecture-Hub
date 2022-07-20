@@ -129,10 +129,6 @@ export default {
     const current_active_route = ref('/home')
     const is_loading = ref(false)
 
-    onBeforeMount(() => {
-      current_active_route.value = route.fullPath
-    })
-
     const user = computed(() => store.state.users.user)
 
     const navbar_links = ref([
@@ -141,11 +137,11 @@ export default {
         title: 'Home',
         icon: 'fa fa-home',
       },
-      // {
-      //   route: '/scholarships',
-      //   title: 'Scholarships',
-      //   icon: 'fa fa-users',
-      // },
+      {
+        route: '/scholarships',
+        title: 'Scholarships',
+        icon: 'fa fa-users',
+      },
       {
         route: '/competitions',
         title: 'Competitions',
@@ -165,12 +161,17 @@ export default {
 
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
-      // return store.dispatch('component_handler/toggleLeftNav')
+      store.dispatch('component_handler/closeAllModals')
     }
 
-    const openNewPostModal = () => {
+    window.onkeyup = () => (current_active_route.value = route.fullPath)
+    window.onscroll = () => (current_active_route.value = route.fullPath)
+    window.onresize = () => (current_active_route.value = route.fullPath)
+
+    onBeforeMount(() => (current_active_route.value = route.fullPath))
+
+    const openNewPostModal = () =>
       store.dispatch('component_handler/openNewPostModal')
-    }
 
     const logUserOut = async () => {
       is_loading.value = true

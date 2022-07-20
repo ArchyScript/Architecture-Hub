@@ -8,6 +8,7 @@ const DefaultLayout = () => import('@/components/Layout/DefaultLayout.vue')
 //
 const HomePage = () => import('@/views/HomePage/index.vue')
 const Competitions = () => import('@/views/Competitions/index.vue')
+const Scholarships = () => import('@/views/Scholarships/index.vue')
 // const Explore = () => import('@/views/Explore/index.vue')
 // const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
@@ -80,6 +81,11 @@ const routes: Array<RouteRecordRaw> = [
         component: Competitions,
       },
       {
+        path: '/scholarships',
+        name: 'Scholarships',
+        component: Scholarships,
+      },
+      {
         path: '/notifications',
         name: 'Notifications',
         component: Notifications,
@@ -110,11 +116,6 @@ const routes: Array<RouteRecordRaw> = [
             name: 'ScholarshipDetails',
             component: ScholarshipDetails,
           },
-          // {
-          //   path: '/profile/:username/edit',
-          //   name: 'EditProfilePage',
-          //   component: EditProfilePage,
-          // },
         ],
       },
     ],

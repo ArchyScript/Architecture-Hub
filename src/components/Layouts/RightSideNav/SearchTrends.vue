@@ -72,6 +72,6 @@ export default {
 
 <style scoped>
 section.scrolled {
-  @apply sticky h-16 md:h-20 pt-4 bg-gradient-to-r from-archyhub-light   to-archyhub-semi-light  shadow-md;
+  @apply sticky h-16 pt-4 bg-gradient-to-r from-archyhub-light   to-archyhub-semi-light  shadow-md;
 }
 </style>

@@ -32,9 +32,19 @@ export const fetchSingleCompetition = async (competition_id: any) => {
 
 //
 export const createCompetition = async (creator_id: any, payload: any) => {
+  const { link, host, title, description, content, image_file } = payload
+  const formData = new FormData()
+
+  formData.append('competition-image', image_file)
+  formData.append('host', host)
+  formData.append('link', link)
+  formData.append('description', description)
+  formData.append('title', title)
+  formData.append('content', content)
+
   try {
     const response = await default_axios_instance
-      .post(`competitions/${creator_id}`, payload)
+      .post(`competitions/${creator_id}`, formData)
       .then(async (response) => response)
 
     return HandleAxiosResponse(response)
@@ -46,6 +56,7 @@ export const createCompetition = async (creator_id: any, payload: any) => {
 //
 export const updateCompetition = async (params: any, payload: any) => {
   const { competition_id, creator_id } = params
+  // const { link, host, title, description, content, image_file } = payload
 
   try {
     const response = await default_axios_instance

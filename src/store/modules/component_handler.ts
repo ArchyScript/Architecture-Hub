@@ -6,6 +6,7 @@ export default {
     open_left_nav: false,
     open_new_post_modal: false,
     open_new_competition_modal: false,
+    open_new_scholarship_modal: false,
     open_new_comment_modal: false,
   },
 
@@ -22,6 +23,9 @@ export default {
     },
     getNewCompetitionVisibillity(state: any) {
       return state.open_new_competition_modal
+    },
+    getNewScholarshipVisibillity(state: any) {
+      return state.open_new_scholarship_modal
     },
     getNewCommentVisibillity(state: any) {
       return state.open_new_comment_modal
@@ -49,6 +53,10 @@ export default {
       commit('CLOSE_ALL_MODALS')
       commit('OPEN_NEW_COMPETITION_MODAL')
     },
+    async openNewScholarshipModal({ commit }: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_NEW_SCHOLARSHIP_MODAL')
+    },
     async openCommentModal({ commit }: any, post_to_comment_on_id: any) {
       commit('CLOSE_ALL_MODALS')
       commit('OPEN_NEW_COMMENT_MODAL', post_to_comment_on_id)
@@ -72,6 +80,9 @@ export default {
     OPEN_NEW_COMPETITION_MODAL(state: any) {
       return (state.open_new_competition_modal = true)
     },
+    OPEN_NEW_SCHOLARSHIP_MODAL(state: any) {
+      return (state.open_new_scholarship_modal = true)
+    },
     OPEN_NEW_COMMENT_MODAL(state: any, post_to_comment_on_id: any) {
       state.post_to_comment_on_id = post_to_comment_on_id
       return (state.open_new_comment_modal = true)
@@ -81,6 +92,7 @@ export default {
       state.open_left_nav = false
       state.open_new_post_modal = false
       state.open_new_competition_modal = false
+      state.open_new_scholarship_modal = false
       state.open_new_comment_modal = false
     },
   },

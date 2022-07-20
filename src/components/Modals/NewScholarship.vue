@@ -5,7 +5,7 @@
     <div
       class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
     >
-      <form class="w-full flex-1" @submit="newCompetition">
+      <form class="w-full flex-1" @submit="newScholarship">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
@@ -37,7 +37,7 @@
             type="text"
             class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="host"
-            placeholder="Competition Host"
+            placeholder="Scholarship Host"
             v-model="payload.host"
           />
         </div>
@@ -66,7 +66,7 @@
           <textarea
             class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-lg"
             rows="4"
-            placeholder="Describe this Competition"
+            placeholder="Describe this Scholarship"
             v-model="payload.description"
           ></textarea>
         </div>
@@ -81,7 +81,7 @@
           <textarea
             class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-lg"
             rows="4"
-            placeholder="Provide litle hint about the competition"
+            placeholder="Provide litle hint about the scholarship"
             v-model="payload.content"
           ></textarea>
         </div>
@@ -92,8 +92,8 @@
               @change="onFileChange"
               class="hidden"
               type="file"
-              name="competition_image"
-              id="competition_image"
+              name="scholarship_image"
+              id="scholarship_image"
               accept="image/gif, image/jpeg, image/png"
             />
           </div>
@@ -115,15 +115,13 @@
             </div>
 
             <div
-              :class="payload.image_file ? ' mt-2' : ''"
+              :class="payload.image_file ? 'justify-end mt-2' : ''"
               class="flex items-center"
             >
               <label
                 class="text-ce nter cursor-pointer py-2 px-6 rounded-xl bg-gray-700 text-white hover:bg-green-dark focus:outline-none my-1"
-                for="competition_image"
+                for="scholarship_image"
               >
-                <span class="fa fa-image mr-1"></span>
-
                 {{ payload.image_file ? 'Change Image' : 'Select Image' }}
               </label>
             </div>
@@ -144,7 +142,7 @@
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>
-                  {{ is_loading ? 'Creating...' : 'Create Competition' }}
+                  {{ is_loading ? 'Creating...' : 'Create Scholarship' }}
                 </span>
 
                 <svg
@@ -174,10 +172,10 @@
 <script lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
-import { createCompetition } from '@/controller/api/competitions'
+import { createScholarship } from '@/controller/api/scholarships'
 
 export default {
-  name: 'CreateCompetitionModal',
+  name: 'CreateScholarshipModal',
   setup() {
     const store = useStore()
     const post_id = ref('')
@@ -198,14 +196,14 @@ export default {
       message.value.text = text
     }
 
-    const newCompetition = async (event: any) => {
+    const newScholarship = async (event: any) => {
       event.preventDefault()
       is_loading.value = true
 
       const creator_id = store.state.users.user._id
       updateResponseMessage('', '')
 
-      const response = await createCompetition(creator_id, payload.value)
+      const response = await createScholarship(creator_id, payload.value)
       const { error, data, status } = response
 
       if (error) {
@@ -231,7 +229,7 @@ export default {
       payload,
       image_url,
       message,
-      newCompetition,
+      newScholarship,
       onFileChange,
     }
   },

@@ -44,6 +44,48 @@ export const createNewPost = async (post_id: string | number, payload: any) => {
     return HandleAxiosError(error)
   }
 }
+//
+export const createNewPostWithoutImage = async (
+  poster_id: string | number,
+  content: any,
+) => {
+  const payload = { content }
+
+  try {
+    const response = await default_axios_instance
+      // .post(`posts/new/62cab7cdc0873b83d04dfd6f`, payload)
+      .post(`posts/new/${poster_id}`, content)
+      .then((response) => response)
+
+    console.log(response)
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    return HandleAxiosError(error)
+  }
+}
+//
+export const createNewPostWithImage = async (
+  poster_id: string | number,
+  payload: any,
+) => {
+  const { content, image_file } = payload
+
+  const formData = new FormData()
+  formData.append('post-image', image_file)
+  formData.append('content', content)
+
+  try {
+    const response = await default_axios_instance
+      .post(`posts/new/upload/${poster_id}`, formData)
+      .then((response) => response)
+
+    console.log(response)
+
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    return HandleAxiosError(error)
+  }
+}
 
 //
 export const updatePost = async (params: any, payload: any) => {

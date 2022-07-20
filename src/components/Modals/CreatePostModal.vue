@@ -1,15 +1,10 @@
 <template>
   <section
-    class="flex justify-center items-center h-full w-full bg-opacity-40 bg-archyhub-main"
+    class="flex flex-col items-center h-full w-full bg-opacity-40 bg-archyhub-main py-10 overflow-scroll"
   >
-    <!-- id="create_post_modal" -->
     <div
-      class="flex shadow-2xl p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
+      class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
     >
-      <div class="flex-shrink-0 mx-4 hidden sm:inline">
-        <img class="w-20 h-20 rounded-full border" src="@/assets/script.jpg" />
-      </div>
-
       <form class="w-full flex-1" @submit="createPost">
         <div
           v-if="message.type !== ''"
@@ -19,17 +14,66 @@
           {{ message.text }}
         </div>
 
-        <div class="flex flex-col w-full border-b-2 mb-3 border-gray-300">
+        <div class="mb-1 p-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-700"
+            for="content"
+          >
+            Content
+          </label>
           <textarea
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-2xl"
+            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-lg"
             rows="4"
-            placeholder="What's happening?"
-            v-model="post_content"
+            placeholder="Provide litle hint about the competition"
+            v-model="payload.content"
           ></textarea>
         </div>
 
-        <div class="flex justify-between items-center sm:flex-row-reverse">
-          <div class="flex-shrink-0 sm:hidden">
+        <div class="mb-2 p-1">
+          <div class="flex justify-center">
+            <input
+              @change="onFileChange"
+              class="hidden"
+              type="file"
+              name="post_image"
+              id="post_image"
+              accept="image/gif, image/jpeg, image/png"
+            />
+          </div>
+
+          <div class="w-full">
+            <div
+              class="w-full border shadow-md bg-archyhub-light rounded-lg mb-4"
+            >
+              <img
+                v-if="payload.image_file"
+                :src="image_url"
+                class="w-full h-72 rounded-lg object-cover"
+              />
+            </div>
+
+            <div class="flex items-center gap-10 justify-between">
+              <label
+                class="cursor-pointer py-2 px-6 rounded-xl bg-gray-700 text-white hover:bg-green-dark focus:outline-none my-1"
+                for="post_image"
+              >
+                <span class="fa fa-image mr-1"></span>
+                {{ payload.image_file ? 'Change Picture' : 'Add Picture' }}
+              </label>
+
+              <span
+                v-if="payload.image_file"
+                class="cursor-pointer py-2 px-6 rounded-xl bg-red-700 text-white hover:bg-green-dark focus:outline-none my-1"
+                @click="payload.image_file = null"
+              >
+                Romove Image
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mt-20">
+          <div class="flex-shrink-0 sm:hi dden">
             <img
               class="w-12 h-12 rounded-full border"
               src="@/assets/script.jpg"
@@ -38,10 +82,12 @@
 
           <div class="">
             <button
-              class="text-md text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-lg sm:rounded-xl md:rounded-2xl py-2 sm:py-3 px-4 sm:px-8"
+              class="text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-lg sm:rounded-xl md:rounded-lg py-2 sm:py-3 px-4 sm:px-8"
             >
               <div class="w-full flex justify-center items-center space-x-2">
-                <span>{{ is_loading ? 'Sending...' : 'Create Post' }}</span>
+                <span>
+                  {{ is_loading ? 'Creating...' : 'Create New Post' }}
+                </span>
 
                 <svg
                   v-if="is_loading"
@@ -69,26 +115,25 @@
 
 <script lang="ts">
 import { ref, onBeforeMount } from 'vue'
-import { createNewPost } from '@/controller/api/posts.api'
+import {
+  createNewPostWithImage,
+  createNewPostWithoutImage,
+} from '@/controller/api/posts.api'
 import { useStore } from 'vuex'
 
 export default {
   name: 'CreatePostModal',
-  props: {
-    // reactions: {
-    //   type: Object,
-    //   required: true,
-    // },
-  },
-  setup(props: any) {
+  setup() {
     const store = useStore()
     const post_id = ref('')
-    const post_content = ref('')
-    const is_loading = ref(false)
+    const image_url = ref('')
     const message = ref({ type: '', text: '' })
-
-    const scrollShadowBoolean = ref(true)
-    const side_nav_toggler_boolean = ref(true)
+    const is_loading = ref(false)
+    const user_wants_image = ref(false)
+    const payload = ref({
+      content: '',
+      image_file: null,
+    })
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -99,14 +144,8 @@ export default {
       event.preventDefault()
       is_loading.value = true
 
-      const user_id = store.state.users.user.user_id
-      updateResponseMessage('', '')
-
-      const response = await createNewPost(user_id, post_content.value)
-      const { error, data, status } = response
-
-      if (error) {
-        updateResponseMessage('error', error)
+      if (payload.value.content === '') {
+        updateResponseMessage('error', 'content cannot be empty')
         is_loading.value = false
 
         return setTimeout(() => {
@@ -114,57 +153,57 @@ export default {
         }, 5000)
       }
 
-      //  return context.emit('createPost')
+      const poster_id = store.state.users.user._id
+      updateResponseMessage('', '')
+
+      if (payload.value.image_file) {
+        const response = await createNewPostWithImage(poster_id, payload.value)
+        const { error, data, status } = response
+
+        if (error) {
+          updateResponseMessage('error', error)
+          is_loading.value = false
+
+          return setTimeout(() => {
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
+      }
+
+      if (payload.value.image_file === null) {
+        const response = await createNewPostWithoutImage(
+          poster_id,
+          payload.value.content,
+        )
+        const { error, data, status } = response
+
+        if (error) {
+          updateResponseMessage('error', error)
+          is_loading.value = false
+
+          return setTimeout(() => {
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
+      }
     }
 
-    // close create post modal
-    // window.addEventListener('click', (event: any) => {
-    //   if (event.target.id === 'create_post_modal') {
-    //     store.dispatch('component_handler/createPostVisibillity')
-    //   }
-    // })
+    const onFileChange = (e: any) => {
+      const file = e.target.files[0]
 
-    // onBeforeMount(() => {
-    //   handleScroll()
-    //   window.addEventListener('scroll', () => handleScroll())
-    // })
-
-    // const handleScroll = () => {
-    //   if (window.pageYOffset > 0) {
-    //     // user is scrolled
-    //     if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
-    //   } else {
-    //     // user is at top of page
-    //     if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
-    //   }
-    // }
-
-    // const commentOnPost = (post_id: any) => {
-    //   console.log(post_id)
-    // }
-
-    // onBeforeMount(() => {
-    //   //
-    //   displayPostReactions()
-    // })
-
-    window.onkeyup = () => test
-
-    const test = (event: any) => {
-      console.log(event)
+      payload.value.image_file = file
+      image_url.value = URL.createObjectURL(file)
     }
 
     return {
       post_id,
-      // likePost,
-      // commentOnPost,
-      scrollShadowBoolean,
       is_loading,
-      post_content,
-      side_nav_toggler_boolean,
+      payload,
+      image_url,
+      user_wants_image,
       message,
       createPost,
-      test,
+      onFileChange,
     }
   },
 }

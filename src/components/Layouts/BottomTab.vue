@@ -6,9 +6,11 @@
       :class="
         current_active_route === '/home'
           ? 'bg-archyhub-main'
-          : current_active_route === '/profile/62a88a9675a64e7ba1a0c451'
-          ? 'bg-green-500 hidden'
-          : current_active_route === '/search'
+          : current_active_route === `/profile/${user.username}`
+          ? ' hidden'
+          : current_active_route === '/competitions'
+          ? ' bg-pink-500'
+          : current_active_route === '/scholarships'
           ? 'bg-red-500'
           : 'bg-yellow-800'
       "
@@ -16,7 +18,7 @@
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="w-12 h-12 sm:h-14 sm:w-14 text-white animate-spin"
+        class="w-10 h-10 sm:h-12 sm:w-12 text-white animate-spin"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -46,13 +48,12 @@
           "
           @click="toggleCurrentActiveNavLink(bottom_bar_link.route)"
         >
-          <router-link
-            :to="
+          <!--  :to="
               bottom_bar_link.route === '/profile'
                 ? `${bottom_bar_link.route}/${user.auth_user._id}`
                 : `${bottom_bar_link.route}`
-            "
-          >
+            " -->
+          <router-link :to="bottom_bar_link.route">
             <span
               :class="bottom_bar_link.icon"
               class="text-lg sm:text-xl p-3 sm:p-4 w-full font-extrabold h-full text-center"
@@ -75,52 +76,52 @@ export default {
     const route = useRoute()
     const store = useStore()
     const current_active_route = ref('/home')
+    const user = computed(() => store.state.users.user)
     const bottom_bar_links = ref([
       {
         route: '/home',
         title: 'Home',
         icon: 'fa fa-home',
       },
-      // {
-      //   route: '/scholarships',
-      //   title: 'Scholarships',
-      //   icon: 'fa fa-users',
-      // },
+      {
+        route: '/scholarships',
+        title: 'Scholarships',
+        icon: 'fa fa-users',
+      },
       {
         route: '/competitions',
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
+      // {
+      //   route: '/notifications',
+      //   title: 'Notifications',
+      //   icon: 'fa fa-bell',
+      // },
       {
-        route: '/notifications',
-        title: 'Notifications',
-        icon: 'fa fa-bell',
-      },
-      {
-        route: `/profile/${'62a88a9675a64e7ba1a0c451'}`,
+        route: `/profile/${user.value.username}`,
         title: 'Profile',
         icon: 'fa fa-user',
       },
     ])
 
-    const user = computed(() => store.state.users.user)
+    window.onkeyup = () => (current_active_route.value = route.fullPath)
+    window.onscroll = () => (current_active_route.value = route.fullPath)
+    window.onresize = () => (current_active_route.value = route.fullPath)
 
-    onBeforeMount(() => {
-      current_active_route.value = route.fullPath
-      console.log(current_active_route.value)
-    })
+    onBeforeMount(() => (current_active_route.value = route.fullPath))
 
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
-      // return store.dispatch('component_handler/sideNavVisibillity')
     }
 
     const openTargettedModal = () => {
-      console.log(current_active_route.value)
       if (current_active_route.value === '/home')
         return store.dispatch('component_handler/openNewPostModal')
       if (current_active_route.value === '/competitions')
         return store.dispatch('component_handler/openNewCompetitionModal')
+      if (current_active_route.value === '/scholarships')
+        return store.dispatch('component_handler/openNewScholarshipModal')
     }
 
     return {

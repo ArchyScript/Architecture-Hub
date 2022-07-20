@@ -1,3 +1,4 @@
+import { fetchAllPosts, fetchSinglePost } from '@/controller/api/posts.api'
 import {
   fetchAllCompetitions,
   fetchSingleCompetition,
@@ -8,22 +9,25 @@ import {
 } from '@/controller/api/scholarships'
 import {
   fetchAllUsers,
-  fetchSingleUserById,
   fetchSingleUserByUsername,
 } from '@/controller/api/users.api'
 
 const singleUser: any = {}
+const singlePost: any = {}
 const singleCompetition: any = {}
 const singleScholarship: any = {}
 const allUsers: any = []
+const allPosts: any = []
 const allCompetitions: any = []
 const allScholarships: any = []
 
 const state = {
   singleUser,
+  singlePost,
   singleScholarship,
   singleCompetition,
   allUsers,
+  allPosts,
   allCompetitions,
   allScholarships,
 }
@@ -35,6 +39,9 @@ export const users = {
     getSingleUser: (state: any) => {
       return state.singleUser
     },
+    getSinglePost: (state: any) => {
+      return state.singleUser
+    },
     getSingleScholarship: (state: any) => {
       return state.singleScholarship
     },
@@ -42,6 +49,9 @@ export const users = {
       return state.singleCompetition
     },
     getAllUsers: (state: any) => {
+      return state.allUsers
+    },
+    getAllPosts: (state: any) => {
       return state.allUsers
     },
     getAllCompetitions: (state: any) => {
@@ -58,6 +68,12 @@ export const users = {
       const { data } = response
 
       commit('SET_SINGLE_USER', data)
+    },
+    async singlePost({ commit }: any, _id: string) {
+      const response: any = await fetchSinglePost(_id)
+      const { data } = response
+
+      commit('SET_SINGLE_POST', data)
     },
     async singleCompetition({ commit }: any, _id: string) {
       const response: any = await fetchSingleCompetition(_id)
@@ -83,6 +99,12 @@ export const users = {
 
       commit('SET_ALL_SCHOLARSHIPS', data)
     },
+    async allPosts({ commit }: any) {
+      const response: any = await fetchAllPosts()
+      const { data } = response
+
+      commit('SET_ALL_POSTS', data)
+    },
     async allUsers({ commit }: any) {
       const response: any = await fetchAllUsers()
       const { data } = response
@@ -94,6 +116,10 @@ export const users = {
   //
   mutations: {
     SET_SINGLE_USER(state: any, data: any) {
+      console.log(data)
+      return (state.singleUser = data)
+    },
+    SET_SINGLE_POST(state: any, data: any) {
       console.log(data)
       return (state.singleUser = data)
     },
@@ -117,12 +143,17 @@ export const users = {
       console.log(data)
       return (state.allUsers = data)
     },
+    SET_ALL_POSTS(state: any, data: any) {
+      console.log(data)
+      return (state.allUsers = data)
+    },
   },
 }
 
-/* 
+/*
 console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
 console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
 console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
 console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb') */
+console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
+*/

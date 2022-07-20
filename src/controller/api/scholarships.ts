@@ -3,6 +3,7 @@ import {
   HandleAxiosResponse,
   HandleAxiosError,
 } from '../utilities/axios_return_response'
+import { formatDateAndTime } from '../utilities'
 
 //
 export const fetchAllScholarships = async () => {
@@ -32,9 +33,19 @@ export const fetchSingleScholarship = async (scholarships_id: any) => {
 
 //
 export const createScholarship = async (creator_id: any, payload: any) => {
+  const { link, host, title, description, content, image_file } = payload
+  const formData = new FormData()
+
+  formData.append('scholarship-image', image_file)
+  formData.append('host', host)
+  formData.append('link', link)
+  formData.append('description', description)
+  formData.append('title', title)
+  formData.append('content', content)
+
   try {
     const response = await default_axios_instance
-      .post(`scholarships/${creator_id}`, payload)
+      .post(`scholarships/${creator_id}`, formData)
       .then(async (response) => response)
 
     return HandleAxiosResponse(response)
