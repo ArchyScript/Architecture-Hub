@@ -3,7 +3,7 @@
     <div class="px-4 my-12">
       <div class="mb-2 w-full">
         <h4 class="text-lg justify-end text-gray-700 font-medium md:text-xl">
-          Update Bio
+          Update Auth Info
         </h4>
       </div>
 
@@ -23,32 +23,32 @@
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
-              for="firstname"
+              for="email"
             >
-              Firstname
+              Email
             </label>
             <input
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
-              name="firstname"
-              placeholder="Firstname"
-              v-model="payload.bio.firstname"
+              name="email"
+              placeholder="Email"
+              v-model="payload.email"
             />
           </div>
 
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
-              for="lastname"
+              for="username"
             >
-              Lastname
+              Username
             </label>
             <input
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
-              name="lastname"
-              placeholder="Lastname"
-              v-model="payload.bio.lastname"
+              name="username"
+              placeholder="Username"
+              v-model="payload.username"
             />
           </div>
         </div>
@@ -57,54 +57,34 @@
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
-              for="gender"
+              for="password"
             >
-              Gender: "{{ payload.bio.gender }}"
+              Password
             </label>
-            <select
-              v-model="payload.bio.gender"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none cursor-pointer rounded-lg"
-            >
-              <option disabled value="">Please select one</option>
-              <option class="bg-archyhub-light bg-opacity-75 cursor-pointer">
-                Male
-              </option>
-              <option>Female</option>
-              <option>Annonymous</option>
-            </select>
+            <input
+              type="text"
+              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+              name="password"
+              placeholder="Password"
+              v-model="payload.password"
+            />
           </div>
 
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
-              for="display_name"
+              for="confirm_password"
             >
-              Display Name
+              Confirm Password
             </label>
             <input
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
-              name="display_name"
-              placeholder="display name"
-              v-model="payload.bio.display_name"
+              name="confirm_password"
+              placeholder="Confirm Password"
+              v-model="payload.confirm_password"
             />
           </div>
-        </div>
-
-        <div class="flex flex-col w-full mb-3 p-1">
-          <label
-            class="block mb-1 mx-2 font-medium text-gray-500"
-            for="description"
-          >
-            Description
-          </label>
-
-          <textarea
-            class="w-full text-sm md:text-base resize-none py-3 px-2 mb-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
-            rows="4"
-            name="description"
-            placeholder="Describe yourself..."
-          ></textarea>
         </div>
 
         <div class="my-2 px-1">
@@ -140,36 +120,41 @@
 
 <script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
-// import { updateUserData } from '@/controller/api/users.api'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import router from '@/router'
 
 export default {
-  name: 'EditBio',
+  name: 'EditAuthInfo',
   setup() {
     const store = useStore()
     const route = useRoute()
     const is_loading = ref(false)
+    // const user_profile_id = ref('')
     const message = ref({ type: '', text: '' })
-    const selected_gender = ref('')
     const payload = ref({
-      bio: {
-        firstname: '',
-        lastname: '',
-        display_name: '',
-        gender: '',
-        description: '',
-      },
+      username: '',
+      email: '',
+      password: '',
+      confirm_password: '',
     })
     const auth_user = computed(() => store.state.users.auth_user)
 
+    const user_data = computed(() => store.state.users)
+
     const loadAuthUserInfo = () => {
-      const { bio } = auth_user.value
-      payload.value.bio = bio
+      const { username, email } = auth_user.value
+      payload.value.username = username
+      payload.value.email = email
     }
 
-    onBeforeMount(() => loadAuthUserInfo())
+    onBeforeMount(() => {
+      loadAuthUserInfo()
+
+      // user_profile_id.value = _id
+    })
+    const user = computed(() => {
+      return store.state.users.user
+    })
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -178,7 +163,12 @@ export default {
 
     const UpdateAndSaveBio = async () => {
       is_loading.value = true
-      updateResponseMessage('error', 'error')
+      updateResponseMessage(
+        'error',
+        'gn.nm;hhhhhhhhhhhhhhwewwwwwwwwwwwwwwwwwwwwigruipnk',
+      )
+
+      const user_id = '62a88b5875a64e7ba1a0c45d'
 
       // const response: any = await updateUserData(user_id, payload.value)
       // const { error, data, status } = response
@@ -217,9 +207,9 @@ export default {
     return {
       payload,
       is_loading,
-      selected_gender,
       message,
       auth_user,
+      user_data,
       UpdateAndSaveBio,
       updateResponseMessage,
     }

@@ -71,7 +71,7 @@
         </div>
 
         <div v-for="(eachCompetition, index) in allCompetitions" :key="index">
-          <CompetitionPostVue :eachCompetition="eachCompetition" />
+          <CompetitionContentVue :eachCompetition="eachCompetition" />
         </div>
       </div>
     </div>
@@ -79,10 +79,10 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
-import CompetitionPostVue from '@/components/CompetitionPost.vue'
+import CompetitionContentVue from '@/components/Competitions/CompetitionContent.vue'
 import AnimatedPostContentVue from '@/components/Animation/AnimatedPostContent.vue'
 import { CompetitionSchema } from '@/controller/typings'
 import { fetchAllCompetitions } from '@/controller/api/competitions'
@@ -91,7 +91,7 @@ export default {
   name: 'Competitions',
   components: {
     MainPageTopBarVue,
-    CompetitionPostVue,
+    CompetitionContentVue,
     AnimatedPostContentVue,
   },
   setup() {
@@ -100,6 +100,17 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Competitions', icon: 'fa fa-trophy' })
+    const storeCompetitions = computed(
+      () => store.state._requests.allCompetitions,
+    )
+
+    const auth_user = computed(() => store.state.users.auth_user)
+    const open_new_post_modal = computed(
+      () => store.state.component_handler.open_new_post_modal,
+    )
+    const open_new_comment_modal = computed(
+      () => store.state.component_handler.open_new_comment_modal,
+    )
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -110,46 +121,85 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      console.log('hfk')
-      const response = await fetchAllCompetitions()
-
-      const { error, data, status } = response
-      console.log('hfeerek')
-
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
-
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
+      async function fetchCompetitions() {
+        await store.dispatch('_requests/getAllCompetitions')
+        allCompetitions.value = storeCompetitions.value
       }
 
-      if (!status || status === 400 || !data) {
-        updateResponseMessage(
-          'error',
-          'Sorry, an unknown error occurred... Check connection',
-        )
+      if (storeCompetitions.value && storeCompetitions.value.length >= 1) {
+        allCompetitions.value = storeCompetitions.value
+      } else {
+        await fetchCompetitions()
 
-        return setTimeout(() => {
+        if (!allCompetitions.value) {
           is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
+          updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+          return setTimeout(() => {
+            is_loading.value = false
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
       }
+
+      // const response = await fetchAllCompetitions()
+      // const { error, data, status } = response
+
+      // if (error) {
+      //   updateResponseMessage('error', error)
+      //   is_loading.value = false
+
+      //   return setTimeout(() => {
+      //     return updateResponseMessage('', '')
+      //   }, 5000)
+      // }
+
+      // if (!status || status === 400 || !data) {
+      //   updateResponseMessage(
+      //     'error',
+      //     'Sorry, an unknown error occurred... Check connection',
+      //   )
+
+      //   return setTimeout(() => {
+      //     is_loading.value = false
+      //     return updateResponseMessage('', '')
+      //   }, 5000)
+      // }
 
       updateResponseMessage('success', '')
-
-      allCompetitions.value = data
       is_loading.value = false
-
-      console.log(data)
+      await store.dispatch('_requests/getAllCompetitions')
     }
 
-    onBeforeMount(() => {
-      getAllCompetitions()
-    })
+    // window.onkeyup = () => {
+    //   if (
+    //     open_new_post_modal.value === false ||
+    //     open_new_comment_modal.value === false
+    //   ) {
+    //     getAllCompetitions()
+    //   }
+    // }
+    // window.addEventListener('click', () => {
+    //   if (
+    //     open_new_post_modal.value === true ||
+    //     open_new_comment_modal.value === false
+    //   ) {
+    //     getAllCompetitions()
+    //   }
+    // })
 
-    return { allCompetitions, is_loading, message, topbar, getAllCompetitions }
+    onBeforeMount(async () => await getAllCompetitions())
+
+    return {
+      allCompetitions,
+      is_loading,
+      message,
+      topbar,
+      getAllCompetitions,
+    }
   },
 }
 </script>

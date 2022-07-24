@@ -6,7 +6,7 @@
       class="flex shadow-2xl p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
     >
       <div class="flex-shrink-0 mx-4 hidden sm:inline">
-        <img class="w-20 h-20 rounded-full border" src="@/assets/script.jpg" />
+        <img class="w-20 h-20 rounded-full border" :src="user_profile_avatar" />
       </div>
 
       <form class="w-full flex-1" @submit="newComment">
@@ -27,11 +27,13 @@
           ></textarea>
         </div>
 
+        {{ post_comment_object }}
+
         <div class="flex justify-between items-center sm:flex-row-reverse">
           <div class="flex-shrink-0 sm:hidden">
             <img
               class="w-12 h-12 rounded-full border"
-              src="@/assets/script.jpg"
+              :src="user_profile_avatar"
             />
           </div>
 
@@ -70,9 +72,11 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { commentOnPost } from '@/controller/api/reactions.api'
+import { getDisplayProfilePicture } from '@/controller/utilities'
+import router from '@/router'
 
 export default {
-  name: 'CreatePostModal',
+  name: 'CreateCommentModal',
 
   setup() {
     const store = useStore()
@@ -85,6 +89,12 @@ export default {
     const post_to_comment_on_id = computed(
       () => store.state.component_handler.post_to_comment_on_id,
     )
+    const post_comment_object = computed(
+      () => store.state.component_handler.post_comment_object,
+    )
+    const user_profile_avatar = ref('')
+    const user = computed(() => store.state.users.user)
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -97,12 +107,15 @@ export default {
       updateResponseMessage('', '')
 
       const params = {
-        commenter_id: store.state.users.user._id,
-        post_id: post_to_comment_on_id.value,
+        commenter_id: auth_user.value._id,
+        post_id: post_comment_object.value.post_id,
+        post_type: post_comment_object.value.post_type,
       }
 
       const response = await commentOnPost(params, payload.value)
       const { error, data, status } = response
+
+      console.log(response)
 
       if (error) {
         updateResponseMessage('error', error)
@@ -114,6 +127,15 @@ export default {
       }
 
       updateResponseMessage('success', data)
+
+      await store.dispatch('_requests/getAllUsers')
+
+      if (post_comment_object.value === 'post')
+        await store.dispatch('_requests/getAllPosts')
+      if (post_comment_object.value === 'competition')
+        await store.dispatch('_requests/getAllCompetitions')
+      if (post_comment_object.value === 'scholarship')
+        await store.dispatch('_requests/getAllScholarships')
 
       store.dispatch('component_handler/closeAllModals')
       // return router.push('/')
@@ -145,10 +167,14 @@ export default {
     //   console.log(post_id)
     // }
 
-    // onBeforeMount(() => {
-    //   //
-    //   displayPostReactions()
-    // })
+    onBeforeMount(async () => {
+      //
+      user_profile_avatar.value = await getDisplayProfilePicture(
+        user.value.profile_picture.avatar,
+        user.value.bio.gender,
+      )
+      // displayPostReactions()
+    })
 
     window.onkeyup = () => test
 
@@ -160,6 +186,8 @@ export default {
       post_id,
       // likePost,
       // newComment,
+      post_comment_object,
+      user_profile_avatar,
       scrollShadowBoolean,
       is_loading,
       payload,

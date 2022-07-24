@@ -278,6 +278,7 @@ export default {
       )
 
       await store.dispatch('users/getUser', user_id)
+      // await store.dispatch('users/getAuthUser', user_id)
       await store.dispatch('users/assignToken', token)
 
       is_loading.value = false

@@ -13,15 +13,15 @@ const Scholarships = () => import('@/views/Scholarships/index.vue')
 // const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
-const Notifications = () => import('@/views/Notifications/index.vue')
+// const Notifications = () => import('@/views/Notifications/index.vue')
 
 //
-const PostDetails = () => import('@/views/PostDetails/index.vue')
-const NewsDetailsLayout = () => import('@/views/NewsDetails/index.vue')
+const ContentDetailsLayout = () => import('@/views/ContentDetails/index.vue')
+const PostDetails = () => import('@/views/ContentDetails/PostDetails.vue')
 const CompetitionDetails = () =>
-  import('@/views/NewsDetails/CompetitionDetails.vue')
+  import('@/views/ContentDetails/CompetitionDetails.vue')
 const ScholarshipDetails = () =>
-  import('@/views/NewsDetails/ScholarshipDetails.vue')
+  import('@/views/ContentDetails/ScholarshipDetails.vue')
 // const SinglePostDetails = () =>
 //   import('@/views/Profile copy/SinglePostDetails.vue')
 
@@ -85,11 +85,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Scholarships',
         component: Scholarships,
       },
-      {
-        path: '/notifications',
-        name: 'Notifications',
-        component: Notifications,
-      },
+      // {
+      //   path: '/notifications',
+      //   name: 'Notifications',
+      //   component: Notifications,
+      // },
 
       {
         path: '/profile/:username/edit',
@@ -97,22 +97,22 @@ const routes: Array<RouteRecordRaw> = [
         component: EditProfilePage,
       },
       {
-        path: '/post/:_id',
+        path: '/post/:post_id',
         name: 'PostDetails',
         component: PostDetails,
       },
       {
         path: '/news',
-        name: 'NewsDetailsLayout',
-        component: NewsDetailsLayout,
+        name: 'ContentDetailsLayout',
+        component: ContentDetailsLayout,
         children: [
           {
-            path: '/competitions/:_id',
+            path: '/competitions/:competition_id',
             name: 'CompetitionDetails',
             component: CompetitionDetails,
           },
           {
-            path: '/scholarships/:_id',
+            path: '/scholarships/:scholarship_id',
             name: 'ScholarshipDetails',
             component: ScholarshipDetails,
           },

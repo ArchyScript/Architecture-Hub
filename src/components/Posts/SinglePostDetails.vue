@@ -73,7 +73,7 @@
       </div>
 
       <div class="mt-6">
-        <div class="" v-if="!does_have_comment">
+        <div class="" v-if="!does_post_have_comment">
           <span class="block text-center">No comment found</span>
         </div>
 
@@ -91,7 +91,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount, Comment } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import {
@@ -102,10 +102,11 @@ import router from '@/router'
 // import { default_images } from '@/controller/utils/index'
 import { useRoute } from 'vue-router'
 import { fetchSinglePost } from '@/controller/api/posts.api'
-import { singleCommentOnPost } from '@/controller/api/reactions.api'
+import { specificComment } from '@/controller/api/reactions.api'
 import CommentVue from '@/components/Comments/Comment.vue'
 import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import { fetchSingleUserById } from '@/controller/api/users.api'
+import { useStore } from 'vuex'
 
 type CommentSchema =
   | {
@@ -122,8 +123,11 @@ export default {
   components: { ReactionsVue, AnimatedSingleContentVue, CommentVue },
 
   setup() {
+    const store = useStore()
     const route = useRoute()
-    const does_have_comment = ref(false)
+    const does_post_have_comment = ref(false)
+    const post_comments = ref<CommentSchema[]>([])
+    const auth_user = computed(() => store.state.users.auth_user)
     const post_info = ref({
       display_name: '',
       username: '',
@@ -133,115 +137,165 @@ export default {
       time: '',
       date: '',
     })
-
-    const post_comments = ref<CommentSchema[]>([])
-
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
-      post_id: '',
+      post_comment_object: {
+        post_id: '',
+        post_type: '',
+      },
     })
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const allUsers = ref([])
+    const allPosts = ref([])
+    const storePosts = computed(() => store.state._requests.allPosts)
 
-    const getPostDetails = async (_id: any) => {
-      const response = await fetchSinglePost(_id)
-      const { error, data, status } = response
-
-      if (error || status === 400 || !data || typeof data === 'string') return
-
-      const getPostInfo = async () => {
-        const {
-          _id,
-          poster_id,
-          createdAt,
-          comments,
-          likes,
-          content,
-          post_image,
-        } = response.data
-        const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
-
-        //
-        reactions.value.no_of_comments = comments.length
-        reactions.value.no_of_likes = likes.length
-        reactions.value.post_id = _id
-
-        //
-        post_info.value.time = formattedTime
-        post_info.value.date = formattedDate
-        post_info.value.post_image = post_image.avatar
-        post_info.value.post_content = content
-        //
-        const result = await fetchSingleUserById(poster_id)
-        const { error, data, status } = result
-
-        if (error || status === 400 || !data || typeof data === 'string') return
-
-        const {
-          username,
-          bio: { display_name, gender },
-          profile_picture: { avatar },
-        } = data
-
-        const poster_picture: any = await getDisplayProfilePicture(
-          avatar,
-          gender,
-        )
-        post_info.value.display_name = display_name
-        post_info.value.username = username
-        post_info.value.poster_picture = poster_picture
+    const getPostDetails = async (post_id: any) => {
+      async function fetchPosts() {
+        await store.dispatch('_requests/getAllPosts')
+        allPosts.value = storePosts.value
       }
-      getPostInfo()
+
+      async function fetchUsers() {
+        await store.dispatch('_requests/getAllUsers')
+        allUsers.value = storeUsers.value
+      }
 
       //
-      if (!data.comments || data.comments === undefined) return
+      if (storePosts.value && storePosts.value.length >= 1) {
+        allPosts.value = storePosts.value
+      } else {
+        await fetchPosts()
+      }
 
-      // Handle comment component data
-      if (data.comments <= 0) return (does_have_comment.value = false)
+      allPosts.value.forEach(async (eachPost: any) => {
+        if (eachPost._id === post_id) {
+          const {
+            _id,
+            poster_id,
+            createdAt,
+            comments,
+            likes,
+            content,
+            post_image: { avatar },
+          } = eachPost
+          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      does_have_comment.value = true
+          //
+          reactions.value.no_of_comments = comments.length
+          reactions.value.no_of_likes = likes.length
+          reactions.value.post_comment_object.post_id = _id
+          reactions.value.post_comment_object.post_type = 'post'
 
-      data.comments.forEach(async (comment: any) => {
-        const _id = comment.comment_id
+          //
+          post_info.value.time = formattedTime
+          post_info.value.date = formattedDate
+          post_info.value.post_image = avatar
+          post_info.value.post_content = content
 
-        const response = await singleCommentOnPost(_id)
-        const { error, data, status } = response
-        if (error || status === 400 || !data || typeof data === 'string') return
+          //
+          if (storeUsers.value.length >= 1) {
+            allUsers.value = storeUsers.value
+          } else {
+            await fetchUsers()
+          }
 
-        const { formattedDate, formattedTime } = formatDateAndTime(
-          data.createdAt,
-        )
+          //
+          allUsers.value.forEach(async (eachUser: any) => {
+            if (eachUser._id === poster_id) {
+              const {
+                username,
+                bio: { display_name, gender },
+                profile_picture: { avatar },
+              } = eachUser
 
-        const result = await fetchSingleUserById(data.commenter_id)
-        const commenter_info = result.data
+              const poster_picture: any = await getDisplayProfilePicture(
+                avatar,
+                gender,
+              )
 
-        const commenter_image: any = await getDisplayProfilePicture(
-          commenter_info.profile_picture.avatar,
-          commenter_info.bio.gender,
-        )
+              //
+              post_info.value.display_name = display_name
+              post_info.value.username = username
+              post_info.value.poster_picture = poster_picture
+            }
+          })
 
-        const post_comment_info = {
-          comment: data.comment,
-          commenter_image,
-          commneter_username: commenter_info.username,
-          date: formattedDate,
-          time: formattedTime,
+          if (comments && comments.length <= 0)
+            return (does_post_have_comment.value = false)
+
+          does_post_have_comment.value = true
+
+          comments.forEach(async (comment: any) => {
+            const params = {
+              comment_id: comment.comment_id,
+              post_type: 'post',
+            }
+
+            //
+            const response = await specificComment(params)
+
+            const { error, data, status } = response
+            if (error || status === 400 || !data) return
+
+            //
+            const singleComment = data
+
+            const { formattedDate, formattedTime } = formatDateAndTime(
+              singleComment.createdAt,
+            )
+
+            //
+            const result = await fetchSingleUserById(data.commenter_id)
+            const commenter_info = result
+
+            //
+            if (
+              commenter_info.error ||
+              commenter_info.status === 400 ||
+              !commenter_info.data
+            )
+              return
+
+            //
+            const {
+              username,
+              profile_picture: { avatar },
+              bio: { gender },
+            } = commenter_info.data
+            const commenter_image: any = await getDisplayProfilePicture(
+              avatar,
+              gender,
+            )
+
+            //
+            const post_comment_info = {
+              comment: singleComment.comment,
+              commenter_image,
+              commneter_username: username,
+              date: formattedDate,
+              time: formattedTime,
+            }
+
+            post_comments.value.unshift(post_comment_info)
+          })
         }
-
-        post_comments.value.push(post_comment_info)
       })
-
       return
     }
 
     onBeforeMount(async () => {
-      const { _id } = route.params
-      await getPostDetails(_id)
+      const { post_id } = route.params
+      // await store.dispatch('_requests/getAllPosts')
+      // await store.dispatch('_requests/getAllUsers')
+
+      await getPostDetails(post_id)
     })
     return {
       post_info,
       post_comments,
       reactions,
-      does_have_comment,
+      does_post_have_comment,
       getPostDetails,
     }
   },

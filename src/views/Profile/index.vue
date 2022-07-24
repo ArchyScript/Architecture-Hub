@@ -63,15 +63,15 @@ export default {
     const profile_page_links = ref([
       {
         title: 'Posts',
-        icon: 'fa fa-home',
-      },
-      {
-        title: 'Bookmarked',
-        icon: 'fa fa-bookmark-o',
+        icon: 'fa fa-sticky-note-o',
       },
       {
         title: 'Media',
         icon: 'fa fa-image',
+      },
+      {
+        title: 'Bookmarked',
+        icon: 'fa fa-bookmark-o',
       },
     ])
 

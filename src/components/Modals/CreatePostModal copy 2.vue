@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { createNewPost } from '@/controller/api/posts.api'
 import { useStore } from 'vuex'
 
@@ -97,6 +97,7 @@ export default {
     const scrollShadowBoolean = ref(true)
     const side_nav_toggler_boolean = ref(true)
 
+    const auth_user = computed(() => store.state.users.auth_user)
     // const displayPostReactions = () => {
     //   props.reactions.no_of_comments < 1 ? '' : props.reactions.no_of_comments
     //   props.reactions.no_of_likes < 1 ? '' : props.reactions.no_of_likes
@@ -170,6 +171,7 @@ export default {
     return {
       post_id,
       // likePost,
+      auth_user,
       // commentOnPost,
       scrollShadowBoolean,
       is_loading,

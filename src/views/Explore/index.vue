@@ -4,11 +4,11 @@
     <TopBarVue />
 
     <div class="pb-8">
+      <!-- <CompetitionPostVue />
       <CompetitionPostVue />
       <CompetitionPostVue />
       <CompetitionPostVue />
-      <CompetitionPostVue />
-      <CompetitionPostVue />
+      <CompetitionPostVue /> -->
     </div>
   </div>
 </template>
@@ -16,13 +16,13 @@
 <script>
 import { ref } from 'vue'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
-import CompetitionPostVue from '@/components/CompetitionPost.vue'
+// import CompetitionPostVue from '@/components/CompetitionPost.vue'
 
 export default {
   name: 'Competitions',
   components: {
     MainPageTopBarVue,
-    CompetitionPostVue,
+    // CompetitionPostVue,
   },
   setup() {
     const topbar = ref({ title: 'Explore', icon: 'fa fa-trophy' })

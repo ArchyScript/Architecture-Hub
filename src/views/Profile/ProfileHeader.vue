@@ -160,6 +160,7 @@ export default {
     })
 
     const active_user = computed(() => store.state.users.user)
+    const auth_user = computed(() => store.state.users.auth_user)
 
     onBeforeMount(async () => {
       const { username } = route.params
@@ -202,7 +203,12 @@ export default {
       return
     }
 
-    return { active_user, user_profile_id, user_profile }
+    return {
+      auth_user,
+      active_user,
+      user_profile_id,
+      user_profile,
+    }
   },
 }
 </script>

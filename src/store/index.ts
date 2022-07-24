@@ -1,19 +1,19 @@
 import { createStore } from 'vuex'
-import { users } from './modules/auth_users'
-import posts from './modules/posts'
+import { users } from './modules/auth_user'
 import component_handler from './modules/component_handler'
+import _requests from './modules/_requests'
 
 interface StoreInterface {
   users: any
-  posts: any
   component_handler: any
+  _requests: any
 }
 
 // export default createStore({
 export default createStore<StoreInterface>({
   modules: {
     users,
-    posts,
     component_handler,
+    _requests,
   },
 })

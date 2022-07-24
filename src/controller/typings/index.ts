@@ -77,7 +77,7 @@ export type ScholarshipSchema = {
   link: string
   host: string
   description: string
-  competition_image: {
+  scholarship_image: {
     title: string
     cloudinary_id: string
     avatar: string

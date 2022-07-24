@@ -13,9 +13,9 @@
         </div>
       </div>
 
-      <div class="flex flex-col space-y-6" v-if="competitions.length >= 1">
+      <div class="flex flex-col" v-if="competitions.length >= 1">
         <div
-          class="flex items -center space-x-4 shadow-sm px-4 py-2"
+          class="flex space-x-4 shadow-sm px-4 py-4"
           :key="competition.category"
           v-for="competition in competitions"
         >
@@ -51,7 +51,7 @@
             <p class="">
               {{
                 is_more_description_boolean &&
-                read_more_user_id == competition._id
+                read_more_competition_id == competition._id
                   ? competition.content.substring(0, 100)
                   : competition.content.substring(0, 75)
               }}
@@ -61,7 +61,7 @@
               >
                 {{
                   is_more_description_boolean &&
-                  read_more_user_id == competition._id
+                  read_more_competition_id == competition._id
                     ? 'see less'
                     : 'see more'
                 }}
@@ -70,12 +70,19 @@
           </div>
         </div>
       </div>
+
+      <!-- <div class="w-full mt-4"> -->
+      <p class="w-full py-2 sm:py-3 text-sm text-center sm:text-base italic">
+        <router-link to="/competitions">see all</router-link>
+      </p>
+      <!-- </div> -->
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
+import { useStore } from 'vuex'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
 import { fetchAllCompetitions } from '@/controller/api/competitions'
 
@@ -93,78 +100,71 @@ export default {
   name: 'LatestCompetitions',
   components: { AnimatedLatestVue },
   setup() {
+    const store = useStore()
     const competitions = ref<CompetitonSchema[]>([])
     const is_more_description_boolean = ref(true)
-    const read_more_user_id = ref('')
-
+    const read_more_competition_id = ref('')
+    const storeCompetitions = computed(
+      () => store.state._requests.allCompetitions,
+    )
+    const allCompetitions = ref([])
+    const auth_user = computed(() => store.state.users.auth_user)
     const viewNewsUpdateDetails = (user_id: string) => {
       console.log(user_id)
     }
 
-    const toggleDescriptionLength = (user_id: string) => {
-      if (read_more_user_id.value === user_id) {
+    const toggleDescriptionLength = (competition_id: string) => {
+      if (read_more_competition_id.value === competition_id) {
         is_more_description_boolean.value = false
-        return (read_more_user_id.value = '')
+        return (read_more_competition_id.value = '')
       }
 
       is_more_description_boolean.value = true
-      read_more_user_id.value = user_id
-      console.log(user_id)
+      read_more_competition_id.value = competition_id
+      console.log(competition_id)
     }
 
     const getCompetitions = async () => {
-      const response = await fetchAllCompetitions()
-      const { error, data, status } = response
+      // const response = await fetchAllCompetitions()
+      // const { error, data, status } = response
 
-      if (error || status === 400 || !data || typeof data === 'string') return
+      // if (error || status === 400 || !data || typeof data === 'string') return
 
-      console.log(data)
+      async function fetchCompetitions() {
+        await store.dispatch('_requests/getAllCompetitions')
+        allCompetitions.value = storeCompetitions.value
+      }
 
-      data.forEach(async (competition: any, index: number) => {
-        if (index <= 1) {
+      if (storeCompetitions.value.length >= 1) {
+        allCompetitions.value = storeCompetitions.value
+      } else {
+        await fetchCompetitions()
+      }
+
+      allCompetitions.value.forEach(async (competition: any, index: number) => {
+        if (index <= 2) {
           const { _id, creator_id, content, title } = competition
 
-          // competition_image: { avatar },
-          // let competition_image = ''
-
-          // const getUser = async () => {
-          //   const user = await fetchSingleUserById(creator_id)
-          //   if (error || status === 400 || !data || typeof data === 'string')
-          //     return
-
-          //   const {
-          //     bio: { gender },
-          //   } = data
-          //   if (avatar !== '') {
-          //     competition_image = avatar
-          //   } else {
-          //     if (gender === 'male') competition_image = default_images.male
-          //     if (gender === 'female') competition_image = default_images.female
-          //     else competition_image = default_images.random
-          //   }
-          // }
-          // getUser()
-
-          const latest_competitions = {
+          const latest_competition = {
             _id,
             creator_id,
             content,
             title,
           }
 
-          competitions.value.push(latest_competitions)
+          competitions.value.push(latest_competition)
         }
       })
+
+      await store.dispatch('_requests/getAllCompetitions')
     }
 
-    onBeforeMount(() => {
-      getCompetitions()
-    })
+    onBeforeMount(async () => await getCompetitions())
 
     return {
       is_more_description_boolean,
       competitions,
-      read_more_user_id,
+      read_more_competition_id,
       viewNewsUpdateDetails,
       toggleDescriptionLength,
     }

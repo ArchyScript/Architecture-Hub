@@ -79,7 +79,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
@@ -100,6 +100,15 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Home', icon: 'fa fa-home' })
+    const storePosts = computed(() => store.state._requests.allPosts)
+    const auth_user = computed(() => store.state.users.auth_user)
+
+    const open_new_post_modal = computed(
+      () => store.state.component_handler.open_new_post_modal,
+    )
+    const open_new_comment_modal = computed(
+      () => store.state.component_handler.open_new_comment_modal,
+    )
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -110,46 +119,50 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      console.log('hfk')
-      const response = await fetchAllPosts()
-
-      const { error, data, status } = response
-      console.log('hfeerek')
-
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
-
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
+      async function fetchPosts() {
+        await store.dispatch('_requests/getAllPosts')
+        allPosts.value = storePosts.value
       }
 
-      if (!status || status === 400 || !data) {
-        updateResponseMessage(
-          'error',
-          'Sorry, an unknown error occurred... Check connection',
-        )
+      if (storePosts.value && storePosts.value.length >= 1) {
+        allPosts.value = storePosts.value
+      } else {
+        await fetchPosts()
 
-        return setTimeout(() => {
+        if (!allPosts.value) {
           is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
+          updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+          return setTimeout(() => {
+            is_loading.value = false
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
       }
 
       updateResponseMessage('success', '')
-
-      allPosts.value = data
       is_loading.value = false
-
-      console.log(data)
+      store.dispatch('_requests/getAllPosts')
     }
 
-    onBeforeMount(() => {
-      //
-      getAllPosts()
+    onBeforeMount(async () => {
+      // await store.dispatch('_requests/getAllPosts')
+      // await store.dispatch('_requests/getAllUsers')
+
+      await getAllPosts()
     })
-    return { allPosts, is_loading, message, topbar, getAllPosts }
+
+    return {
+      auth_user,
+      allPosts,
+      is_loading,
+      message,
+      topbar,
+      getAllPosts,
+    }
   },
 }
 </script>

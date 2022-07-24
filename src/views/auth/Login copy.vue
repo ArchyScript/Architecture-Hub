@@ -41,8 +41,9 @@
                 otherLoginOptions ? 'border-green-600 text-green-600' : ''
               "
               @click="otherLoginOptions = true"
-              >Other Options</span
             >
+              Other Options
+            </span>
           </div>
 
           <div v-if="!otherLoginOptions">
@@ -55,24 +56,27 @@
                     class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
                     :class="!loginWithEmail ? 'border-green-600  ' : ''"
                     @click="toggleLoginOption('username')"
-                    >Username</span
                   >
+                    Username
+                  </span>
                   or
                   <span
                     title="Login with Email and password"
                     class="cursor-pointer px-3 py-1 mx-1 rounded-xl border border-solid border-gray-100"
                     :class="loginWithEmail ? 'border-green-600 ' : ''"
                     @click="toggleLoginOption('email')"
-                    >Email</span
                   >
+                    Email
+                  </span>
                 </div>
 
                 <div class="p-1 mb-3">
                   <label
                     class="block mb-1 mx-2 font-medium text-gray-600"
                     for="email"
-                    >{{ loginWithEmail ? 'Email' : 'Username' }}</label
                   >
+                    {{ loginWithEmail ? 'Email' : 'Username' }}
+                  </label>
 
                   <input
                     v-if="loginWithEmail"
@@ -133,10 +137,14 @@
                 </div>
               </div>
 
-              {{ user }} <br />
-              {{ double }}<br />
-              {{ increment }}<br />
-              {{ asyncIncrement }}<br />
+              {{ user }}
+              <br />
+              {{ double }}
+              <br />
+              {{ increment }}
+              <br />
+              {{ asyncIncrement }}
+              <br />
 
               <div class="text-grey-dark my-6 text-right underline">
                 <router-link :to="{ name: 'ResetPassword' }">
@@ -161,7 +169,7 @@
             Don't have an account?
 
             <span class="underline ml-1">
-              <router-link :to="{ name: 'SignUp' }"> SignUp</router-link>
+              <router-link :to="{ name: 'SignUp' }">SignUp</router-link>
             </span>
           </div>
         </div>
@@ -171,89 +179,91 @@
 </template>
 
 <script>
-  import { ref } from 'vue'
-  import OtherSigninOptions from './OtherSigninOptions.vue'
-  import { useStore, mapGetters } from 'vuex'
-  import { computed } from 'vue'
+import { ref } from 'vue'
+import OtherSigninOptions from './OtherSigninOptions.vue'
+import { useStore, mapGetters } from 'vuex'
+import { computed } from 'vue'
 
-  export default {
-    name: 'Login',
+export default {
+  name: 'Login',
 
-    components: {
-      OtherSigninOptions,
-    },
+  components: {
+    OtherSigninOptions,
+  },
 
-    computed: {
-      ...mapGetters(['allUsers']),
-    },
+  computed: {
+    ...mapGetters(['allUsers']),
+  },
 
-    created() {
-      console.log(this.allUsers)
-    },
-    setup() {
-      const store = useStore()
+  created() {
+    console.log(this.allUsers)
+  },
+  setup() {
+    const store = useStore()
 
-      const otherLoginOptions = ref(false)
-      const loginWithEmail = ref(true)
-      const passwordVisibility = ref(true)
-      const email = ref('')
-      const username = ref('')
-      const password = ref('')
+    const otherLoginOptions = ref(false)
+    const loginWithEmail = ref(true)
+    const passwordVisibility = ref(true)
+    const email = ref('')
+    const username = ref('')
+    const password = ref('')
 
-      // const testing = computed(() => {
-      //   return store
-      // }),
-      //
-      const user = computed(() => {
-        // console.log(store.state.allUsers)
-        return store.state.allUsers
-      })
+    // const testing = computed(() => {
+    //   return store
+    // }),
+    //
+    const auth_user = computed(() => store.state.users.auth_user)
+    const user = computed(() => {
+      // console.log(store.state.allUsers)
+      return store.state.allUsers
+    })
+    // access a getter in computed function
+    const double = computed(() => store.getters.double)
+    // access a mutation
+    const increment = () => store.commit('increment')
+
+    // access an action
+    const asyncIncrement = () => store.dispatch('asyncIncrement')
+
+    // const loadStore = () => {}
+    // const checkoutStatus = computed(() => store.state.cart.checkoutStatus)
+    // const products = computed(() => store.getters['cart/cartProducts'])
+    // const total = computed(() => store.getters['cart/cartTotalPrice'])
+
+    const toggleLoginOption = (event) => {
+      // console.log(store)
+      loginWithEmail.value = event === 'email' ? true : false
+    }
+
+    const togglePasswordVisibility = () => {
+      passwordVisibility.value = !passwordVisibility.value
+    }
+
+    const logUserIn = (event) => {
+      event.preventDefault()
+    }
+    return {
+      email,
+      username,
+      password,
+      loginWithEmail,
+      toggleLoginOption,
+      logUserIn,
+      passwordVisibility,
+      togglePasswordVisibility,
+      otherLoginOptions,
+      // state
+      user,
+      auth_user,
       // access a getter in computed function
-      const double = computed(() => store.getters.double)
+      double,
       // access a mutation
-      const increment = () => store.commit('increment')
-
+      increment,
       // access an action
-      const asyncIncrement = () => store.dispatch('asyncIncrement')
-
-      // const loadStore = () => {}
-      // const checkoutStatus = computed(() => store.state.cart.checkoutStatus)
-      // const products = computed(() => store.getters['cart/cartProducts'])
-      // const total = computed(() => store.getters['cart/cartTotalPrice'])
-
-      const toggleLoginOption = (event) => {
-        // console.log(store)
-        loginWithEmail.value = event === 'email' ? true : false
-      }
-
-      const togglePasswordVisibility = () => {
-        passwordVisibility.value = !passwordVisibility.value
-      }
-
-      const logUserIn = (event) => {
-        event.preventDefault()
-      }
-      return {
-        email,
-        username,
-        password,
-        loginWithEmail,
-        toggleLoginOption,
-        logUserIn,
-        passwordVisibility,
-        togglePasswordVisibility,
-        otherLoginOptions,
-        // state
-        user,
-        // access a getter in computed function
-        double,
-        // access a mutation
-        increment,
-        // access an action
-        asyncIncrement,
-      }
-    },
-  }
+      asyncIncrement,
+    }
+  },
+}
 </script>
 
 <style scoped></style>

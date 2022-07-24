@@ -114,7 +114,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import {
   createNewPostWithImage,
   createNewPostWithoutImage,
@@ -129,11 +129,11 @@ export default {
     const image_url = ref('')
     const message = ref({ type: '', text: '' })
     const is_loading = ref(false)
-    const user_wants_image = ref(false)
     const payload = ref({
       content: '',
       image_file: null,
     })
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -168,6 +168,21 @@ export default {
             return updateResponseMessage('', '')
           }, 5000)
         }
+
+        if (!status || status === 400 || !data) {
+          updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+          return setTimeout(() => {
+            is_loading.value = false
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
+
+        is_loading.value = false
+        closeAllModals()
       }
 
       if (payload.value.image_file === null) {
@@ -175,6 +190,7 @@ export default {
           poster_id,
           payload.value.content,
         )
+
         const { error, data, status } = response
 
         if (error) {
@@ -185,8 +201,26 @@ export default {
             return updateResponseMessage('', '')
           }, 5000)
         }
+
+        if (!status || status === 400 || !data) {
+          updateResponseMessage(
+            'error',
+            'Sorry, an unknown error occurred... Check connection',
+          )
+
+          return setTimeout(() => {
+            is_loading.value = false
+            return updateResponseMessage('', '')
+          }, 5000)
+        }
+
+        is_loading.value = false
+        closeAllModals()
       }
     }
+
+    const closeAllModals = () =>
+      store.dispatch('component_handler/closeAllModals')
 
     const onFileChange = (e: any) => {
       const file = e.target.files[0]
@@ -200,8 +234,8 @@ export default {
       is_loading,
       payload,
       image_url,
-      user_wants_image,
       message,
+      auth_user,
       createPost,
       onFileChange,
     }

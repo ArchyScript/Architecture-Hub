@@ -35,11 +35,13 @@
                 }}
               </span>
 
-              <span
-                class="text-sm md:text-base font-normal text-gray-500 truncate"
-              >
-                @{{ post_info.username || '...' }}
-              </span>
+              <router-link :to="`/profile/${post_info.username}`">
+                <span
+                  class="text-sm md:text-base font-normal text-gray-500 hover:underline truncate"
+                >
+                  @{{ post_info.username || '...' }}
+                </span>
+              </router-link>
             </p>
 
             <p
@@ -92,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import { PostSchema } from '@/controller/typings/index'
@@ -101,6 +103,7 @@ import {
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
 import router from '@/router'
+import { useStore } from 'vuex'
 import { fetchSingleUserById } from '@/controller/api/users.api'
 // import { default_images } from '@/controller/utils/index'
 
@@ -114,6 +117,7 @@ export default {
     },
   },
   setup(props: any) {
+    const store = useStore()
     const post_info = ref({
       display_name: '',
       poster_id: '',
@@ -125,8 +129,13 @@ export default {
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
-      post_id: '',
+      post_comment_object: {
+        post_id: '',
+        post_type: '',
+      },
     })
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const allUsers = ref([])
 
     const viewUserProfile = (username: any) => {
       router.push(`/profile/${username}`)
@@ -140,51 +149,80 @@ export default {
       //
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
-      reactions.value.post_id = _id
+      reactions.value.post_comment_object.post_id = _id
+      reactions.value.post_comment_object.post_type = 'post'
+
+      async function fetchUsers() {
+        await store.dispatch('_requests/getAllUsers')
+        allUsers.value = storeUsers.value
+      }
+
+      if (storeUsers.value.length >= 1) {
+        allUsers.value = storeUsers.value
+      } else {
+        await fetchUsers()
+      }
+
+      allUsers.value.forEach(async (user: any) => {
+        if (user._id === poster_id) {
+          const {
+            username,
+            bio: { display_name, gender },
+            profile_picture: { avatar },
+          } = user
+
+          const profile_picture_avatar: any = await getDisplayProfilePicture(
+            avatar,
+            gender,
+          )
+
+          post_info.value.display_name = display_name
+          post_info.value.username = username
+          post_info.value.poster_id = poster_id
+          post_info.value.time = formattedTime
+          post_info.value.date = formattedDate
+          post_info.value.profile_picture_avatar = profile_picture_avatar
+        }
+      })
 
       //
-      const response = await fetchSingleUserById(poster_id)
-      const { error, data, status } = response
+      // const response = await fetchSingleUserById(poster_id)
+      // const { error, data, status } = response
 
-      if (error) return
-      if (!data) return
-      if (status === 400) return
+      // if (error || status === 400 || !data) return
 
-      const {
-        username,
-        bio: { display_name, gender },
-        profile_picture: { avatar },
-      } = data
+      // const {
+      //   username,
+      //   bio: { display_name, gender },
+      //   profile_picture: { avatar },
+      // } = data
 
-      const profile_picture_avatar: any = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
+      // const profile_picture_avatar: any = await getDisplayProfilePicture(
+      //   avatar,
+      //   gender,
+      // )
 
-      post_info.value.display_name = display_name
-      post_info.value.username = username
-      post_info.value.poster_id = poster_id
-      post_info.value.time = formattedTime
-      post_info.value.date = formattedDate
-      post_info.value.profile_picture_avatar = profile_picture_avatar
+      // post_info.value.display_name = display_name
+      // post_info.value.username = username
+      // post_info.value.poster_id = poster_id
+      // post_info.value.time = formattedTime
+      // post_info.value.date = formattedDate
+      // post_info.value.profile_picture_avatar = profile_picture_avatar
 
-      return
-    }
-
-    const viewSinglePost = (post_id: any) => {
-      router.push(`/post/${post_id}`)
+      return store.dispatch('_requests/getAllUsers')
     }
 
     onBeforeMount(async () => {
-      //
       await getPostDetails()
+      // getPostDetails()
     })
+
+    //
     return {
       post_info,
       reactions,
       viewUserProfile,
       getPostDetails,
-      viewSinglePost,
     }
   },
 }

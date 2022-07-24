@@ -170,7 +170,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { createScholarship } from '@/controller/api/scholarships'
 
@@ -190,6 +190,7 @@ export default {
       content: '',
       image_file: null,
     })
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -227,6 +228,7 @@ export default {
       post_id,
       is_loading,
       payload,
+      auth_user,
       image_url,
       message,
       newScholarship,

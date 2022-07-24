@@ -16,8 +16,11 @@
           "
           class="flex-1 py-4 space-x-1 items-center cursor-pointer text-center hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10 text-gray-500 font-medium"
         >
-          <span :class="profile_page_link.icon" class="text-lg"></span>
-          <span class="text-lg px-2">
+          <span
+            :class="profile_page_link.icon"
+            class="text-sm sm:text-base"
+          ></span>
+          <span class="text-sm sm:text-base px-2">
             {{ profile_page_link.title }}
           </span>
         </span>
@@ -29,17 +32,23 @@
         <EditProfilePictureVue
           v-if="toggle_active_profile_page_link === 'Picture'"
         />
+
+        <EditAuthInfoVue v-if="toggle_active_profile_page_link === 'Account'" />
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import TopBarVue from './TopBar.vue'
 import ProfileHeaderVue from './ProfileHeader.vue'
 import EditBioVue from './EditBio.vue'
 import EditProfilePictureVue from './EditProfilePicture.vue'
+import EditAuthInfoVue from './EditAuthInfo.vue'
+import router from '@/router'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'Profile',
@@ -48,8 +57,11 @@ export default {
     ProfileHeaderVue,
     EditBioVue,
     EditProfilePictureVue,
+    EditAuthInfoVue,
   },
   setup() {
+    const store = useStore()
+    const route = useRoute()
     const test_ref = ref('testing')
     const toggle_active_profile_page_link = ref('Bio')
 
@@ -63,14 +75,28 @@ export default {
         icon: 'fa fa-image',
       },
       {
-        title: 'Acount',
-        icon: 'fa fa-bookmark-o',
+        title: 'Account',
+        icon: 'fa fa-lock',
       },
     ])
+
     const toggleActiveProfilePageLink = (current_active: string) => {
       toggle_active_profile_page_link.value = current_active
       console.log(current_active)
     }
+
+    const auth_user = computed(() => store.state.users.auth_user)
+
+    const loadAuthUserInfo = () => {
+      const { username } = route.params
+      if (username !== auth_user.value.username)
+        return router.push(`/profile/${username}`)
+    }
+
+    onBeforeMount(() => {
+      loadAuthUserInfo()
+    })
+
     return {
       test_ref,
       profile_page_links,

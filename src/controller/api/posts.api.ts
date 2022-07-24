@@ -46,7 +46,7 @@ export const createNewPost = async (post_id: string | number, payload: any) => {
 }
 //
 export const createNewPostWithoutImage = async (
-  poster_id: string | number,
+  poster_id: any,
   content: any,
 ) => {
   const payload = { content }
@@ -54,7 +54,7 @@ export const createNewPostWithoutImage = async (
   try {
     const response = await default_axios_instance
       // .post(`posts/new/62cab7cdc0873b83d04dfd6f`, payload)
-      .post(`posts/new/${poster_id}`, content)
+      .post(`posts/new/${poster_id}`, payload)
       .then((response) => response)
 
     console.log(response)

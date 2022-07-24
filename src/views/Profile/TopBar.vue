@@ -23,9 +23,9 @@
         class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
       >
         {{
-          user_data.no_of_posts === 0
-            ? ` ${user_data.no_of_posts} post`
-            : ` ${user_data.no_of_posts} posts`
+          auth_user.posts.length === 0
+            ? ` ${auth_user.posts.length} post`
+            : ` ${auth_user.posts.length} posts`
         }}
       </span>
     </div>
@@ -33,13 +33,15 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 
 export default {
   name: 'ProfileTopbar',
   setup() {
+    const store = useStore()
     const scrollShadowBoolean = ref(true)
     const router = useRouter()
     const user_data = ref({
@@ -47,6 +49,7 @@ export default {
       display_name: '',
       username: '',
     })
+    const auth_user = computed(() => store.state.users.auth_user)
 
     onBeforeMount(async () => {
       handleScroll()
@@ -75,6 +78,7 @@ export default {
       scrollShadowBoolean,
       router,
       user_data,
+      auth_user,
     }
   },
 }

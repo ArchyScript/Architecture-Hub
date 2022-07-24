@@ -1,6 +1,6 @@
 <template>
   <section class="mb-6 inset-x-0 pb-4">
-    <div class="flex justify-center ">
+    <div class="flex justify-center">
       <input
         @change="onFileChange"
         class="hidden"
@@ -15,7 +15,6 @@
       <div class="w-full mt-16 px-4">
         <div class="h-96 w-full border shadow-md bg-archyhub-light rounded-3xl">
           <img
-            v-if="payload"
             :src="image_url"
             class="w-full h-full rounded-3xl object-cover"
           />
@@ -69,10 +68,11 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import { uploadProfilePicture } from '@/controller/api/users.api'
 import { useStore } from 'vuex'
 import router from '@/router'
+import { getDisplayProfilePicture } from '@/controller/utilities'
 
 export default {
   name: 'ProfilePictureUploadPage',
@@ -82,6 +82,8 @@ export default {
     const payload = ref(null)
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
+    const auth_user = computed(() => store.state.users.auth_user)
+    const user = computed(() => store.state.users.user)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -128,15 +130,33 @@ export default {
       updateResponseMessage('success', `${data} please wait...'`)
 
       await store.dispatch('users/getUser', user_id)
+      // await store.dispatch('users/getAuthUser', user_id)
 
       is_loading.value = false
 
       return router.push(`/profile/${user_id}`)
     }
 
+    const loadAuthUserInfo = async () => {
+      const {
+        profile_picture: { avatar },
+        bio: { gender },
+      } = auth_user.value
+
+      const profile_picture_avatar = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      image_url.value = profile_picture_avatar
+    }
+
+    onBeforeMount(() => loadAuthUserInfo())
+
     return {
       onFileChange,
       image_url,
+      auth_user,
       message,
       payload,
       is_loading,

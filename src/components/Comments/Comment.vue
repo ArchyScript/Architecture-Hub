@@ -120,8 +120,8 @@ export default {
     }
 
     onBeforeMount(async () => {
-      //
       await getPostCommentDetails()
+      getPostCommentDetails()
     })
     return {
       post_info,

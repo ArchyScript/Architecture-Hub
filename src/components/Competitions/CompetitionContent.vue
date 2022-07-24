@@ -100,14 +100,14 @@
         target="_blank"
         class="flex justify-center items-center space-x-1 sm:space-x-2 hover:underline"
       >
-        apply now
+        participate now
       </a>
     </p>
   </section>
 </template>
 
 <script lang="ts">
-import { ref, onBeforeMount } from 'vue'
+import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import { CompetitionSchema } from '@/controller/typings/index'
@@ -117,9 +117,10 @@ import {
 } from '@/controller/utilities/index'
 import router from '@/router'
 import { fetchSingleUserById } from '@/controller/api/users.api'
+import { useStore } from 'vuex'
 
 export default {
-  name: 'PostContent',
+  name: 'CompetitionContent',
   components: { ReactionsVue },
   props: {
     eachCompetition: {
@@ -128,6 +129,7 @@ export default {
     },
   },
   setup(props: any) {
+    const store = useStore()
     const competition_info = ref({
       display_name: '',
       creator_id: '',
@@ -139,68 +141,100 @@ export default {
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
-      competition_id: '',
+      post_comment_object: {
+        post_id: '',
+        post_type: '',
+      },
     })
+    const storeCompetitions = computed(
+      () => store.state._requests.allCompetitions,
+    )
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const allUsers = ref([])
 
-    const viewUserProfile = (username: any) => {
-      router.push(`/profile/${username}`)
-      console.log(username)
-    }
+    const getCompetitionDetails = async () => {
+      async function fetchUsers() {
+        await store.dispatch('_requests/getAllUsers')
+        allUsers.value = storeUsers.value
+      }
 
-    const getPostDetails = async () => {
-      const { creator_id, createdAt } = props.eachCompetition
+      const {
+        _id,
+        creator_id,
+        createdAt,
+        comments,
+        likes,
+      } = props.eachCompetition
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
       //
-      // reactions.value.no_of_comments = comments.length
-      // reactions.value.no_of_likes = likes.length
-      // reactions.value.competition_id = _id
+      reactions.value.no_of_comments = comments.length
+      reactions.value.no_of_likes = likes.length
+      reactions.value.post_comment_object.post_id = _id
+      reactions.value.post_comment_object.post_type = 'competition'
 
-      //
-      const response = await fetchSingleUserById(creator_id)
-      const { error, data, status } = response
+      if (storeUsers.value.length >= 1) {
+        allUsers.value = storeUsers.value
+      } else {
+        await fetchUsers()
+      }
 
-      if (error) return
-      if (!data) return
-      if (status === 400) return
+      allUsers.value.forEach(async (user: any) => {
+        if (user._id === creator_id) {
+          const {
+            username,
+            bio: { display_name, gender },
+            profile_picture: { avatar },
+          } = user
 
-      console.log(data)
+          const profile_picture_avatar: any = await getDisplayProfilePicture(
+            avatar,
+            gender,
+          )
 
-      const {
-        username,
-        bio: { display_name, gender },
-        profile_picture: { avatar },
-      } = data
+          competition_info.value.display_name = display_name
+          competition_info.value.username = username
+          competition_info.value.creator_id = creator_id
+          competition_info.value.time = formattedTime
+          competition_info.value.date = formattedDate
+          competition_info.value.profile_picture_avatar = profile_picture_avatar
+        }
+      })
+      // const response = await fetchSingleUserById(creator_id)
+      // const { error, data, status } = response
 
-      const profile_picture_avatar: any = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
+      // if (error) return
+      // if (!data) return
+      // if (status === 400) return
 
-      competition_info.value.display_name = display_name
-      competition_info.value.username = username
-      competition_info.value.creator_id = creator_id
-      competition_info.value.time = formattedTime
-      competition_info.value.date = formattedDate
-      competition_info.value.profile_picture_avatar = profile_picture_avatar
+      // const {
+      //   username,
+      //   bio: { display_name, gender },
+      //   profile_picture: { avatar },
+      // } = data
 
-      return
+      // const profile_picture_avatar: any = await getDisplayProfilePicture(
+      //   avatar,
+      //   gender,
+      // )
+
+      // competition_info.value.display_name = display_name
+      // competition_info.value.username = username
+      // competition_info.value.creator_id = creator_id
+      // competition_info.value.time = formattedTime
+      // competition_info.value.date = formattedDate
+      // competition_info.value.profile_picture_avatar = profile_picture_avatar
+
+      return store.dispatch('_requests/getAllUsers')
     }
 
-    const viewSinglePost = (competition_id: any) => {
-      router.push(`/post/${competition_id}`)
-    }
+    onBeforeMount(async () => await getCompetitionDetails())
 
-    onBeforeMount(async () => {
-      //
-      await getPostDetails()
-    })
+    //
     return {
       competition_info,
       reactions,
-      viewUserProfile,
-      getPostDetails,
-      viewSinglePost,
+      getCompetitionDetails,
     }
   },
 }

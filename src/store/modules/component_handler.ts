@@ -3,11 +3,16 @@ export default {
   state: {
     current_active_modal: '',
     post_to_comment_on_id: '',
+    comment_post_type: '',
     open_left_nav: false,
     open_new_post_modal: false,
     open_new_competition_modal: false,
     open_new_scholarship_modal: false,
     open_new_comment_modal: false,
+    post_comment_object: {
+      post_id: '',
+      post_type: '',
+    },
   },
 
   //
@@ -17,6 +22,12 @@ export default {
     },
     getPostToCommentOnId(state: any) {
       return state.post_to_comment_on_id
+    },
+    getNewCommentPostType(state: any) {
+      return state.comment_post_type
+    },
+    getPostCommentObject(state: any) {
+      return state.post_comment_object
     },
     getNewPostVisibillity(state: any) {
       return state.open_new_post_modal
@@ -61,6 +72,10 @@ export default {
       commit('CLOSE_ALL_MODALS')
       commit('OPEN_NEW_COMMENT_MODAL', post_to_comment_on_id)
     },
+    async getPostCommentObject({ commit }: any, post_comment_object: any) {
+      commit('CLOSE_ALL_MODALS')
+      commit('OPEN_NEW_COMMENT_MODAL', post_comment_object)
+    },
     async closeAllModals({ commit }: any) {
       commit('CLOSE_ALL_MODALS')
     },
@@ -83,8 +98,9 @@ export default {
     OPEN_NEW_SCHOLARSHIP_MODAL(state: any) {
       return (state.open_new_scholarship_modal = true)
     },
-    OPEN_NEW_COMMENT_MODAL(state: any, post_to_comment_on_id: any) {
-      state.post_to_comment_on_id = post_to_comment_on_id
+    OPEN_NEW_COMMENT_MODAL(state: any, { post_type, post_id }: any) {
+      state.post_comment_object.post_type = post_type
+      state.post_comment_object.post_id = post_id
       return (state.open_new_comment_modal = true)
     },
 

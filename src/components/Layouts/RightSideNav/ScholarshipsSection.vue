@@ -13,9 +13,9 @@
         </div>
       </div>
 
-      <div class="flex flex-col space-y-6" v-if="scholarships.length >= 1">
+      <div class="flex flex-col" v-if="scholarships.length >= 1">
         <div
-          class="flex items -center space-x-4 shadow-sm px-4 py-2"
+          class="flex items -center space-x-4 shadow-sm px-4 py-4"
           :key="scholarship.category"
           v-for="scholarship in scholarships"
         >
@@ -50,7 +50,7 @@
             <p class="">
               {{
                 is_more_description_boolean &&
-                read_more_user_id == scholarship._id
+                read_more_scholarship_id == scholarship._id
                   ? scholarship.content.substring(0, 100)
                   : scholarship.content.substring(0, 75)
               }}
@@ -60,7 +60,7 @@
               >
                 {{
                   is_more_description_boolean &&
-                  read_more_user_id == scholarship._id
+                  read_more_scholarship_id == scholarship._id
                     ? 'see less'
                     : 'see more'
                 }}
@@ -69,13 +69,20 @@
           </div>
         </div>
       </div>
+
+      <!-- <div class="w-full mt-4"> -->
+      <p class="w-full py-2 sm:py-3 text-sm text-center sm:text-base italic">
+        <router-link to="/scholarships">see all</router-link>
+      </p>
+      <!-- </div> -->
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
+import { useStore } from 'vuex'
 import { fetchAllScholarships } from '@/controller/api/scholarships'
 // import { default_images } from '@/controller/utils'
 // import { fetchSingleUserById } from '@/controller/api/users.api'
@@ -94,64 +101,53 @@ export default {
   name: 'LatestScholarships',
   components: { AnimatedLatestVue },
   setup() {
+    const store = useStore()
     const scholarships = ref<ScholarshipSchema[]>([])
     const is_more_description_boolean = ref(true)
-    const read_more_user_id = ref('')
-
+    const read_more_scholarship_id = ref('')
+    const storeScholarships = computed(
+      () => store.state._requests.allScholarships,
+    )
+    const allScholarships = ref([])
     const toggleDescriptionLength = (user_id: string) => {
-      if (read_more_user_id.value === user_id) {
+      if (read_more_scholarship_id.value === user_id) {
         is_more_description_boolean.value = false
-        return (read_more_user_id.value = '')
+        return (read_more_scholarship_id.value = '')
       }
 
       is_more_description_boolean.value = true
-      read_more_user_id.value = user_id
+      read_more_scholarship_id.value = user_id
       console.log(user_id)
     }
 
     const getScholarships = async () => {
-      const response = await fetchAllScholarships()
-      const { error, data, status } = response
+      async function fetchCompetitions() {
+        await store.dispatch('_requests/getAllScholarships')
+        allScholarships.value = storeScholarships.value
+      }
 
-      if (error || status === 400 || !data || typeof data === 'string') return
+      if (storeScholarships.value.length >= 1) {
+        allScholarships.value = storeScholarships.value
+      } else {
+        await fetchCompetitions()
+      }
 
-      console.log(data)
-
-      data.forEach(async (scholarship: any, index: number) => {
-        if (index <= 1) {
+      allScholarships.value.forEach(async (scholarship: any, index: number) => {
+        if (index <= 2) {
           const { _id, creator_id, content, title } = scholarship
 
-          // scholarship_image: { avatar },
-          // let scholarship_image = ''
-
-          // const getUser = async () => {
-          //   const user = await fetchSingleUserById(creator_id)
-          //   if (error || status === 400 || !data || typeof data === 'string')
-          //     return
-
-          //   const {
-          //     bio: { gender },
-          //   } = data
-          //   if (avatar !== '') {
-          //     scholarship_image = avatar
-          //   } else {
-          //     if (gender === 'male') scholarship_image = default_images.male
-          //     if (gender === 'female') scholarship_image = default_images.female
-          //     else scholarship_image = default_images.random
-          //   }
-          // }
-          // getUser()
-
-          const latest_scholarships = {
+          const latest_scholarship = {
             _id,
             creator_id,
             content,
             title,
           }
 
-          scholarships.value.push(latest_scholarships)
+          scholarships.value.push(latest_scholarship)
         }
       })
+
+      await store.dispatch('_requests/getAllScholarships')
     }
 
     onBeforeMount(() => {
@@ -161,7 +157,7 @@ export default {
     return {
       is_more_description_boolean,
       scholarships,
-      read_more_user_id,
+      read_more_scholarship_id,
 
       toggleDescriptionLength,
     }

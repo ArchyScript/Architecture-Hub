@@ -9,7 +9,7 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import SingleScholarshipDetailsVue from '@/components/News/SingleScholarshipDetails.vue'
+import SingleScholarshipDetailsVue from '@/components/Scholarships/SingleScholarshipDetails.vue'
 
 export default {
   name: 'ScholarshipDetails',

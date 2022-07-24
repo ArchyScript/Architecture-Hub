@@ -129,6 +129,7 @@ export default {
     const current_active_route = ref('/home')
     const is_loading = ref(false)
 
+    const auth_user = computed(() => store.state.users.auth_user)
     const user = computed(() => store.state.users.user)
 
     const navbar_links = ref([
@@ -140,7 +141,7 @@ export default {
       {
         route: '/scholarships',
         title: 'Scholarships',
-        icon: 'fa fa-users',
+        icon: 'fas fa-medal',
       },
       {
         route: '/competitions',
@@ -168,7 +169,9 @@ export default {
     window.onscroll = () => (current_active_route.value = route.fullPath)
     window.onresize = () => (current_active_route.value = route.fullPath)
 
-    onBeforeMount(() => (current_active_route.value = route.fullPath))
+    onBeforeMount(async () => {
+      current_active_route.value = route.fullPath
+    })
 
     const openNewPostModal = () =>
       store.dispatch('component_handler/openNewPostModal')
@@ -194,6 +197,7 @@ export default {
       create_post_boolean,
       is_loading,
       route,
+      auth_user,
       user,
       openNewPostModal,
       toggleCurrentActiveNavLink,

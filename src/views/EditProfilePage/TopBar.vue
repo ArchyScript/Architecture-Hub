@@ -58,6 +58,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky h-20 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

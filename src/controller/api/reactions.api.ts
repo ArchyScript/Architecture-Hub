@@ -6,11 +6,29 @@ import {
 
 //
 export const commentOnPost = async (params: any, payload: any) => {
-  const { commenter_id, post_id } = params
+  const { commenter_id, post_id, post_type } = params
 
   try {
     const response = await default_axios_instance
-      .post(`reactions/comments/${commenter_id}/${post_id}`, payload)
+      .post(
+        `reactions/${post_type}/comments/${commenter_id}/${post_id}`,
+        payload,
+      )
+      .then(async (response) => response)
+
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    return HandleAxiosError(error)
+  }
+}
+
+//
+export const specificComment = async (params: any) => {
+  const { post_type, comment_id } = params
+
+  try {
+    const response = await default_axios_instance
+      .get(`reactions/${post_type}/comments/${comment_id}`)
       .then(async (response) => response)
 
     return HandleAxiosResponse(response)
@@ -31,6 +49,7 @@ export const singleCommentOnPost = async (comment_id: any) => {
     return HandleAxiosError(error)
   }
 }
+
 //
 export const deleteComment = async (params: any) => {
   const { commenter_id, comment_id } = params
@@ -73,3 +92,72 @@ export const reverseLike = async (params: any) => {
     return HandleAxiosError(error)
   }
 }
+
+/* 
+//
+const {
+  newPostComment,
+  singlePostComment,
+  deletePostComment,
+} = require('../controller/reactions.posts.comments')
+const {
+  newPostLike,
+  reversePostLike,
+} = require('../controller/reactions.posts.likes')
+
+
+router.get('/post/comments/:comment_id', singlePostComment)
+router.post('/post/comments/:commenter_id/:post_id', newPostComment)
+router.delete('/post/comments/:commenter_id/:comment_id', deletePostComment)
+router.post('/post/likes/:liker_id/:post_id', newPostLike)
+router.delete('/post/likes/:liker_id/:like_id', reversePostLike)
+
+//
+const {
+  newCompetitionComment,
+  singleCompetitionComment,
+  deleteCompetitionComment,
+} = require('../controller/reactions.competitions.comments')
+const {
+  newCompetitionLike,
+  reverseCompetitionLike,
+} = require('../controller/reactions.competitions.likes')
+
+// 
+router.post(
+  '/competition/comments/:commenter_id/:competition_id',
+  newCompetitionComment,
+)
+router.get('/competition/comments/:comment_id', singleCompetitionComment)
+router.delete(
+  '/competition/comments/:commenter_id/:comment_id',
+  deleteCompetitionComment,
+)
+router.post('/competition/likes/:liker_id/:competition_id', newCompetitionLike)
+router.delete('/competition/likes/:liker_id/:like_id', reverseCompetitionLike)
+
+//
+const {
+  newScholarshipComment,
+  singleScholarshipComment,
+  deleteScholarshipComment,
+} = require('../controller/reactions.scholarships.comments')
+const {
+  newScholarshipLike,
+  reverseScholarshipLike,
+} = require('../controller/reactions.scholarships.likes')
+
+
+router.post(
+  '/scholarship/comments/:commenter_id/:scholarship_id',
+  newScholarshipComment,
+)
+router.get('/scholarship/comments/:comment_id', singleScholarshipComment)
+router.delete(
+  '/scholarship/comments/:commenter_id/:comment_id',
+  deleteScholarshipComment,
+)
+router.post('/scholarship/likes/:liker_id/:scholarship_id', newScholarshipLike)
+router.delete('/scholarship/likes/:liker_id/:like_id', reverseScholarshipLike)
+
+ */

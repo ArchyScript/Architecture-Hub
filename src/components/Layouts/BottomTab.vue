@@ -1,37 +1,30 @@
 <template>
   <section class="fixed md:hidden border-t bottom-0 inset-x-0 w-full">
-    <!-- <div class="rel ative flex justify-bettween items-center  bg-black h-24"> -->
     <span
       class="absolute right-2 bottom-16 sm:right-3 sm:bottom-20 p-2 mr-2 cursor-pointer rounded-full shadow-2xl"
       :class="
         current_active_route === '/home'
           ? 'bg-archyhub-main'
-          : current_active_route === `/profile/${user.username}`
-          ? ' hidden'
           : current_active_route === '/competitions'
           ? ' bg-pink-500'
           : current_active_route === '/scholarships'
           ? 'bg-red-500'
-          : 'bg-yellow-800'
+          : current_active_route === `/profile/${user.username}`
+          ? ' hidden'
+          : 'hidden'
       "
       @click="openTargettedModal"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="w-10 h-10 sm:h-12 sm:w-12 text-white animate-spin"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
+        class="w-8 h-8 sm:h-10 sm:w-10 p-2 text-white"
+        viewBox="0 0 448 512"
       >
         <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="1"
-          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+          d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"
         />
       </svg>
     </span>
-    <!-- </div> -->
 
     <div class="flex items-center bg-archyhub-semi-light">
       <div
@@ -48,11 +41,6 @@
           "
           @click="toggleCurrentActiveNavLink(bottom_bar_link.route)"
         >
-          <!--  :to="
-              bottom_bar_link.route === '/profile'
-                ? `${bottom_bar_link.route}/${user.auth_user._id}`
-                : `${bottom_bar_link.route}`
-            " -->
           <router-link :to="bottom_bar_link.route">
             <span
               :class="bottom_bar_link.icon"
@@ -77,6 +65,7 @@ export default {
     const store = useStore()
     const current_active_route = ref('/home')
     const user = computed(() => store.state.users.user)
+    const auth_user = computed(() => store.state.users.auth_user)
     const bottom_bar_links = ref([
       {
         route: '/home',
@@ -86,7 +75,7 @@ export default {
       {
         route: '/scholarships',
         title: 'Scholarships',
-        icon: 'fa fa-users',
+        icon: 'fas fa-medal',
       },
       {
         route: '/competitions',
@@ -127,6 +116,7 @@ export default {
     return {
       bottom_bar_links,
       user,
+      auth_user,
       current_active_route,
       toggleCurrentActiveNavLink,
       openTargettedModal,

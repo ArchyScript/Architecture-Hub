@@ -118,7 +118,7 @@ export const deleteProfilePicture = async (_id: any) => {
 }
 
 //
-export const follow = async (params: any) => {
+export const followUser = async (params: any) => {
   const { current_user_id, user_to_follow_id } = params
 
   try {
@@ -133,7 +133,7 @@ export const follow = async (params: any) => {
 }
 
 //
-export const unfollow = async (params: any) => {
+export const unfollowUser = async (params: any) => {
   const { current_user_id, user_to_unfollow_id } = params
 
   try {

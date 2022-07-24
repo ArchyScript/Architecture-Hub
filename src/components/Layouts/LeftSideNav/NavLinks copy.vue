@@ -189,9 +189,8 @@ export default {
       current_active_route.value = route.fullPath
     })
 
-    const user = computed(() => {
-      return store.state.users.user
-    })
+    const user = computed(() => store.state.users.user)
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const navbar_links_mobile = ref([
       {
@@ -285,6 +284,7 @@ export default {
       create_post_boolean,
       is_loading,
       route,
+      auth_user,
       user,
       openNewPostModal,
       toggleDescriptionLength,

@@ -56,7 +56,6 @@ export const createCompetition = async (creator_id: any, payload: any) => {
 //
 export const updateCompetition = async (params: any, payload: any) => {
   const { competition_id, creator_id } = params
-  // const { link, host, title, description, content, image_file } = payload
 
   try {
     const response = await default_axios_instance

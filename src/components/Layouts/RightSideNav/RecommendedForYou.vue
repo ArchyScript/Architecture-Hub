@@ -1,5 +1,6 @@
 <template>
   <section
+    v-if="recommended_people_to_follow.length >= 1"
     class="flex items-center border rounded-2xl p-3 border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
   >
     <div class="w-full">
@@ -54,8 +55,16 @@
               <span
                 class="btn py-1 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
                 @click="followRecommended(recommended._id)"
+                v-if="just_followed_user_id !== recommended._id"
               >
                 follow
+              </span>
+
+              <span
+                v-if="just_followed_user_id === recommended._id"
+                class="btn py-1 rounded-lg px-3 border border-gray-700 bg-gray-700 cursor-not-allowed text-gray-100"
+              >
+                following
               </span>
             </div>
 
@@ -71,11 +80,12 @@
 </template>
 
 <script lang="ts">
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 import { fetchAllUsers } from '@/controller/api/users.api'
-// import { default_images } from '@/controller/utils'
 import AnimatedRecommendedVue from '@/components/Animation/AnimatedRecommended.vue'
 import { getDisplayProfilePicture } from '@/controller/utilities'
+import { useStore } from 'vuex'
+import { followUser } from '@/controller/api/users.api'
 
 type RecommendedSchema =
   | {
@@ -90,57 +100,102 @@ export default {
   name: 'RecommendedForYou',
   components: { AnimatedRecommendedVue },
   setup() {
+    const store = useStore()
     const recommended_people_to_follow = ref<RecommendedSchema[]>([])
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const auth_user = computed(() => store.state.users.auth_user)
+    const allUsers = ref([])
+    const just_followed_user_id = ref('')
+    // const is_up_to_three_recommended = ref(false)
 
     const getRecommendedPeople = async () => {
-      const response = await fetchAllUsers()
-      const { error, data, status } = response
+      async function fetchUsers() {
+        await store.dispatch('_requests/getAllUsers')
+        allUsers.value = storeUsers.value
+      }
 
-      if (error || status === 400 || !data || typeof data === 'string') return
+      if (storeUsers.value.length >= 1) {
+        allUsers.value = storeUsers.value
+      } else {
+        await fetchUsers()
+      }
 
-      const sortedByMostFollowers = data.sort((user_1: any, user_2: any) => {
-        return user_2.followers.length - user_1.followers.length
-      })
+      recommended_people_to_follow.value = []
 
-      sortedByMostFollowers.forEach(
-        async (recommended_user: any, index: number) => {
-          if (index <= 2) {
-            const {
-              _id,
-              bio: { display_name },
-              username,
-              profile_picture: { avatar },
-              bio: { gender },
-            } = recommended_user
-
-            const profile_image: any = await getDisplayProfilePicture(
-              avatar,
-              gender,
-            )
-
-            const people_to_follow = {
-              _id,
-              display_name,
-              username,
-              profile_image,
-            }
-
-            recommended_people_to_follow.value.push(people_to_follow)
-          }
+      const sortedByMostFollowers = allUsers.value.sort(
+        (user_1: any, user_2: any) => {
+          return user_2.followers.length - user_1.followers.length
         },
       )
+
+      sortedByMostFollowers.forEach(async (recommended_user: any) => {
+        const {
+          _id,
+          bio: { display_name },
+          username,
+          profile_picture: { avatar },
+          followers,
+          bio: { gender },
+        } = recommended_user
+
+        const profile_image: any = await getDisplayProfilePicture(
+          avatar,
+          gender,
+        )
+
+        const people_to_follow = {
+          _id,
+          display_name,
+          username,
+          profile_image,
+        }
+
+        const is_active_user_part_of_another_user_followers = followers.find(
+          (follower: any) => {
+            return follower.follower_id === auth_user.value._id
+          },
+        )
+        const is_another_user_part_of_active_user_followings = auth_user.value.followings.find(
+          (following: any) => {
+            return following.following_id === _id
+          },
+        )
+
+        if (
+          auth_user.value._id !== _id &&
+          !is_active_user_part_of_another_user_followers &&
+          !is_another_user_part_of_active_user_followings
+        ) {
+          if (recommended_people_to_follow.value.length <= 2) {
+            recommended_people_to_follow.value.push(people_to_follow)
+          }
+        }
+      })
+
+      return store.dispatch('_requests/getAllUsers')
     }
 
-    const followRecommended = (user_id: string) => {
-      console.log(user_id)
-    }
+    const followRecommended = async (user_id: string) => {
+      const params = {
+        current_user_id: auth_user.value._id,
+        user_to_follow_id: user_id,
+      }
 
-    onBeforeMount(() => {
+      const response = await followUser(params)
+      const { error, data, status } = response
+
+      if (error || status === 400 || !data) return
+
+      just_followed_user_id.value = user_id
+      await getRecommendedPeople()
       getRecommendedPeople()
-    })
+    }
+
+    onBeforeMount(async () => await getRecommendedPeople())
 
     return {
       recommended_people_to_follow,
+      just_followed_user_id,
       followRecommended,
     }
   },

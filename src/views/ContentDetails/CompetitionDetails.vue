@@ -10,7 +10,7 @@
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
 // import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
-import SingleCompetitionDetailsVue from '@/components/News/SingleCompetitionDetails.vue'
+import SingleCompetitionDetailsVue from '@/components/Competitions/SingleCompetitionDetails.vue'
 export default {
   name: 'CompetitionDetails',
   components: {

@@ -32,7 +32,7 @@ const state = {
   allScholarships,
 }
 
-export const users = {
+export default {
   namespaced: true,
   state,
   getters: {
@@ -40,7 +40,7 @@ export const users = {
       return state.singleUser
     },
     getSinglePost: (state: any) => {
-      return state.singleUser
+      return state.singlePost
     },
     getSingleScholarship: (state: any) => {
       return state.singleScholarship
@@ -52,7 +52,7 @@ export const users = {
       return state.allUsers
     },
     getAllPosts: (state: any) => {
-      return state.allUsers
+      return state.allPosts
     },
     getAllCompetitions: (state: any) => {
       return state.allCompetitions
@@ -63,49 +63,49 @@ export const users = {
   },
 
   actions: {
-    async singleUser({ commit }: any, username: string) {
+    async setSingleUser({ commit }: any, username: string) {
       const response: any = await fetchSingleUserByUsername(username)
       const { data } = response
 
       commit('SET_SINGLE_USER', data)
     },
-    async singlePost({ commit }: any, _id: string) {
+    async setSinglePost({ commit }: any, _id: string) {
       const response: any = await fetchSinglePost(_id)
       const { data } = response
 
       commit('SET_SINGLE_POST', data)
     },
-    async singleCompetition({ commit }: any, _id: string) {
+    async setSingleCompetition({ commit }: any, _id: string) {
       const response: any = await fetchSingleCompetition(_id)
       const { data } = response
 
       commit('SET_SINGLE_COMPETITION', data)
     },
-    async singleScholarship({ commit }: any, _id: string) {
+    async setSingleScholarship({ commit }: any, _id: string) {
       const response: any = await fetchSingleScholarship(_id)
       const { data } = response
 
       commit('SET_SINGLE_SCHOLARSHIP', data)
     },
-    async allCompetitions({ commit }: any) {
+    async getAllCompetitions({ commit }: any) {
       const response: any = await fetchAllCompetitions()
       const { data } = response
 
       commit('SET_ALL_COMPETITIONS', data)
     },
-    async allScholarships({ commit }: any) {
+    async getAllScholarships({ commit }: any) {
       const response: any = await fetchAllScholarships()
       const { data } = response
 
       commit('SET_ALL_SCHOLARSHIPS', data)
     },
-    async allPosts({ commit }: any) {
+    async getAllPosts({ commit }: any) {
       const response: any = await fetchAllPosts()
       const { data } = response
 
       commit('SET_ALL_POSTS', data)
     },
-    async allUsers({ commit }: any) {
+    async getAllUsers({ commit }: any) {
       const response: any = await fetchAllUsers()
       const { data } = response
 
@@ -117,35 +117,42 @@ export const users = {
   mutations: {
     SET_SINGLE_USER(state: any, data: any) {
       console.log(data)
+      // if (!data)return
       return (state.singleUser = data)
     },
     SET_SINGLE_POST(state: any, data: any) {
       console.log(data)
-      return (state.singleUser = data)
+      // if (!data)return
+      return (state.singlePost = data)
     },
     SET_SINGLE_COMPETITION(state: any, data: any) {
       console.log(data)
+      // if (!data)return
       return (state.singleCompetition = data)
     },
     SET_SINGLE_SCHOLARSHIP(state: any, data: any) {
       console.log(data)
+      // if (!data)return
       return (state.singleScholarship = data)
     },
     SET_ALL_COMPETITIONS(state: any, data: any) {
-      console.log(data)
+      if (!data) return
       return (state.allCompetitions = data)
     },
     SET_ALL_SCHOLARSHIPS(state: any, data: any) {
+      if (!data) return
       console.log(data)
       return (state.allScholarships = data)
     },
     SET_ALL_USERS(state: any, data: any) {
-      console.log(data)
+      if (!data) return
+      // console.log(data)
       return (state.allUsers = data)
     },
     SET_ALL_POSTS(state: any, data: any) {
-      console.log(data)
-      return (state.allUsers = data)
+      // console.log(data)
+      if (!data) return
+      return (state.allPosts = data)
     },
   },
 }
