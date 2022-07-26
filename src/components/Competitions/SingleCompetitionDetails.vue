@@ -57,7 +57,7 @@
               {{ competition_info.title }}
             </span>
 
-            <span class="block pb-4 h-52 sm:h-56 lg:h-72 xl:h-96">
+            <span class="block pb-4 h-64 sm:h-80 lg:h-96 xl:h-96">
               <img
                 v-if="competition_info.competition_image !== ''"
                 class="w-full h-full object-fill border rounded-xl"

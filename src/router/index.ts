@@ -97,15 +97,15 @@ const routes: Array<RouteRecordRaw> = [
         component: EditProfilePage,
       },
       {
-        path: '/post/:post_id',
-        name: 'PostDetails',
-        component: PostDetails,
-      },
-      {
-        path: '/news',
+        path: '/content-details',
         name: 'ContentDetailsLayout',
         component: ContentDetailsLayout,
         children: [
+          {
+            path: '/posts/:post_id',
+            name: 'PostDetails',
+            component: PostDetails,
+          },
           {
             path: '/competitions/:competition_id',
             name: 'CompetitionDetails',

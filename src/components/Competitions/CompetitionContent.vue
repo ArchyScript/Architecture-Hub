@@ -79,7 +79,7 @@
 
           <img
             v-if="eachCompetition.competition_image.avatar !== ''"
-            class="w-full h-52 mt-2 sm:h-56 lg:h-64 mb-5 object-fill border rounded-xl"
+            class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-5 object-fill border rounded-xl"
             :src="eachCompetition.competition_image.avatar"
           />
 
@@ -94,7 +94,7 @@
       <ReactionsVue :reactions="reactions" />
     </div>
 
-    <p class="py-2 w-f ull font-normal text-gray-500 space-x-2 italic">
+    <!-- <p class="py-2 w-f ull font-normal text-gray-500 space-x-2 italic">
       <a
         :href="eachCompetition.link"
         target="_blank"
@@ -102,7 +102,7 @@
       >
         participate now
       </a>
-    </p>
+    </p> -->
   </section>
 </template>
 

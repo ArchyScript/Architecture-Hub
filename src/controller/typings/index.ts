@@ -55,6 +55,20 @@ export type PostSchema = {
   likes: Like[]
 }
 
+export type BookmarkedPostSchema = {
+  _id: string
+  post_type: string
+  user_id: string
+  title: string
+  content: string
+  edited: boolean
+  post_image: object
+  competition_image: object
+  scholarship_image: object
+  comments: Comment[]
+  likes: Like[]
+}
+
 export type CompetitionSchema = {
   _id: string
   title: string

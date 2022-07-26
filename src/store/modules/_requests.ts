@@ -11,6 +11,7 @@ import {
   fetchAllUsers,
   fetchSingleUserByUsername,
 } from '@/controller/api/users.api'
+import { all___Comments, all___Likes } from '@/controller/api/reactions.api'
 
 const singleUser: any = {}
 const singlePost: any = {}
@@ -20,6 +21,12 @@ const allUsers: any = []
 const allPosts: any = []
 const allCompetitions: any = []
 const allScholarships: any = []
+const allPostComments: any = []
+const allCompetitionComments: any = []
+const allScholarshipComments: any = []
+const allPostLikes: any = []
+const allCompetitionLikes: any = []
+const allScholarshipLikes: any = []
 
 const state = {
   singleUser,
@@ -30,6 +37,14 @@ const state = {
   allPosts,
   allCompetitions,
   allScholarships,
+
+  //
+  allPostComments,
+  allPostLikes,
+  allScholarshipComments,
+  allScholarshipLikes,
+  allCompetitionComments,
+  allCompetitionLikes,
 }
 
 export default {
@@ -59,6 +74,27 @@ export default {
     },
     getAllScholarships: (state: any) => {
       return state.allScholarships
+    },
+
+    //
+
+    getAllPostComments: (state: any) => {
+      return state.allPostComments
+    },
+    getAllCompetitionComments: (state: any) => {
+      return state.allCompetitionComments
+    },
+    getAllScholarshipComments: (state: any) => {
+      return state.allScholarshipComments
+    },
+    getAllPostLikes: (state: any) => {
+      return state.allPostLikes
+    },
+    getAllCompetitionLikes: (state: any) => {
+      return state.allCompetitionLikes
+    },
+    getAllScholarshipLikes: (state: any) => {
+      return state.allScholarshipLikes
     },
   },
 
@@ -111,6 +147,46 @@ export default {
 
       commit('SET_ALL_USERS', data)
     },
+
+    // REACTIONS
+    // comments
+    async getAllPostComments({ commit }: any) {
+      const response: any = await all___Comments('post')
+      const { data } = response
+
+      commit('SET_ALL_POST_COMMENTS', data)
+    },
+    async getAllCompetitionComments({ commit }: any) {
+      const response: any = await all___Comments('competition')
+      const { data } = response
+
+      commit('SET_ALL_COMPETITION_COMMENTS', data)
+    },
+    async getAllScholarshipComments({ commit }: any) {
+      const response: any = await all___Comments('scholarship')
+      const { data } = response
+
+      commit('SET_ALL_SCHOLARSHIP_COMMENTS', data)
+    },
+    // likes
+    async getAllPostLikes({ commit }: any) {
+      const response: any = await all___Likes('post')
+      const { data } = response
+
+      commit('SET_ALL_POST_LIKES', data)
+    },
+    async getAllCompetitionLikes({ commit }: any) {
+      const response: any = await all___Likes('competition')
+      const { data } = response
+
+      commit('SET_ALL_COMPETITION_LIKES', data)
+    },
+    async getAllScholarshipLikes({ commit }: any) {
+      const response: any = await all___Likes('scholarship')
+      const { data } = response
+
+      commit('SET_ALL_SCHOLARSHIP_LIKES', data)
+    },
   },
 
   //
@@ -154,13 +230,36 @@ export default {
       if (!data) return
       return (state.allPosts = data)
     },
+
+    // REACTIONS
+    // comments
+    SET_ALL_POST_COMMENTS(state: any, data: any) {
+      // console.log(data)
+      if (!data) return
+      return (state.allPostComments = data)
+    },
+    SET_ALL_COMPETITION_COMMENTS(state: any, data: any) {
+      if (!data) return
+      return (state.allCompetitionComments = data)
+    },
+    SET_ALL_SCHOLARSHIP_COMMENTS(state: any, data: any) {
+      if (!data) return
+      console.log(data)
+      return (state.allScholarshipComments = data)
+    },
+    // likes
+    SET_ALL_POST_LIKES(state: any, data: any) {
+      if (!data) return
+      return (state.allPostLikes = data)
+    },
+    SET_ALL_COMPETITION_LIKES(state: any, data: any) {
+      if (!data) return
+      return (state.allCompetitionLikes = data)
+    },
+    SET_ALL_SCHOLARSHIP_LIKES(state: any, data: any) {
+      if (!data) return
+      console.log(data)
+      return (state.allScholarshipLikes = data)
+    },
   },
 }
-
-/*
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-console.log('halda j adgj adk aadakdlad adhaldadn;abirvbe vefgvef eb')
-*/

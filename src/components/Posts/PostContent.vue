@@ -74,14 +74,14 @@
         </div>
 
         <div class="px-1 sm:px-2 mt-2">
-          <router-link :to="`/post/${eachPost._id}`">
+          <router-link :to="`/posts/${eachPost._id}`">
             <p class="text-sm xl:text-base font-normal text-gray-500">
               {{ eachPost.content }}
             </p>
 
             <img
               v-if="eachPost.post_image.avatar !== ''"
-              class="w-full h-52 mt-2 sm:h-56 lg:h-64 object-fill border rounded-xl"
+              class="w-full h-60 mt-2 sm:h-72 lg:h-80 object-fill border rounded-xl"
               :src="eachPost.post_image.avatar"
             />
           </router-link>

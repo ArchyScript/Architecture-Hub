@@ -19,7 +19,7 @@
             />
           </svg>
         </span>
-        <h4 class="text-xl px-2 font-bold text-gray-700">
+        <h4 class="text-lg sm:text-xl px-2 font-bold text-gray-700">
           {{ props.page_title }}
         </h4>
       </div>
@@ -52,7 +52,7 @@
               </div> -->
 
               <img
-                class="w-12 h-12 rounded-full"
+                class="w-10 h-10 sm:h-12 sm:w-auto12 rounded-full"
                 :src="
                   user.profile_picture.avatar !== ''
                     ? user.profile_picture.avatar

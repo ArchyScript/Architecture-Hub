@@ -1,7 +1,5 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
-    <!-- <TopBarVue /> -->
-
     <div class="">
       <SinglePostDetailsVue />
     </div>
@@ -10,14 +8,12 @@
 
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
-// import TopBarVue from '../PostDetails/TopBar.vue'
 import { useRoute } from 'vue-router'
 import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
 
 export default {
   name: 'Profile',
   components: {
-    // TopBarVue,
     SinglePostDetailsVue,
   },
   setup() {

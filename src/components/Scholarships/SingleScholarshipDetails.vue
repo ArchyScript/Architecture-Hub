@@ -57,7 +57,7 @@
               {{ scholarship_info.title }}
             </span>
 
-            <span class="block pb-4 h-52 sm:h-56 lg:h-72 xl:h-96">
+            <span class="block pb-4 h-64 sm:h-80 lg:h-96 xl:h-96">
               <img
                 v-if="scholarship_info.scholarship_image !== ''"
                 class="w-full h-full object-fill border rounded-xl"
@@ -432,7 +432,7 @@ export default {
     }
 
     window.addEventListener('click', async () => {
-      const scholarship_id = route.params
+      const { scholarship_id } = route.params
 
       if (!scholarship_id || scholarship_id === undefined)
         return console.log('teajl')
@@ -441,7 +441,7 @@ export default {
     })
 
     onBeforeMount(async () => {
-      const scholarship_id = route.params
+      const { scholarship_id } = route.params
 
       // await store.dispatch('_requests/getAllScholarships')
       // await store.dispatch('_requests/getAllUsers')

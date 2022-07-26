@@ -137,7 +137,12 @@ const auth_user = {
   createdAt: '2022-07-10T11:28:13.651Z',
   updatedAt: '2022-07-19T23:24:08.831Z',
   __v: 0,
-  bookmarked_posts: [],
+  bookmarked: [
+    {
+      post_id: '62d737e01e57c7dc6c3b902f',
+      post_type: 'post',
+    },
+  ],
 }
 
 const all_users: any = []

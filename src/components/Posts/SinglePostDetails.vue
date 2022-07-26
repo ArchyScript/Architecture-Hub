@@ -61,7 +61,7 @@
 
             <img
               v-if="post_info.post_image !== ''"
-              class="w-full h-52 mt-4 sm:h-56 lg:h-72 object-fill border rounded-xl"
+              class="w-full h-60 mt-4 sm:h-80 lg:h-96 object-fill border rounded-xl"
               :src="post_info.post_image"
             />
           </div>
