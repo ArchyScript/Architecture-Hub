@@ -1,29 +1,33 @@
 <template>
   <section class="flex items-center rounded-2xl sm:px-2 mt-10">
     <div class="w-full">
-      <router-link :to="`/profile/${user.username}`">
+      <router-link :to="`/profile/${auth_user.username}`">
         <div class="mb-16 flex items-center cursor-pointer">
-          <img
-            class="w-12 h-12 lg:w-14 lg:h-14 rounded-full border border-arch yhub-semi-light"
-            :src="
-              user.profile_picture.avatar !== ''
-                ? user.profile_picture.avatar
-                : ''
-            "
-          />
+          <span class="w-12 h-12 lg:w-14 lg:h-14 rounded-full">
+            <img
+              v-if="auth_user_profile_image !== ''"
+              class="h-full rounded-full w-full border border-arch yhub-semi-light"
+              :src="auth_user_profile_image"
+            />
+
+            <div
+              v-if="auth_user_profile_image === ''"
+              class="w-full h-full bg-gray-400 rounded-full animate-pulse"
+            ></div>
+          </span>
 
           <div class="flex-1 ml-2">
             <span
               class="text-base md:text-lg block font-semibold text-gray-700 truncate"
             >
               {{
-                user.bio.display_name !== ''
-                  ? user.bio.display_name
-                  : user.username
+                auth_user.bio.display_name !== ''
+                  ? auth_user.bio.display_name
+                  : auth_user.username
               }}
             </span>
             <span class="text-sm block font-semibold text-gray-600 truncate">
-              @{{ user.username }}
+              @{{ auth_user.username }}
             </span>
           </div>
         </div>
@@ -42,13 +46,7 @@
             "
             @click="toggleCurrentActiveNavLink(navbar_link.route)"
           >
-            <router-link
-              :to="
-                navbar_link.route === '/profile'
-                  ? `${navbar_link.route}/${user.auth_user._id}`
-                  : `${navbar_link.route}`
-              "
-            >
+            <router-link :to="navbar_link.route">
               <div
                 class="flex justify-center items-center py-3 xl:py-4 space-x-2"
               >
@@ -111,10 +109,10 @@
 
 <script lang="ts">
 import { onBeforeMount, computed, ref } from 'vue'
-import router from '@/router'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { AuthApiService } from '@/controller/api/auth.api'
+import { getDisplayProfilePicture } from '@/controller/utilities'
 
 export default {
   name: 'NavLinks',
@@ -122,15 +120,23 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
-    const search_value = ref('')
-    const is_more_description_boolean = ref(true)
-    const read_more_user_id = ref('')
-    const create_post_boolean = ref(false)
     const current_active_route = ref('/home')
     const is_loading = ref(false)
-
+    const auth_user_profile_image = ref('')
     const auth_user = computed(() => store.state.users.auth_user)
-    const user = computed(() => store.state.users.user)
+
+    const getAuthUserImage = async () => {
+      const {
+        bio: { gender },
+        profile_picture: { avatar },
+      } = auth_user.value
+      const profile_picture_image = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      auth_user_profile_image.value = profile_picture_image
+    }
 
     const navbar_links = ref([
       {
@@ -148,13 +154,8 @@ export default {
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
-      // {
-      //   route: '/notifications',
-      //   title: 'Notifications',
-      //   icon: 'fa fa-bell',
-      // },
       {
-        route: `/profile/${user.value.username}`,
+        route: `/profile/${auth_user.value.username}`,
         title: 'Profile',
         icon: 'fa fa-user',
       },
@@ -165,40 +166,44 @@ export default {
       store.dispatch('component_handler/closeAllModals')
     }
 
-    window.onkeyup = () => (current_active_route.value = route.fullPath)
-    window.onscroll = () => (current_active_route.value = route.fullPath)
-    window.onresize = () => (current_active_route.value = route.fullPath)
-
-    onBeforeMount(async () => {
+    const getCurrentActiveRoute = () => {
       current_active_route.value = route.fullPath
-    })
+    }
 
-    const openNewPostModal = () =>
+    window.onkeyup = () => getCurrentActiveRoute()
+    window.onscroll = () => getCurrentActiveRoute()
+    window.onresize = () => getCurrentActiveRoute()
+
+    //
+    onBeforeMount(async () => await getCurrentActiveRoute())
+
+    //
+    const openNewPostModal = () => {
       store.dispatch('component_handler/openNewPostModal')
+    }
 
     const logUserOut = async () => {
       is_loading.value = true
 
       const response = await AuthApiService.logout()
-      // const { error, data, status } = response
-
-      // is_loading.value = false
-
-      // return router.push('/auth/login')
-      // return router.push('/')
     }
 
+    //
+    async function fetchAuthUser(_id: any) {
+      await store.dispatch('users/getAuthUser', _id)
+    }
+
+    onBeforeMount(async () => {
+      await getAuthUserImage()
+      await fetchAuthUser(auth_user.value._id)
+    })
+
     return {
-      search_value,
-      is_more_description_boolean,
       navbar_links,
-      read_more_user_id,
       current_active_route,
-      create_post_boolean,
+      auth_user_profile_image,
       is_loading,
-      route,
       auth_user,
-      user,
       openNewPostModal,
       toggleCurrentActiveNavLink,
       logUserOut,

@@ -109,6 +109,7 @@
       </div>
     </div>
 
+    <!-- display all modal boxes -->
     <ModalsDisplayVue />
   </div>
 </template>
@@ -118,7 +119,7 @@ import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, onBeforeMount } from 'vue'
 import BottomTabVue from '../Layouts/BottomTab.vue'
 import ModalsDisplayVue from './ModalsDisplay.vue'
 
@@ -162,6 +163,14 @@ export default {
       if (route.fullPath === '/scholarships')
         return store.dispatch('component_handler/openNewScholarshipModal')
     }
+
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
+
+    onBeforeMount(async () => {
+      scrollToTop()
+    })
 
     return {
       user,

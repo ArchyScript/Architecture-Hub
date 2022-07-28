@@ -106,6 +106,8 @@ export const uploadProfilePicture = async (_id: any, payload: any) => {
 
 //
 export const deleteProfilePicture = async (_id: any) => {
+  console.log(_id)
+
   try {
     const response = await default_axios_instance
       .delete(`users/profile/delete/${_id}`)

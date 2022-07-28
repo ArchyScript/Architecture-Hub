@@ -21,8 +21,8 @@
           ></div>
         </span>
 
-        <div v-if="user_profile._id === active_user._id" class="mt-2">
-          <router-link :to="`/profile/${user_profile._id}/edit`">
+        <div v-if="user_profile._id === auth_user._id" class="mt-2">
+          <router-link :to="`/profile/${user_profile.username}/edit`">
             <span
               class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
@@ -126,6 +126,8 @@
           </p>
         </div>
       </div>
+
+      <!-- <VueNotificationList /> -->
     </section>
   </section>
 </template>
@@ -140,9 +142,11 @@ import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities'
+// import { VueNotificationList } from '@dafcoe/vue-notification'
 
 export default {
   name: 'ProfileHeader',
+  // components: { VueNotificationList },
   setup() {
     const store = useStore()
     const route = useRoute()
@@ -161,46 +165,57 @@ export default {
 
     const active_user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
+    const storeUsers = computed(() => store.state._requests.allUsers)
 
     onBeforeMount(async () => {
       const { username } = route.params
       console.log(username)
       await getUserData(username)
     })
-
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
     const getUserData = async (username: any) => {
-      const response = await fetchSingleUserByUsername(username)
-      const { data, status, error } = response
+      // const response = await fetchSingleUserByUsername(username)
+      // const { data, status, error } = response
 
-      if (error || status === 400 || !data || typeof data === 'string')
-        return router.push(`/profile/${username}`)
+      // if (error || status === 400 || !data || typeof data === 'string')
+      //   return router.push(`/profile/${username}`)
+      if (storeUsers.value.length < 1) {
+        await fetchUsers()
+      }
 
-      const {
-        _id,
-        createdAt,
-        followers,
-        followings,
-        bio: { display_name, gender, description },
-        profile_picture: { avatar },
-      } = data
-      const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+      storeUsers.value.forEach(async (eachUser: any) => {
+        if (eachUser.username === username) {
+          const {
+            _id,
+            createdAt,
+            followers,
+            followings,
+            bio: { display_name, gender, description },
+            profile_picture: { avatar },
+          } = await eachUser
 
-      const profile_picture: any = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
+          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      user_profile.value._id = _id
-      user_profile.value.display_name = display_name
-      user_profile.value.username = username
-      user_profile.value.profile_picture = profile_picture
-      user_profile.value.description = description
-      user_profile.value.time = formattedTime
-      user_profile.value.date_joined = formattedDate
-      user_profile.value.no_of_followers = followers.length
-      user_profile.value.no_of_followings = followings.length
+          const profile_picture: any = await getDisplayProfilePicture(
+            avatar,
+            gender,
+          )
 
-      return
+          user_profile.value._id = _id
+          user_profile.value.display_name = display_name
+          user_profile.value.username = username
+          user_profile.value.profile_picture = profile_picture
+          user_profile.value.description = description
+          user_profile.value.time = formattedTime
+          user_profile.value.date_joined = formattedDate
+          user_profile.value.no_of_followers = followers.length
+          user_profile.value.no_of_followings = followings.length
+
+          return
+        }
+      })
     }
 
     return {

@@ -73,7 +73,9 @@
     <article class="w-full px-2 sm:px-3 xl:px-4 pb-2">
       <div class="px-1 sm:px-2 mt-2">
         <router-link :to="`/scholarships/${eachScholarship._id}`">
-          <span class="text-base md:text-lg block font-semibold text-gray-600">
+          <span
+            class="text-base md:text-lg block font-semibold text-gray-600 break-all"
+          >
             {{ eachScholarship.title }}
           </span>
 
@@ -83,7 +85,9 @@
             :src="eachScholarship.scholarship_image.avatar"
           />
 
-          <span class="text-sm md:text-base block font-normal text-gray-600">
+          <span
+            class="text-sm md:text-base block font-normal text-gray-600 break-all"
+          >
             {{ eachScholarship.description }}
           </span>
         </router-link>
@@ -130,6 +134,8 @@ export default {
   },
   setup(props: any) {
     const store = useStore()
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const allUsers = ref([])
     const scholarship_info = ref({
       display_name: '',
       creator_id: '',
@@ -146,18 +152,8 @@ export default {
         post_type: '',
       },
     })
-    const storeScholarships = computed(
-      () => store.state._requests.allScholarships,
-    )
-    const storeUsers = computed(() => store.state._requests.allUsers)
-    const allUsers = ref([])
 
     const getScholarshipDetails = async () => {
-      async function fetchUsers() {
-        await store.dispatch('_requests/getAllUsers')
-        allUsers.value = storeUsers.value
-      }
-
       const {
         _id,
         creator_id,
@@ -173,13 +169,10 @@ export default {
       reactions.value.post_comment_object.post_id = _id
       reactions.value.post_comment_object.post_type = 'scholarship'
 
-      if (storeUsers.value.length >= 1) {
-        allUsers.value = storeUsers.value
-      } else {
-        await fetchUsers()
-      }
+      //
+      if (storeUsers.value.length < 1) await fetchUsers()
 
-      allUsers.value.forEach(async (user: any) => {
+      storeUsers.value.forEach(async (user: any) => {
         if (user._id === creator_id) {
           const {
             username,
@@ -200,34 +193,16 @@ export default {
           scholarship_info.value.profile_picture_avatar = profile_picture_avatar
         }
       })
-      // const response = await fetchSingleUserById(creator_id)
-      // const { error, data, status } = response
 
-      // if (error) return
-      // if (!data) return
-      // if (status === 400) return
-
-      // const {
-      //   username,
-      //   bio: { display_name, gender },
-      //   profile_picture: { avatar },
-      // } = data
-
-      // const profile_picture_avatar: any = await getDisplayProfilePicture(
-      //   avatar,
-      //   gender,
-      // )
-
-      // scholarship_info.value.display_name = display_name
-      // scholarship_info.value.username = username
-      // scholarship_info.value.creator_id = creator_id
-      // scholarship_info.value.time = formattedTime
-      // scholarship_info.value.date = formattedDate
-      // scholarship_info.value.profile_picture_avatar = profile_picture_avatar
-
-      return store.dispatch('_requests/getAllUsers')
+      return await fetchUsers()
     }
 
+    // fetch data from store
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+
+    //
     onBeforeMount(async () => await getScholarshipDetails())
 
     //

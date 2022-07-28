@@ -145,7 +145,7 @@ import {
   singleCommentOnPost,
   specificComment,
 } from '@/controller/api/reactions.api'
-import CommentVue from '@/components/Comments/Comment.vue'
+import CommentVue from '@/components/Utilities/Comment.vue'
 import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import { fetchSingleUserById } from '@/controller/api/users.api'
 import { fetchSingleScholarship } from '@/controller/api/scholarships'
@@ -168,6 +168,13 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const storeScholarships = computed(
+      () => store.state._requests.allScholarships,
+    )
+    const storeScholarshipComments = computed(
+      () => store.state._requests.allScholarshipComments,
+    )
     const does_scholarship_have_comment = ref(false)
     const scholarship_comments = ref<CommentSchema[]>([])
     const auth_user = computed(() => store.state.users.auth_user)
@@ -184,39 +191,21 @@ export default {
       time: '',
       date: '',
     })
-    const storeScholarships = computed(
-      () => store.state._requests.allScholarships,
-    )
-    const allScholarships = ref([])
-    const storeUsers = computed(() => store.state._requests.allUsers)
-    const allUsers = ref([])
-
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
       post_comment_object: {
-        scholarship_id: '',
+        post_id: '',
         post_type: '',
       },
     })
 
+    //
     const getScholarshipDetails = async (scholarship_id: any) => {
-      async function fetchScholarships() {
-        await store.dispatch('_requests/getAllScholarships')
-        allScholarships.value = storeScholarships.value
-      }
-      async function fetchUsers() {
-        await store.dispatch('_requests/getAllUsers')
-        allUsers.value = storeUsers.value
-      }
-
-      if (storeScholarships.value && storeScholarships.value.length >= 1) {
-        allScholarships.value = storeScholarships.value
-      } else {
+      if (storeScholarships.value && storeScholarships.value.length < 1)
         await fetchScholarships()
-      }
 
-      allScholarships.value.forEach(async (eachScholarship: any) => {
+      storeScholarships.value.forEach(async (eachScholarship: any) => {
         if (eachScholarship._id === scholarship_id) {
           const {
             _id,
@@ -230,8 +219,10 @@ export default {
             comments,
             likes,
             scholarship_image: { avatar },
-          } = eachScholarship
-          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+          } = await eachScholarship
+          const { formattedDate, formattedTime } = await formatDateAndTime(
+            createdAt,
+          )
 
           scholarship_info.value.title = title
           scholarship_info.value.content = content
@@ -245,18 +236,13 @@ export default {
           //
           reactions.value.no_of_comments = comments.length
           reactions.value.no_of_likes = likes.length
-          reactions.value.post_comment_object.scholarship_id = _id
+          reactions.value.post_comment_object.post_id = _id
           reactions.value.post_comment_object.post_type = 'scholarship'
 
-          //
-          if (storeUsers.value.length >= 1) {
-            allUsers.value = storeUsers.value
-          } else {
-            await fetchUsers()
-          }
+          if (storeUsers.value.length < 1) await fetchUsers()
 
           //
-          allUsers.value.forEach(async (eachUser: any) => {
+          storeUsers.value.forEach(async (eachUser: any) => {
             if (eachUser._id === creator_id) {
               const {
                 username,
@@ -281,165 +267,64 @@ export default {
 
           does_scholarship_have_comment.value = true
 
-          comments.forEach(async (comment: any) => {
-            const params = {
-              comment_id: comment.comment_id,
-              post_type: 'scholarship',
-            }
+          comments.forEach(async (eachScholarshipComment: any) => {
+            const { comment_id } = await eachScholarshipComment
 
-            //
-            const response = await specificComment(params)
+            if (storeScholarshipComments.value < 1)
+              await fetchAllScholarshipComments()
 
-            const { error, data, status } = response
-            if (error || status === 400 || !data) return
+            storeScholarshipComments.value.forEach(
+              async (each_store_scholarship_comment: any) => {
+                if (comment_id === each_store_scholarship_comment._id) {
+                  const { commenter_id } = each_store_scholarship_comment
 
-            //
-            const singleComment = data
+                  storeUsers.value.forEach(async (eachUser: any) => {
+                    if (eachUser._id === commenter_id) {
+                      const {
+                        username,
+                        profile_picture: { avatar },
+                        bio: { gender },
+                      } = eachUser
 
-            const { formattedDate, formattedTime } = formatDateAndTime(
-              singleComment.createdAt,
+                      const commenter_image: any = await getDisplayProfilePicture(
+                        avatar,
+                        gender,
+                      )
+
+                      const scholarship_comment_info = {
+                        comment: each_store_scholarship_comment.comment,
+                        commenter_image,
+                        commneter_username: username,
+                        date: formattedDate,
+                        time: formattedTime,
+                      }
+
+                      scholarship_comments.value.unshift(
+                        scholarship_comment_info,
+                      )
+                    }
+                  })
+                }
+              },
             )
-
-            //
-            const result = await fetchSingleUserById(data.commenter_id)
-            const commenter_info = result
-
-            //
-            if (
-              commenter_info.error ||
-              commenter_info.status === 400 ||
-              !commenter_info.data
-            )
-              return
-
-            //
-            const {
-              username,
-              profile_picture: { avatar },
-              bio: { gender },
-            } = commenter_info.data
-            const commenter_image: any = await getDisplayProfilePicture(
-              avatar,
-              gender,
-            )
-
-            //
-            const scholarship_comment_info = {
-              comment: singleComment.comment,
-              commenter_image,
-              commneter_username: username,
-              date: formattedDate,
-              time: formattedTime,
-            }
-
-            scholarship_comments.value.unshift(scholarship_comment_info)
           })
         }
       })
       return
-
-      // const response = await fetchSingleScholarship(_id)
-      // const { error, data, status } = response
-
-      // if (error || status === 400 || !data || typeof data === 'string') return
-
-      // console.log(data)
-
-      // const {
-      // creator_id,
-      // title,
-      // link,
-      // host,
-      // createdAt,
-      // description,
-      // scholarship_image,
-      // content,
-      // } = data
-
-      // const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
-
-      // //
-      // scholarship_info.value.title = title
-      // scholarship_info.value.content = content
-      // scholarship_info.value.link = link
-      // scholarship_info.value.host = host
-      // scholarship_info.value.time = formattedTime
-      // scholarship_info.value.date = formattedDate
-      // scholarship_info.value.description = description
-      // scholarship_info.value.scholarship_image = scholarship_image.avatar
-
-      // const getCreatorsInfo = async () => {
-      //   const result = await fetchSingleUserById(creator_id)
-      //   const { error, data, status } = result
-
-      //   if (error || status === 400 || !data || typeof data === 'string') return
-
-      //   const {
-      //     username,
-      //     bio: { gender, display_name },
-      //     profile_picture: { avatar },
-      //   } = data
-
-      //   // get profile image
-      //   const creator_picture: any = await getDisplayProfilePicture(
-      //     avatar,
-      //     gender,
-      //   )
-
-      //   scholarship_info.value.creator_picture = creator_picture
-      //   scholarship_info.value.creator_username = username
-      //   scholarship_info.value.display_name = display_name
-      // }
-      // getCreatorsInfo()
-
-      // //
-      // if (!data.comments || data.comments === undefined) return
-      // Handle comment component data
-      // if (data.comments <= 0) return (does_scholarship_have_comment.value = false)
-
-      // does_scholarship_have_comment.value = true
-
-      // data.comments.forEach(async (comment: any) => {
-      //   const _id = comment.comment_id
-
-      //   const response = await singleCommentOnPost(_id)
-      //   const { error, data, status } = response
-      //   if (error || status === 400 || !data || typeof data === 'string') return
-
-      //   const { formattedDate, formattedTime } = formatDateAndTime(
-      //     data.createdAt,
-      //   )
-
-      //   const result = await fetchSingleUserById(data.commenter_id)
-
-      //   const commenter_info = result.data
-
-      // const commenter_image: any = await getDisplayProfilePicture(
-      //   commenter_info.profile_picture.avatar,
-      //   commenter_info.bio.gender,
-      // )
-
-      //   const scholarship_comment_info = {
-      //     comment: data.comment,
-      //     commenter_image,
-      //     commneter_username: commenter_info.creator_username,
-      //     date: formattedDate,
-      //     time: formattedTime,
-      //   }
-
-      //   scholarship_comments.value.push(scholarship_comment_info)
-      // })
     }
 
-    window.addEventListener('click', async () => {
-      const { scholarship_id } = route.params
+    // fetch data from store
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+    async function fetchScholarships() {
+      await store.dispatch('_requests/getAllScholarships')
+    }
+    const fetchAllScholarshipComments = async () => {
+      await store.dispatch('_requests/getAllScholarshipComments')
+    }
 
-      if (!scholarship_id || scholarship_id === undefined)
-        return console.log('teajl')
-
-      await getScholarshipDetails(scholarship_id)
-    })
-
+    //
     onBeforeMount(async () => {
       const { scholarship_id } = route.params
 
@@ -448,6 +333,8 @@ export default {
 
       await getScholarshipDetails(scholarship_id)
     })
+
+    //
     return {
       scholarship_info,
       scholarship_comments,

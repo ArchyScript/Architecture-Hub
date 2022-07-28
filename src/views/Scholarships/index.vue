@@ -3,7 +3,7 @@
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
-      <div class="" v-if="allScholarships.length < 1">
+      <div class="" v-if="storeScholarships.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No scholarship found' }}</span>
         </div>
@@ -70,7 +70,7 @@
           </form>
         </div>
 
-        <div v-for="(eachScholarship, index) in allScholarships" :key="index">
+        <div v-for="(eachScholarship, index) in storeScholarships" :key="index">
           <ScholarshipContentVue :eachScholarship="eachScholarship" />
         </div>
       </div>
@@ -121,80 +121,45 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      async function fetchScholarships() {
-        await store.dispatch('_requests/getAllScholarships')
-        allScholarships.value = storeScholarships.value
-      }
-
-      if (storeScholarships.value && storeScholarships.value.length >= 1) {
-        allScholarships.value = storeScholarships.value
-      } else {
+      //
+      if (storeScholarships.value && storeScholarships.value.length < 1)
         await fetchScholarships()
 
-        if (!allScholarships.value) {
+      if (!storeScholarships.value) {
+        is_loading.value = false
+        updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
+
+        return setTimeout(() => {
           is_loading.value = false
-          updateResponseMessage(
-            'error',
-            'Sorry, an unknown error occurred... Check connection',
-          )
-
-          return setTimeout(() => {
-            is_loading.value = false
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
+          return updateResponseMessage('', '')
+        }, 5000)
       }
-
-      // const response = await fetchAllScholarships()
-      // const { error, data, status } = response
-
-      // if (error) {
-      //   updateResponseMessage('error', error)
-      //   is_loading.value = false
-
-      //   return setTimeout(() => {
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
-
-      // if (!status || status === 400 || !data) {
-      //   updateResponseMessage(
-      //     'error',
-      //     'Sorry, an unknown error occurred... Check connection',
-      //   )
-
-      //   return setTimeout(() => {
-      //     is_loading.value = false
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
 
       updateResponseMessage('success', '')
       is_loading.value = false
+      await fetchScholarships()
+    }
+
+    //
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
+
+    //
+    async function fetchScholarships() {
       await store.dispatch('_requests/getAllScholarships')
     }
 
-    // window.onkeyup = () => {
-    //   if (
-    //     open_new_post_modal.value === false ||
-    //     open_new_comment_modal.value === false
-    //   ) {
-    //     getScholarships()
-    //   }
-    // }
-    // window.addEventListener('click', () => {
-    //   if (
-    //     open_new_post_modal.value === true ||
-    //     open_new_comment_modal.value === false
-    //   ) {
-    //     getScholarships()
-    //   }
-    // })
-
-    onBeforeMount(async () => await getScholarships())
+    onBeforeMount(async () => {
+      await getScholarships()
+      scrollToTop()
+    })
 
     return {
-      allScholarships,
+      storeScholarships,
       is_loading,
       message,
       topbar,

@@ -5,20 +5,17 @@
   >
     <div class="p-6">
       <NavLinks />
-      <!-- <UserSection /> -->
     </div>
   </section>
 </template>
 
 <script>
 import { onBeforeMount, ref } from 'vue'
-// import UserSection from './UserSection.vue'
 import NavLinks from './NavLinks.vue'
 
 export default {
   name: 'LeftSideNav',
   components: {
-    // UserSection,
     NavLinks,
   },
 

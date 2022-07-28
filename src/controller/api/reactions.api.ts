@@ -125,11 +125,11 @@ export const createNewLike = async (params: any) => {
 
 //
 export const reverseLike = async (params: any) => {
-  const { liker_id, like_id } = params
+  const { post_type, liker_id, like_id } = params
   // localhost:4000/api/reactions/post/likes/62cab7cdc0873b83d04dfd6f/62deb2c82f7f5b14d791cc36
   try {
     const response = await default_axios_instance
-      .delete(`reactions/likes/${liker_id}/${like_id}`)
+      .delete(`reactions/${post_type}/likes/${liker_id}/${like_id}`)
       .then((response) => response)
 
     return HandleAxiosResponse(response)

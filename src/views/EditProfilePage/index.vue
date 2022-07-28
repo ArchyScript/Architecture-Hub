@@ -93,8 +93,12 @@ export default {
         return router.push(`/profile/${username}`)
     }
 
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
     onBeforeMount(() => {
       loadAuthUserInfo()
+      scrollToTop()
     })
 
     return {

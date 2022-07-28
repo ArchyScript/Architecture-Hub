@@ -203,7 +203,7 @@ export default {
       event.preventDefault()
       is_loading.value = true
 
-      const creator_id = store.state.users.user._id
+      const creator_id = auth_user.value._id
       updateResponseMessage('', '')
 
       const response = await createCompetition(creator_id, payload.value)
@@ -217,6 +217,29 @@ export default {
           return updateResponseMessage('', '')
         }, 5000)
       }
+
+      if (!status || status === 400 || !data) {
+        updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
+
+        return setTimeout(() => {
+          is_loading.value = false
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
+
+      is_loading.value = false
+
+      await fetchCompetitions()
+
+      closeAllModals()
+    }
+
+    //
+    const closeAllModals = () => {
+      store.dispatch('component_handler/closeAllModals')
     }
 
     const onFileChange = (e: any) => {
@@ -224,6 +247,10 @@ export default {
 
       payload.value.image_file = file
       image_url.value = URL.createObjectURL(file)
+    }
+
+    async function fetchCompetitions() {
+      await store.dispatch('_requests/getAllCompetitions')
     }
 
     return {

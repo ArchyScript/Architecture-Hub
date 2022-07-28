@@ -75,7 +75,7 @@
 
         <div class="px-1 sm:px-2 mt-2">
           <router-link :to="`/posts/${eachPost._id}`">
-            <p class="text-sm xl:text-base font-normal text-gray-500">
+            <p class="text-sm xl:text-base font-normal text-gray-500 break-all">
               {{ eachPost.content }}
             </p>
 
@@ -104,8 +104,6 @@ import {
 } from '@/controller/utilities/index'
 import router from '@/router'
 import { useStore } from 'vuex'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-// import { default_images } from '@/controller/utils/index'
 
 export default {
   name: 'PostContent',
@@ -135,7 +133,6 @@ export default {
       },
     })
     const storeUsers = computed(() => store.state._requests.allUsers)
-    const allUsers = ref([])
 
     const viewUserProfile = (username: any) => {
       router.push(`/profile/${username}`)
@@ -152,18 +149,9 @@ export default {
       reactions.value.post_comment_object.post_id = _id
       reactions.value.post_comment_object.post_type = 'post'
 
-      async function fetchUsers() {
-        await store.dispatch('_requests/getAllUsers')
-        allUsers.value = storeUsers.value
-      }
+      if (storeUsers.value.length < 1) await fetchUsers()
 
-      if (storeUsers.value.length >= 1) {
-        allUsers.value = storeUsers.value
-      } else {
-        await fetchUsers()
-      }
-
-      allUsers.value.forEach(async (user: any) => {
+      storeUsers.value.forEach(async (user: any) => {
         if (user._id === poster_id) {
           const {
             username,
@@ -185,36 +173,16 @@ export default {
         }
       })
 
-      //
-      // const response = await fetchSingleUserById(poster_id)
-      // const { error, data, status } = response
+      return await fetchUsers()
+    }
 
-      // if (error || status === 400 || !data) return
-
-      // const {
-      //   username,
-      //   bio: { display_name, gender },
-      //   profile_picture: { avatar },
-      // } = data
-
-      // const profile_picture_avatar: any = await getDisplayProfilePicture(
-      //   avatar,
-      //   gender,
-      // )
-
-      // post_info.value.display_name = display_name
-      // post_info.value.username = username
-      // post_info.value.poster_id = poster_id
-      // post_info.value.time = formattedTime
-      // post_info.value.date = formattedDate
-      // post_info.value.profile_picture_avatar = profile_picture_avatar
-
-      return store.dispatch('_requests/getAllUsers')
+    //
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
     }
 
     onBeforeMount(async () => {
       await getPostDetails()
-      // getPostDetails()
     })
 
     //

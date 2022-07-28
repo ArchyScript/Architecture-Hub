@@ -3,7 +3,7 @@
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
-      <div class="" v-if="allCompetitions.length < 1">
+      <div class="" v-if="storeCompetitions.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No competition found' }}</span>
         </div>
@@ -70,7 +70,7 @@
           </form>
         </div>
 
-        <div v-for="(eachCompetition, index) in allCompetitions" :key="index">
+        <div v-for="(eachCompetition, index) in storeCompetitions" :key="index">
           <CompetitionContentVue :eachCompetition="eachCompetition" />
         </div>
       </div>
@@ -96,7 +96,6 @@ export default {
   },
   setup() {
     const store = useStore()
-    const allCompetitions = ref<CompetitionSchema[]>([])
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Competitions', icon: 'fa fa-trophy' })
@@ -104,14 +103,7 @@ export default {
       () => store.state._requests.allCompetitions,
     )
 
-    const auth_user = computed(() => store.state.users.auth_user)
-    const open_new_post_modal = computed(
-      () => store.state.component_handler.open_new_post_modal,
-    )
-    const open_new_comment_modal = computed(
-      () => store.state.component_handler.open_new_comment_modal,
-    )
-
+    //
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
       message.value.text = text
@@ -121,29 +113,23 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      async function fetchCompetitions() {
-        await store.dispatch('_requests/getAllCompetitions')
-        allCompetitions.value = storeCompetitions.value
-      }
-
-      if (storeCompetitions.value && storeCompetitions.value.length >= 1) {
-        allCompetitions.value = storeCompetitions.value
-      } else {
+      //
+      if (storeCompetitions.value && storeCompetitions.value.length < 1)
         await fetchCompetitions()
 
-        if (!allCompetitions.value) {
-          is_loading.value = false
-          updateResponseMessage(
-            'error',
-            'Sorry, an unknown error occurred... Check connection',
-          )
+      if (!storeCompetitions.value) {
+        is_loading.value = false
+        updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
 
-          return setTimeout(() => {
-            is_loading.value = false
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
+        return setTimeout(() => {
+          is_loading.value = false
+          return updateResponseMessage('', '')
+        }, 5000)
       }
+      // }
 
       // const response = await fetchAllCompetitions()
       // const { error, data, status } = response
@@ -171,30 +157,27 @@ export default {
 
       updateResponseMessage('success', '')
       is_loading.value = false
+      await fetchCompetitions()
+    }
+
+    //
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
+
+    //
+    async function fetchCompetitions() {
       await store.dispatch('_requests/getAllCompetitions')
     }
 
-    // window.onkeyup = () => {
-    //   if (
-    //     open_new_post_modal.value === false ||
-    //     open_new_comment_modal.value === false
-    //   ) {
-    //     getAllCompetitions()
-    //   }
-    // }
-    // window.addEventListener('click', () => {
-    //   if (
-    //     open_new_post_modal.value === true ||
-    //     open_new_comment_modal.value === false
-    //   ) {
-    //     getAllCompetitions()
-    //   }
-    // })
-
-    onBeforeMount(async () => await getAllCompetitions())
+    //
+    onBeforeMount(async () => {
+      await getAllCompetitions()
+      scrollToTop()
+    })
 
     return {
-      allCompetitions,
+      storeCompetitions,
       is_loading,
       message,
       topbar,

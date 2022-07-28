@@ -12,29 +12,28 @@
 
     <div class="flex-1 items-center px-2">
       <h4 class="text-xl block font-bold text-gray-600">
-        Dasolu Daniel
         {{
-          user_data.display_name === ''
-            ? user_data.username
-            : user_data.display_name
+          user_profile_data.display_name === ''
+            ? user_profile_data.username
+            : user_profile_data.display_name
         }}
       </h4>
       <span
         class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
       >
         {{
-          auth_user.posts.length === 0
-            ? ` ${auth_user.posts.length} post`
-            : ` ${auth_user.posts.length} posts`
+          user_profile_data.no_of_posts === 0
+            ? ` ${user_profile_data.no_of_posts} post`
+            : ` ${user_profile_data.no_of_posts} posts`
         }}
       </span>
     </div>
   </nav>
 </template>
 
-<script>
+<script lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 
@@ -42,21 +41,60 @@ export default {
   name: 'ProfileTopbar',
   setup() {
     const store = useStore()
+    const route = useRoute()
     const scrollShadowBoolean = ref(true)
     const router = useRouter()
-    const user_data = ref({
+    const user_profile_data = ref({
       no_of_posts: 0,
       display_name: '',
       username: '',
     })
+    const storeUsers = computed(() => store.state._requests.allUsers)
+
+    const getUserProfileData = async () => {
+      // const { username } = route.params
+
+      const {
+        bio: { display_name },
+        username,
+        posts,
+      } = auth_user.value
+
+      user_profile_data.value.no_of_posts = posts.length
+      user_profile_data.value.display_name = display_name
+      user_profile_data.value.username = username
+
+      // await fetchUsers()
+
+      // storeUsers.value.forEach((eachUser: any) => {
+      //   if (eachUser.username === username) {
+      // const {
+      //   bio: { display_name },
+      //   username,
+      //   posts,
+      // } = eachUser
+
+      // user_profile_data.value.no_of_posts = posts.length
+      // user_profile_data.value.display_name = display_name
+      // user_profile_data.value.username = username
+      //   }
+      // })
+    }
+
+    async function fetchUsers() {
+      if (storeUsers.value && storeUsers.value.length < 1)
+        return await store.dispatch('_requests/getAllUsers')
+    }
+
     const auth_user = computed(() => store.state.users.auth_user)
+    window.addEventListener('scroll', () => handleScroll())
 
     onBeforeMount(async () => {
       handleScroll()
-      window.addEventListener('scroll', () => handleScroll())
+      await getUserProfileData()
     })
 
-    // const getUserData = async (username: any) => {
+    // const getUserProfileData = async (username: any) => {
     //   const response = await fetchSingleUserByUsername(username)
     //   const { data, status, error } = response
 
@@ -77,7 +115,7 @@ export default {
     return {
       scrollShadowBoolean,
       router,
-      user_data,
+      user_profile_data,
       auth_user,
     }
   },

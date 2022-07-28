@@ -199,7 +199,8 @@ export default {
         login_with_email.value === true ? 'email' : 'username'
 
       let token = ''
-      let user_id = ''
+      let auth_user_id = ''
+
       const { email, username, password } = payload.value
       const email_login_payload = { email, password }
       const username_login_payload = { username, password }
@@ -219,7 +220,7 @@ export default {
           )
 
         token = data.token
-        user_id = await HandleTokenResponse(token)
+        auth_user_id = await HandleTokenResponse(token)
       }
 
       if (login_method.value === 'username') {
@@ -237,7 +238,7 @@ export default {
           )
 
         token = data.token
-        user_id = await HandleTokenResponse(token)
+        auth_user_id = await HandleTokenResponse(token)
       }
 
       updateResponseMessage(
@@ -245,14 +246,23 @@ export default {
         "You've successfully logged in, you'll be redirected in a moment",
       )
 
-      await store.dispatch('users/getUser', user_id)
-      // await store.dispatch('users/getAuthUser', user_id)
-      await store.dispatch('users/assignToken', token)
+      await store.dispatch('users/getUser', auth_user_id)
+      await assignToken(token)
+      await fetchAuthUser(auth_user_id)
+      // await store.dispatch('users/assignToken', token)
 
       is_loading.value = false
       updateResponseMessage('', '')
 
       return router.push('/')
+    }
+
+    //
+    async function fetchAuthUser(_id: any) {
+      await store.dispatch('users/getAuthUser', _id)
+    }
+    async function assignToken(token: any) {
+      await store.dispatch('users/assignToken', token)
     }
 
     return {

@@ -201,7 +201,7 @@ export default {
       event.preventDefault()
       is_loading.value = true
 
-      const creator_id = store.state.users.user._id
+      const creator_id = auth_user.value._id
       updateResponseMessage('', '')
 
       const response = await createScholarship(creator_id, payload.value)
@@ -215,6 +215,11 @@ export default {
           return updateResponseMessage('', '')
         }, 5000)
       }
+
+      is_loading.value = false
+
+      await fetchScholarships()
+      closeAllModals()
     }
 
     const onFileChange = (e: any) => {
@@ -222,6 +227,16 @@ export default {
 
       payload.value.image_file = file
       image_url.value = URL.createObjectURL(file)
+    }
+
+    //
+    const closeAllModals = () => {
+      store.dispatch('component_handler/closeAllModals')
+    }
+
+    //
+    async function fetchScholarships() {
+      await store.dispatch('_requests/getAllScholarships')
     }
 
     return {

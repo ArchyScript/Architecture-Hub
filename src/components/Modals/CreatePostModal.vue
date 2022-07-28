@@ -120,6 +120,7 @@ import {
   createNewPostWithoutImage,
 } from '@/controller/api/posts.api'
 import { useStore } from 'vuex'
+import router from '@/router'
 
 export default {
   name: 'CreatePostModal',
@@ -153,7 +154,7 @@ export default {
         }, 5000)
       }
 
-      const poster_id = store.state.users.user._id
+      const poster_id = auth_user.value._id
       updateResponseMessage('', '')
 
       if (payload.value.image_file) {
@@ -182,6 +183,7 @@ export default {
         }
 
         is_loading.value = false
+        await fetchPosts()
         closeAllModals()
       }
 
@@ -215,13 +217,15 @@ export default {
         }
 
         is_loading.value = false
+
+        await fetchPosts()
         closeAllModals()
       }
     }
 
-    const closeAllModals = () =>
-      store.dispatch('component_handler/closeAllModals')
+    //
 
+    //
     const onFileChange = (e: any) => {
       const file = e.target.files[0]
 
@@ -229,6 +233,14 @@ export default {
       image_url.value = URL.createObjectURL(file)
     }
 
+    //
+    async function fetchPosts() {
+      await store.dispatch('_requests/getAllPosts')
+    }
+    const closeAllModals = () => {
+      store.dispatch('component_handler/closeAllModals')
+    }
+    //
     return {
       post_id,
       is_loading,

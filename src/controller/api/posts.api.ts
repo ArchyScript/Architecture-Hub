@@ -104,11 +104,11 @@ export const updatePost = async (params: any, payload: any) => {
 
 //
 export const deletePost = async (params: any) => {
-  const { user_id, post_id } = params
+  const { poster_id, post_id } = params
 
   try {
     const response = await default_axios_instance
-      .delete(`/users/${user_id}/${post_id}`)
+      .delete(`/posts/${poster_id}/${post_id}`)
       .then((response) => response)
 
     return HandleAxiosResponse(response)

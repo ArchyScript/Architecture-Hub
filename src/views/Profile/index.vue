@@ -45,14 +45,14 @@
             >
               {{ is_loading ? '' : ' No media post found' }}
             </span>
-            <!-- <span
+            <span
               v-else-if="
                 allPostsBoomarkedByUser.length < 1 &&
                 current_active_profile_page_sub_nav === 'bookmarked'
               "
             >
               {{ is_loading ? '' : ' No bookmarked post found' }}
-            </span> -->
+            </span>
           </div>
 
           <!-- <div class="text-center">
@@ -210,6 +210,7 @@ export default {
     const allPosts = ref([])
     const allCompetitions = ref([])
     const allScholarships = ref([])
+    const username_param = ref<any>('')
     const storePosts = computed(() => store.state._requests.allPosts)
     const storeCompetitions = computed(
       () => store.state._requests.allCompetitions,
@@ -248,18 +249,20 @@ export default {
       }
 
       //
-      allUsers.value.forEach(async (eachUser: any) => {
+      storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
           const { posts, bookmarked } = await eachUser
+
+          console.log('posts')
+          console.log(posts)
+          console.log('posts')
+          console.log(posts)
+          console.log('posts')
+          console.log(posts)
 
           const post_type = current_active_profile_page_sub_nav.value
 
           if (post_type === 'bookmarked') {
-            console.log(post_type)
-            console.log(post_type)
-            console.log(post_type)
-            console.log(post_type)
-            console.log(post_type)
             await getBookmarkedPostsDetails(bookmarked)
           } else {
             await getPostsDetails(posts, post_type)
@@ -302,7 +305,7 @@ export default {
       }
 
       await posts_array.forEach((post: any) => {
-        allPosts.value.forEach((eachPost: any) => {
+        storePosts.value.forEach((eachPost: any) => {
           const {
             _id,
             post_image: { avatar },
@@ -401,8 +404,6 @@ export default {
         }
       })
 
-      console.log(all_bookmarked_posts)
-      console.log(all_bookmarked_posts)
       allPostsBoomarkedByUser.value = all_bookmarked_posts
     }
 

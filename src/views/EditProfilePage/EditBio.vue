@@ -166,10 +166,14 @@ export default {
 
     const loadAuthUserInfo = () => {
       const { bio } = auth_user.value
-      payload.value.bio = bio
+      payload.value.bio.gender = bio.gender
+      payload.value.bio.firstname = bio.firstname
+      payload.value.bio.display_name = bio.display_name
+      payload.value.bio.description = bio.description
+      payload.value.bio.lastname = bio.lastname
     }
 
-    onBeforeMount(() => loadAuthUserInfo())
+    onBeforeMount(async () => await loadAuthUserInfo())
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type

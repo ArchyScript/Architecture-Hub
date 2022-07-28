@@ -54,7 +54,7 @@
         <article class="w-full flex-1 mt-4">
           <div class="px-1 sm:px-2 mt-2">
             <p
-              class="text-base sm:text-lg xl:text-xl font-normal text-gray-500"
+              class="text-base sm:text-lg xl:text-xl font-normal text-gray-500 break-all"
             >
               {{ post_info.post_content }}
             </p>
@@ -99,14 +99,15 @@ import {
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
 import router from '@/router'
-// import { default_images } from '@/controller/utils/index'
 import { useRoute } from 'vue-router'
 import { fetchSinglePost } from '@/controller/api/posts.api'
 import { specificComment } from '@/controller/api/reactions.api'
-import CommentVue from '@/components/Comments/Comment.vue'
+import CommentVue from '@/components/Utilities/Comment.vue'
 import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import { fetchSingleUserById } from '@/controller/api/users.api'
 import { useStore } from 'vuex'
+
+import { PostSchema } from '@/controller/typings/index'
 
 type CommentSchema =
   | {
@@ -128,6 +129,10 @@ export default {
     const does_post_have_comment = ref(false)
     const post_comments = ref<CommentSchema[]>([])
     const auth_user = computed(() => store.state.users.auth_user)
+    const storePostComments = computed(
+      () => store.state._requests.allPostComments,
+    )
+
     const post_info = ref({
       display_name: '',
       username: '',
@@ -147,7 +152,7 @@ export default {
     })
     const storeUsers = computed(() => store.state._requests.allUsers)
     const allUsers = ref([])
-    const allPosts = ref([])
+    const allPosts = ref<PostSchema[]>([])
     const storePosts = computed(() => store.state._requests.allPosts)
 
     const getPostDetails = async (post_id: any) => {
@@ -178,9 +183,13 @@ export default {
             likes,
             content,
             post_image: { avatar },
-          } = eachPost
-          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+          } = await eachPost
+          const { formattedDate, formattedTime } = await formatDateAndTime(
+            createdAt,
+          )
 
+          console.log(comments)
+          console.log(typeof comments)
           //
           reactions.value.no_of_comments = comments.length
           reactions.value.no_of_likes = likes.length
@@ -226,62 +235,113 @@ export default {
 
           does_post_have_comment.value = true
 
-          comments.forEach(async (comment: any) => {
-            const params = {
-              comment_id: comment.comment_id,
-              post_type: 'post',
-            }
+          comments.forEach(async (eachPostComment: any) => {
+            const { comment_id } = eachPostComment
 
-            //
-            const response = await specificComment(params)
+            await fetchAllPostComments()
+            storePostComments.value.forEach(
+              async (each_store_post_comment: any) => {
+                if (comment_id === each_store_post_comment._id) {
+                  const { commenter_id } = each_store_post_comment
 
-            const { error, data, status } = response
-            if (error || status === 400 || !data) return
+                  //
+                  if (storeUsers.value.length >= 1) {
+                    allUsers.value = storeUsers.value
+                  } else {
+                    await fetchUsers()
+                  }
 
-            //
-            const singleComment = data
+                  allUsers.value.forEach(async (eachUser: any) => {
+                    if (eachUser._id === commenter_id) {
+                      console.log(eachUser.username)
+                      const {
+                        username,
+                        profile_picture: { avatar },
+                        bio: { gender },
+                      } = eachUser
+                      const commenter_image: any = await getDisplayProfilePicture(
+                        avatar,
+                        gender,
+                      )
 
-            const { formattedDate, formattedTime } = formatDateAndTime(
-              singleComment.createdAt,
+                      const post_comment_info = {
+                        comment: each_store_post_comment.comment,
+                        commenter_image,
+                        commneter_username: username,
+                        date: formattedDate,
+                        time: formattedTime,
+                      }
+
+                      post_comments.value.unshift(post_comment_info)
+                    }
+                  })
+                }
+              },
             )
-
-            //
-            const result = await fetchSingleUserById(data.commenter_id)
-            const commenter_info = result
-
-            //
-            if (
-              commenter_info.error ||
-              commenter_info.status === 400 ||
-              !commenter_info.data
-            )
-              return
-
-            //
-            const {
-              username,
-              profile_picture: { avatar },
-              bio: { gender },
-            } = commenter_info.data
-            const commenter_image: any = await getDisplayProfilePicture(
-              avatar,
-              gender,
-            )
-
-            //
-            const post_comment_info = {
-              comment: singleComment.comment,
-              commenter_image,
-              commneter_username: username,
-              date: formattedDate,
-              time: formattedTime,
-            }
-
-            post_comments.value.unshift(post_comment_info)
           })
+
+          // comments.forEach(async (comment: any) => {
+          //   const params = {
+          // comment_id: comment.comment_id,
+          //     post_type: 'post',
+          //   }
+
+          //   //
+          //   const response = await specificComment(params)
+
+          //   const { error, data, status } = response
+          //   if (error || status === 400 || !data) return
+
+          //   //
+          //   const singleComment = data
+
+          //   const { formattedDate, formattedTime } = formatDateAndTime(
+          //     singleComment.createdAt,
+          //   )
+
+          //   //
+          //   const result = await fetchSingleUserById(data.commenter_id)
+          //   const commenter_info = result
+
+          //   //
+          //   if (
+          //     commenter_info.error ||
+          //     commenter_info.status === 400 ||
+          //     !commenter_info.data
+          //   )
+          //     return
+
+          //   //
+          // const {
+          //   username,
+          //   profile_picture: { avatar },
+          //   bio: { gender },
+          // } = commenter_info.data
+          // const commenter_image: any = await getDisplayProfilePicture(
+          //   avatar,
+          //   gender,
+          // )
+
+          //   //
+          // const post_comment_info = {
+          //   comment: singleComment.comment,
+          //   commenter_image,
+          //   commneter_username: username,
+          //   date: formattedDate,
+          //   time: formattedTime,
+          // }
+
+          // post_comments.value.unshift(post_comment_info)
+          // })
         }
       })
       return
+    }
+
+    const fetchAllPostComments = async () => {
+      if (storePostComments.value < 1) {
+        await store.dispatch('_requests/getAllPostComments')
+      }
     }
 
     onBeforeMount(async () => {
@@ -291,6 +351,7 @@ export default {
 
       await getPostDetails(post_id)
     })
+
     return {
       post_info,
       post_comments,

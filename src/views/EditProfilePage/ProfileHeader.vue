@@ -10,9 +10,15 @@
           class="h-24 w-24 md:h-28 md:w-28 xl:h-32 xl:w-32 -mt-12 md:-mt-14 xl:-mt-16 p-1 rounded-full block bg-archyhub-semi-light border"
         >
           <img
+            v-if="auth_user_profile.profile_picture !== ''"
             class="w-full h-full rounded-full object-fill"
-            :src="this.auth_user.profile_picture.avatar"
+            :src="auth_user_profile.profile_picture"
           />
+
+          <div
+            v-if="auth_user_profile.profile_picture === ''"
+            class="w-full h-full bg-gray-400 rounded-full animate-pulse"
+          ></div>
         </span>
       </div>
 
@@ -37,21 +43,21 @@
           </div>
         </div>
 
-        <div class="" v-if="auth_user.username !== ''">
+        <div class="" v-if="auth_user_profile.username !== ''">
           <div class="fl ex-1 items-center px-2 mt-2 mb-2">
             <h4
               class="text-base sm:text-lg lg:text-xl block font-semibold text-gray-600"
             >
               {{
-                auth_user.bio.display_name !== ''
-                  ? auth_user.bio.display_name
-                  : auth_user.username
+                auth_user_profile.display_name !== ''
+                  ? auth_user_profile.display_name
+                  : auth_user_profile.username
               }}
             </h4>
             <span
               class="text-sm sm:text-base block cursor-pointer text-gray-500 truncate"
             >
-              @{{ auth_user.username }}
+              @{{ auth_user_profile.username }}
             </span>
           </div>
         </div>
@@ -60,31 +66,77 @@
   </section>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
+import {
+  formatDateAndTime,
+  getDisplayProfilePicture,
+} from '@/controller/utilities'
 
 export default {
   name: 'ProfileHeader',
   setup() {
     const store = useStore()
     const route = useRoute()
-    const user_profile_id = ref('')
+    const username = ref('')
     const auth_user = computed(() => store.state.users.auth_user)
     const user = computed(() => {
       return store.state.users.user
     })
-    onBeforeMount(() => {
-      const { _id } = route.params
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const auth_user_profile = ref({
+      _id: '',
+      display_name: '',
+      username: '',
+      profile_picture: '',
+    })
 
-      user_profile_id.value = _id
+    const getUserData = async (username: any) => {
+      // const response = await fetchSingleUserByUsername(username)
+      // const { data, status, error } = response
+
+      // if (error || status === 400 || !data || typeof data === 'string')
+      //   return router.push(`/profile/${username}`)
+      if (storeUsers.value.length < 1) {
+        await fetchUsers()
+      }
+
+      storeUsers.value.forEach(async (eachUser: any) => {
+        if (eachUser.username === username) {
+          const {
+            _id,
+            bio: { display_name, gender },
+            profile_picture: { avatar },
+          } = await eachUser
+
+          const profile_picture = await getDisplayProfilePicture(avatar, gender)
+
+          auth_user_profile.value._id = _id
+          auth_user_profile.value.display_name = display_name
+          auth_user_profile.value.username = username
+          auth_user_profile.value.profile_picture = profile_picture
+
+          return
+        }
+      })
+    }
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+    onBeforeMount(async () => {
+      const username = route.params.username
+
+      await getUserData(username)
+      // username.value = username
     })
 
     return {
       user,
-      user_profile_id,
+      username,
       auth_user,
+      auth_user_profile,
     }
   },
 }

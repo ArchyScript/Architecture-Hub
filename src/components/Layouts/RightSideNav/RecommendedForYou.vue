@@ -104,25 +104,15 @@ export default {
     const recommended_people_to_follow = ref<RecommendedSchema[]>([])
     const storeUsers = computed(() => store.state._requests.allUsers)
     const auth_user = computed(() => store.state.users.auth_user)
-    const allUsers = ref([])
     const just_followed_user_id = ref('')
-    // const is_up_to_three_recommended = ref(false)
 
+    //
     const getRecommendedPeople = async () => {
-      async function fetchUsers() {
-        await store.dispatch('_requests/getAllUsers')
-        allUsers.value = storeUsers.value
-      }
-
-      if (storeUsers.value.length >= 1) {
-        allUsers.value = storeUsers.value
-      } else {
-        await fetchUsers()
-      }
+      if (storeUsers.value.length < 1) await fetchUsers()
 
       recommended_people_to_follow.value = []
 
-      const sortedByMostFollowers = allUsers.value.sort(
+      const sortedByMostFollowers = storeUsers.value.sort(
         (user_1: any, user_2: any) => {
           return user_2.followers.length - user_1.followers.length
         },
@@ -191,6 +181,11 @@ export default {
       getRecommendedPeople()
     }
 
+    //
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+    //
     onBeforeMount(async () => await getRecommendedPeople())
 
     return {

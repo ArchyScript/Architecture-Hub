@@ -184,10 +184,12 @@ export default {
       time: '',
       date: '',
     })
-    const storeUsers = computed(() => store.state._requests.allUsers)
     const storeCompetitions = computed(
       () => store.state._requests.allCompetitions,
     )
+    const allCompetitions = ref([])
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const allUsers = ref([])
     const storeCompetitionComments = computed(
       () => store.state._requests.allCompetitionComments,
     )
@@ -200,12 +202,23 @@ export default {
       },
     })
 
-    //
     const getCompetitionDetails = async (competition_id: any) => {
-      if (storeCompetitions.value && storeCompetitions.value.length < 1)
-        await fetchCompetitions()
+      async function fetchCompetitions() {
+        await store.dispatch('_requests/getAllCompetitions')
+        allCompetitions.value = storeCompetitions.value
+      }
+      async function fetchUsers() {
+        await store.dispatch('_requests/getAllUsers')
+        allUsers.value = storeUsers.value
+      }
 
-      storeCompetitions.value.forEach(async (eachCompetition: any) => {
+      if (storeCompetitions.value && storeCompetitions.value.length >= 1) {
+        allCompetitions.value = storeCompetitions.value
+      } else {
+        await fetchCompetitions()
+      }
+
+      allCompetitions.value.forEach(async (eachCompetition: any) => {
         if (eachCompetition._id === competition_id) {
           const {
             _id,
@@ -231,16 +244,22 @@ export default {
           competition_info.value.description = description
           competition_info.value.competition_image = avatar
 
+          console.log('copetition_id' + ' ' + _id)
           //
           reactions.value.no_of_comments = comments.length
           reactions.value.no_of_likes = likes.length
           reactions.value.post_comment_object.post_id = _id
           reactions.value.post_comment_object.post_type = 'competition'
 
-          if (storeUsers.value.length < 1) await fetchUsers()
+          //
+          if (storeUsers.value.length >= 1) {
+            allUsers.value = storeUsers.value
+          } else {
+            await fetchUsers()
+          }
 
           //
-          storeUsers.value.forEach(async (eachUser: any) => {
+          allUsers.value.forEach(async (eachUser: any) => {
             if (eachUser._id === creator_id) {
               const {
                 username,
@@ -268,19 +287,32 @@ export default {
           comments.forEach(async (eachCompetitionComment: any) => {
             const { comment_id } = await eachCompetitionComment
 
-            if (storeCompetitionComments.value < 1)
-              await fetchAllCompetitionComments()
+            await fetchAllCompetitionComments()
 
             storeCompetitionComments.value.forEach(
               async (each_store_competition_comment: any) => {
+                console.log(each_store_competition_comment)
+                console.log(comment_id)
+
                 if (comment_id === each_store_competition_comment._id) {
                   const { commenter_id } = each_store_competition_comment
+                  console.log('commenter_id')
+                  console.log(commenter_id)
+                  console.log(each_store_competition_comment)
 
                   //
-                  if (storeUsers.value.length < 1) await fetchUsers()
+                  if (storeUsers.value.length >= 1) {
+                    allUsers.value = storeUsers.value
+                  } else {
+                    await fetchUsers()
+                  }
 
-                  storeUsers.value.forEach(async (eachUser: any) => {
+                  console.log(storeUsers.value)
+
+                  allUsers.value.forEach(async (eachUser: any) => {
                     if (eachUser._id === commenter_id) {
+                      console.log(eachUser)
+                      console.log(commenter_id)
                       const {
                         username,
                         profile_picture: { avatar },
@@ -308,23 +340,163 @@ export default {
               },
             )
           })
+
+          const fetchAllCompetitionComments = async () => {
+            if (storeCompetitionComments.value < 1) {
+              await store.dispatch('_requests/getAllCompetitionComments')
+            }
+          }
+
+          //   comments.forEach(async (comment: any) => {
+          //     const params = {
+          //       comment_id: comment.comment_id,
+          //       post_type: 'competition',
+          //     }
+
+          //     //
+          //     const response = await specificComment(params)
+
+          //     const { error, data, status } = response
+          //     if (error || status === 400 || !data) return
+
+          //     //
+          //     const singleComment = data
+
+          //     const { formattedDate, formattedTime } = formatDateAndTime(
+          //       singleComment.createdAt,
+          //     )
+
+          //     //
+          //     const result = await fetchSingleUserById(data.commenter_id)
+          //     const commenter_info = result
+
+          //     //
+          //     if (
+          //       commenter_info.error ||
+          //       commenter_info.status === 400 ||
+          //       !commenter_info.data
+          //     )
+          //       return
+
+          //     //
+          //     const {
+          //       username,
+          //       profile_picture: { avatar },
+          //       bio: { gender },
+          //     } = commenter_info.data
+          //     const commenter_image: any = await getDisplayProfilePicture(
+          //       avatar,
+          //       gender,
+          //     )
+
+          //     //
+          //     const competition_comment_info = {
+          //       comment: singleComment.comment,
+          //       commenter_image,
+          //       commneter_username: username,
+          //       date: formattedDate,
+          //       time: formattedTime,
+          //     }
+
+          //     competition_comments.value.unshift(competition_comment_info)
+          //   })
         }
       })
       return
+
+      // const response = await fetchSingleCompetition(_id)
+      // const { error, data, status } = response
+
+      // if (error || status === 400 || !data || typeof data === 'string') return
+
+      // console.log(data)
+
+      // const {
+      // creator_id,
+      // title,
+      // link,
+      // host,
+      // createdAt,
+      // description,
+      // competition_image,
+      // content,
+      // } = data
+
+      // const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+
+      // //
+      // competition_info.value.title = title
+      // competition_info.value.content = content
+      // competition_info.value.link = link
+      // competition_info.value.host = host
+      // competition_info.value.time = formattedTime
+      // competition_info.value.date = formattedDate
+      // competition_info.value.description = description
+      // competition_info.value.competition_image = competition_image.avatar
+
+      // const getCreatorsInfo = async () => {
+      //   const result = await fetchSingleUserById(creator_id)
+      //   const { error, data, status } = result
+
+      //   if (error || status === 400 || !data || typeof data === 'string') return
+
+      //   const {
+      //     username,
+      //     bio: { gender, display_name },
+      //     profile_picture: { avatar },
+      //   } = data
+
+      //   // get profile image
+      //   const creator_picture: any = await getDisplayProfilePicture(
+      //     avatar,
+      //     gender,
+      //   )
+
+      //   competition_info.value.creator_picture = creator_picture
+      //   competition_info.value.creator_username = username
+      //   competition_info.value.display_name = display_name
+      // }
+      // getCreatorsInfo()
+
+      // //
+      // if (!data.comments || data.comments === undefined) return
+      // Handle comment component data
+      // if (data.comments <= 0) return (does_competition_have_comment.value = false)
+
+      // does_competition_have_comment.value = true
+
+      // data.comments.forEach(async (comment: any) => {
+      //   const _id = comment.comment_id
+
+      //   const response = await singleCommentOnPost(_id)
+      //   const { error, data, status } = response
+      //   if (error || status === 400 || !data || typeof data === 'string') return
+
+      //   const { formattedDate, formattedTime } = formatDateAndTime(
+      //     data.createdAt,
+      //   )
+
+      //   const result = await fetchSingleUserById(data.commenter_id)
+
+      //   const commenter_info = result.data
+
+      // const commenter_image: any = await getDisplayProfilePicture(
+      //   commenter_info.profile_picture.avatar,
+      //   commenter_info.bio.gender,
+      // )
+
+      //   const competition_comment_info = {
+      //     comment: data.comment,
+      //     commenter_image,
+      //     commneter_username: commenter_info.creator_username,
+      //     date: formattedDate,
+      //     time: formattedTime,
+      //   }
+
+      //   competition_comments.value.push(competition_comment_info)
+      // })
     }
 
-    // fetch data from store
-    async function fetchUsers() {
-      await store.dispatch('_requests/getAllUsers')
-    }
-    async function fetchCompetitions() {
-      await store.dispatch('_requests/getAllCompetitions')
-    }
-    async function fetchAllCompetitionComments() {
-      await store.dispatch('_requests/getAllCompetitionComments')
-    }
-
-    //
     onBeforeMount(async () => {
       const { competition_id } = route.params
 
@@ -333,8 +505,6 @@ export default {
 
       await getCompetitionDetails(competition_id)
     })
-
-    //
     return {
       competition_info,
       competition_comments,

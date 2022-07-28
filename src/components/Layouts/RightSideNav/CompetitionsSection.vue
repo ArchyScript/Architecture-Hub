@@ -33,7 +33,6 @@
               <router-link :to="`/competitions/${competition._id}`">
                 <span
                   class="btn py-1 italic text-gray-700 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
-                  @click="viewNewsUpdateDetails(competition._id)"
                 >
                   more details
                 </span>
@@ -89,7 +88,6 @@ import { fetchAllCompetitions } from '@/controller/api/competitions'
 type CompetitonSchema =
   | {
       _id: any
-      // competition_image: string
       creator_id: any
       content: string
       title: string
@@ -107,11 +105,7 @@ export default {
     const storeCompetitions = computed(
       () => store.state._requests.allCompetitions,
     )
-    const allCompetitions = ref([])
     const auth_user = computed(() => store.state.users.auth_user)
-    const viewNewsUpdateDetails = (user_id: string) => {
-      console.log(user_id)
-    }
 
     const toggleDescriptionLength = (competition_id: string) => {
       if (read_more_competition_id.value === competition_id) {
@@ -125,47 +119,40 @@ export default {
     }
 
     const getCompetitions = async () => {
-      // const response = await fetchAllCompetitions()
-      // const { error, data, status } = response
+      if (storeCompetitions.value.length < 1) await fetchCompetitions()
 
-      // if (error || status === 400 || !data || typeof data === 'string') return
+      storeCompetitions.value.forEach(
+        async (competition: any, index: number) => {
+          if (index <= 2) {
+            const { _id, creator_id, content, title } = competition
 
-      async function fetchCompetitions() {
-        await store.dispatch('_requests/getAllCompetitions')
-        allCompetitions.value = storeCompetitions.value
-      }
+            const latest_competition = {
+              _id,
+              creator_id,
+              content,
+              title,
+            }
 
-      if (storeCompetitions.value.length >= 1) {
-        allCompetitions.value = storeCompetitions.value
-      } else {
-        await fetchCompetitions()
-      }
-
-      allCompetitions.value.forEach(async (competition: any, index: number) => {
-        if (index <= 2) {
-          const { _id, creator_id, content, title } = competition
-
-          const latest_competition = {
-            _id,
-            creator_id,
-            content,
-            title,
+            competitions.value.push(latest_competition)
           }
+        },
+      )
 
-          competitions.value.push(latest_competition)
-        }
-      })
+      // await fetchCompetitions()
+    }
 
+    //
+    async function fetchCompetitions() {
       await store.dispatch('_requests/getAllCompetitions')
     }
 
+    //
     onBeforeMount(async () => await getCompetitions())
 
     return {
       is_more_description_boolean,
       competitions,
       read_more_competition_id,
-      viewNewsUpdateDetails,
       toggleDescriptionLength,
     }
   },

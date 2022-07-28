@@ -53,7 +53,7 @@ type CommentSchema =
   | any
 
 export default {
-  name: 'PostComment',
+  name: 'Comment',
   props: {
     eachPostComment: {
       type: Object as PropType<CommentSchema>,
@@ -121,8 +121,9 @@ export default {
 
     onBeforeMount(async () => {
       await getPostCommentDetails()
-      getPostCommentDetails()
+      // getPostCommentDetails()
     })
+
     return {
       post_info,
       reactions,

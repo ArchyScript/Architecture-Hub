@@ -2,7 +2,7 @@
   <section class="mb-6 inset-x-0 pb-4">
     <div class="flex justify-center">
       <input
-        @change="onFileChange"
+        @change.prevent="onFileChange"
         class="hidden"
         type="file"
         name="profile_picture"
@@ -39,7 +39,7 @@
           <button
             v-if="payload"
             type="submit"
-            class="w-full cursor-pointer text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
+            class="w-full cursor-pointer text-center py-3 rounded-xl bg-green-500 text-white focus:outline-none my-1"
           >
             <div class="w-full flex justify-center items-center space-x-2">
               <span>Upload Picture</span>
@@ -64,44 +64,85 @@
         </div>
       </div>
     </form>
+
+    <form
+      @submit.prevent="removeProfilePicture"
+      v-if="user_have_profile_picture"
+    >
+      <div class="px-4 my-4">
+        <button
+          class="w-full text-center cursor-pointer py-3 rounded-xl bg-red-800 text-white focus:outline-none my-1"
+        >
+          <div class="w-full flex justify-center items-center space-x-2">
+            <span>
+              Delete Profile Picture
+            </span>
+
+            <svg
+              v-if="is_loading"
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-white animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              />
+            </svg>
+          </div>
+        </button>
+      </div>
+    </form>
   </section>
 </template>
 
 <script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
-import { uploadProfilePicture } from '@/controller/api/users.api'
+import {
+  uploadProfilePicture,
+  deleteProfilePicture,
+} from '@/controller/api/users.api'
 import { useStore } from 'vuex'
 import router from '@/router'
 import { getDisplayProfilePicture } from '@/controller/utilities'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'ProfilePictureUploadPage',
   setup() {
     const store = useStore()
+    const route = useRoute()
     const image_url = ref('')
     const payload = ref(null)
     const is_loading = ref(false)
+    const user_have_profile_picture = ref(false)
     const message = ref({ type: '', text: '' })
     const auth_user = computed(() => store.state.users.auth_user)
     const user = computed(() => store.state.users.user)
+    const storeUsers = computed(() => store.state._requests.allUsers)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
       message.value.text = text
     }
 
-    const onFileChange = (e: any) => {
-      const file = e.target.files[0]
+    const onFileChange = async (event: any) => {
+      const file = event.target.files[0]
 
       payload.value = file
       image_url.value = URL.createObjectURL(file)
+      user_have_profile_picture.value = false
     }
 
     const uploadPicture = async () => {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      const user_id = '62a88b5875a64e7ba1a0c45d'
+      const user_id = auth_user.value._id
 
       const response = await uploadProfilePicture(user_id, payload.value)
       const { error, data, status } = response
@@ -129,26 +170,69 @@ export default {
 
       updateResponseMessage('success', `${data} please wait...'`)
 
-      await store.dispatch('users/getUser', user_id)
-      // await store.dispatch('users/getAuthUser', user_id)
+      // await store.dispatch('users/getUser', user_id)
+      await store.dispatch('users/getAuthUser', user_id)
+
+      console.log(auth_user.value)
 
       is_loading.value = false
 
-      return router.push(`/profile/${user_id}`)
+      return router.push(`/profile/${auth_user.value.username}`)
     }
 
     const loadAuthUserInfo = async () => {
-      const {
-        profile_picture: { avatar },
-        bio: { gender },
-      } = auth_user.value
+      const { username } = route.params
+      console.log(username)
 
-      const profile_picture_avatar = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
+      if (storeUsers.value.length < 1) {
+        await fetchUsers()
+      }
 
-      image_url.value = profile_picture_avatar
+      storeUsers.value.forEach(async (eachUser: any) => {
+        if (eachUser.username === username) {
+          const {
+            _id,
+            bio: { gender },
+            profile_picture: { avatar },
+          } = await eachUser
+
+          if (avatar !== '') user_have_profile_picture.value = true
+
+          const profile_picture = await getDisplayProfilePicture(avatar, gender)
+
+          image_url.value = profile_picture
+
+          return
+        }
+      })
+
+      // const {
+      //   profile_picture: { avatar },
+      //   bio: { gender },
+      // } = auth_user.value
+
+      // const profile_picture_avatar = await getDisplayProfilePicture(
+      //   avatar,
+      //   gender,
+      // )
+
+      // image_url.value = profile_picture_avatar
+    }
+
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+
+    const removeProfilePicture = async () => {
+      is_loading.value = true
+      const response = await deleteProfilePicture(auth_user.value._id)
+      const { error, data, status } = response
+
+      if (error || status === 400 || !data) return
+
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
+
+      return router.push(`/profile/${auth_user.value.username}`)
     }
 
     onBeforeMount(() => loadAuthUserInfo())
@@ -161,6 +245,8 @@ export default {
       payload,
       is_loading,
       uploadPicture,
+      removeProfilePicture,
+      user_have_profile_picture,
     }
   },
 }

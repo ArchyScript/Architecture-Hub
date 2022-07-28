@@ -108,7 +108,8 @@ export default {
     const storeScholarships = computed(
       () => store.state._requests.allScholarships,
     )
-    const allScholarships = ref([])
+
+    //
     const toggleDescriptionLength = (user_id: string) => {
       if (read_more_scholarship_id.value === user_id) {
         is_more_description_boolean.value = false
@@ -121,35 +122,34 @@ export default {
     }
 
     const getScholarships = async () => {
-      async function fetchCompetitions() {
-        await store.dispatch('_requests/getAllScholarships')
-        allScholarships.value = storeScholarships.value
-      }
+      if (storeScholarships.value.length < 1) await fetchScholarships()
 
-      if (storeScholarships.value.length >= 1) {
-        allScholarships.value = storeScholarships.value
-      } else {
-        await fetchCompetitions()
-      }
+      storeScholarships.value.forEach(
+        async (scholarship: any, index: number) => {
+          if (index <= 2) {
+            const { _id, creator_id, content, title } = scholarship
 
-      allScholarships.value.forEach(async (scholarship: any, index: number) => {
-        if (index <= 2) {
-          const { _id, creator_id, content, title } = scholarship
+            const latest_scholarship = {
+              _id,
+              creator_id,
+              content,
+              title,
+            }
 
-          const latest_scholarship = {
-            _id,
-            creator_id,
-            content,
-            title,
+            scholarships.value.push(latest_scholarship)
           }
+        },
+      )
 
-          scholarships.value.push(latest_scholarship)
-        }
-      })
+      // await fetchScholarships()
+    }
 
+    //
+    async function fetchScholarships() {
       await store.dispatch('_requests/getAllScholarships')
     }
 
+    //
     onBeforeMount(() => {
       getScholarships()
     })
@@ -158,7 +158,6 @@ export default {
       is_more_description_boolean,
       scholarships,
       read_more_scholarship_id,
-
       toggleDescriptionLength,
     }
   },

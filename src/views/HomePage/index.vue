@@ -3,7 +3,7 @@
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
-      <div class="" v-if="allPosts.length < 1">
+      <div class="" v-if="storePosts.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No post found' }}</span>
         </div>
@@ -70,7 +70,7 @@
           </form>
         </div>
 
-        <div v-for="(eachPost, index) in allPosts" :key="index">
+        <div v-for="(eachPost, index) in storePosts" :key="index">
           <PostContentVue :eachPost="eachPost" />
         </div>
       </div>
@@ -119,45 +119,51 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      async function fetchPosts() {
-        await store.dispatch('_requests/getAllPosts')
-        allPosts.value = storePosts.value
-      }
+      // if (storePosts.value && storePosts.value.length >= 1) {
+      //   allPosts.value = storePosts.value
+      // } else {
+      //   await fetchPosts()
+      // if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
 
-      if (storePosts.value && storePosts.value.length >= 1) {
-        allPosts.value = storePosts.value
-      } else {
-        await fetchPosts()
+      if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
 
-        if (!allPosts.value) {
+      if (!storePosts.value) {
+        is_loading.value = false
+        updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
+
+        return setTimeout(() => {
           is_loading.value = false
-          updateResponseMessage(
-            'error',
-            'Sorry, an unknown error occurred... Check connection',
-          )
-
-          return setTimeout(() => {
-            is_loading.value = false
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
+          return updateResponseMessage('', '')
+        }, 5000)
       }
+      // }
 
       updateResponseMessage('success', '')
       is_loading.value = false
-      store.dispatch('_requests/getAllPosts')
+      // await fetchPosts()
     }
 
-    onBeforeMount(async () => {
-      // await store.dispatch('_requests/getAllPosts')
-      // await store.dispatch('_requests/getAllUsers')
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
 
+    //
+    async function fetchPosts() {
+      await store.dispatch('_requests/getAllPosts')
+    }
+
+    //
+    onBeforeMount(async () => {
       await getAllPosts()
+      scrollToTop()
     })
 
     return {
       auth_user,
-      allPosts,
+      storePosts,
       is_loading,
       message,
       topbar,

@@ -105,55 +105,6 @@ export default {
 
     const trends = ref([
       {
-        _id: 'badjnfajafjakaj',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 2338988293343,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'badjnfajkkafjakaj',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 2339930823802343,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'kjeowpriewnrwe',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 233343,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'eoriulejekm',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 233343,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'ejdniskalajka',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 2333943,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'eyrelkhskhhs',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 293,
-        categories: ['laptop', 'web dev'],
-      },
-      {
-        _id: 'sdgshijkananna',
-        category: 'Music',
-        trend_topic: 'Macbook',
-        total_number: 28943,
-        categories: ['laptop', 'web dev'],
-      },
-      {
         _id: 'uekekknbsjbsdjk',
         category: 'Music',
         trend_topic: 'Macbook',

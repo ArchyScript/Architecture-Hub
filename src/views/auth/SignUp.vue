@@ -270,20 +270,29 @@ export default {
       )
 
       const token = data.token
-      const user_id = await HandleTokenResponse(token)
+      const auth_user_id = await HandleTokenResponse(token)
 
       updateResponseMessage(
         'success',
         "You've successfully signed up and logged in, you'll be redirected in a moment",
       )
 
-      await store.dispatch('users/getUser', user_id)
-      // await store.dispatch('users/getAuthUser', user_id)
+      await store.dispatch('users/getUser', auth_user_id)
+      // await store.dispatch('users/getAuthUser', auth_user_id)
       await store.dispatch('users/assignToken', token)
+      await assignToken(token)
+      await fetchAuthUser(auth_user_id)
 
       is_loading.value = false
-
       return router.push('/')
+    }
+
+    //
+    async function fetchAuthUser(_id: any) {
+      await store.dispatch('users/getAuthUser', _id)
+    }
+    async function assignToken(token: any) {
+      await store.dispatch('users/assignToken', token)
     }
 
     return {

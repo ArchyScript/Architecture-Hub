@@ -5,7 +5,8 @@
   >
     <div class="flex-shrink-0">
       <span
-        class="fa fa-bell text-2xl text-gray-700 hover:bg-archyhub-semi-light px-4 py-3 cursor-pointer rounded-full"
+        @click="router.go(-1)"
+        class="fa fa-arrow-left text-base text-gray-700 hover:bg-archyhub-light hover:bg-opacity-80 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>
 
@@ -24,6 +25,7 @@
 
 <script>
 import { onBeforeMount, ref } from 'vue'
+import router from '@/router'
 
 export default {
   name: 'ProfileTopbar',
@@ -52,6 +54,7 @@ export default {
     return {
       scrollShadowBoolean,
       toggleLeftNav,
+      router,
     }
   },
 }

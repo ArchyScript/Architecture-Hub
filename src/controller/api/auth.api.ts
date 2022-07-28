@@ -43,12 +43,10 @@ export const AuthApiService = {
   },
 
   //
-  async resetPasswoord() {
-    // _id  will be gotten from the store
-
+  async resetPasswoord(payload: any) {
     try {
       const response = await default_axios_instance
-        .post(`auth/reset-password/:_id`)
+        .post(`auth/reset-password`, payload)
         .then(async (response) => response)
 
       return HandleAxiosResponse(response)

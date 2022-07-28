@@ -36,8 +36,12 @@ export default {
         icon: 'fa fa-image',
       },
     ])
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
 
     onBeforeMount(async () => {
+      scrollToTop()
       // const { username } = route.params
       // const data = await getUserData(username)
       // console.log(data)
