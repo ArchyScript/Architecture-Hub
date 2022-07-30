@@ -118,11 +118,11 @@ const routes: Array<RouteRecordRaw> = [
             name: 'ScholarshipDetails',
             component: ScholarshipDetails,
           },
-          // {
-          //   path: '/user/:username/:followers_or_followings',
-          //   name: 'UserCommunity',
-          //   component: UserCommunity,
-          // },
+          {
+            path: '/user/:username/:followers_or_followings',
+            name: 'UserCommunity',
+            component: UserCommunity,
+          },
         ],
       },
     ],

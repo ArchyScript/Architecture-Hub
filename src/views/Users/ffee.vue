@@ -3,13 +3,13 @@
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
-      <div class="" v-if="storeUsers.length < 1">
+      <div class="" v-if="userCommunities.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No user found' }}</span>
         </div>
 
         <div class="text-center">
-          <form @submit.prevent="getUsers">
+          <form @submit.prevent="getUserCommunities">
             <button
               class="text-md text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
             >
@@ -43,7 +43,7 @@
 
       <div v-else>
         <div class="hidden text-center mb-8">
-          <form @submit.prevent="getUsers">
+          <form @submit.prevent="getUserCommunities">
             <button
               class="text-md text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
             >
@@ -70,8 +70,13 @@
           </form>
         </div>
 
-        <div v-for="(eachUser, index) in storeUsers" :key="index">
-          <UserContentVue :eachUser="eachUser" />
+        <div
+          v-for="(eachUserInUserCommunity, index) in userCommunities"
+          :key="index"
+        >
+          <UserCommunityVue
+            :eachUserInUserCommunity="eachUserInUserCommunity"
+          />
         </div>
       </div>
     </div>
@@ -82,15 +87,15 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
-import UserContentVue from '@/components/Users/UserContent.vue'
+import UserCommunityVue from '@/components/Users/UserCommunity.vue'
 import AnimatedUserVue from '@/components/Animation/AnimatedUser.vue'
-import { UserSchema } from '@/controller/typings/index'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'Scholarships',
   components: {
     MainPageTopBarVue,
-    UserContentVue,
+    UserCommunityVue,
     AnimatedUserVue,
   },
   setup() {
@@ -102,7 +107,7 @@ export default {
     //   () => store.state._requests.allScholarships,
     // )
     const storeUsers = computed(() => store.state._requests.allUsers)
-
+    const userCommunities = ref([])
     const auth_user = computed(() => store.state.users.auth_user)
     const open_new_post_modal = computed(
       () => store.state.component_handler.open_new_post_modal,
@@ -116,25 +121,60 @@ export default {
       message.value.text = text
     }
 
-    const getUsers = async () => {
+    const getUserCommunities = async () => {
+      const { username, followers_or_followings } = useRoute().params
+
       is_loading.value = true
       updateResponseMessage('', '')
 
       //
       if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
-      if (!storeUsers.value) {
-        is_loading.value = false
-        updateResponseMessage(
-          'error',
-          'Sorry, an unknown error occurred... Check connection',
-        )
+      storeUsers.value.forEach(async (eachUser: any) => {
+        if (eachUser.username === username) {
+          const { followers, followings } = eachUser
 
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+          const userFollowers: any = []
+          const userFollowings: any = []
+
+          if (followers_or_followings === 'followers') {
+            await followers.forEach(async (follower: any) => {
+              await storeUsers.value.forEach((user: any) => {
+                if (follower.follower_id === user._id) {
+                  userFollowers.push(user)
+                }
+              })
+            })
+
+            userCommunities.value = userFollowers
+          }
+
+          if (followers_or_followings === 'followings') {
+            await followings.forEach(async (following: any) => {
+              await storeUsers.value.forEach((user: any) => {
+                if (following.following_id === user._id) {
+                  userFollowings.push(user)
+                }
+              })
+            })
+
+            userCommunities.value = userFollowings
+          }
+        }
+      })
+
+      // if (!storeUsers.value) {
+      //   is_loading.value = false
+      //   updateResponseMessage(
+      //     'error',
+      //     'Sorry, an unknown error occurred... Check connection',
+      //   )
+
+      //   return setTimeout(() => {
+      //     is_loading.value = false
+      //     return updateResponseMessage('', '')
+      //   }, 5000)
+      // }
 
       updateResponseMessage('success', '')
       is_loading.value = false
@@ -150,15 +190,9 @@ export default {
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
-    async function fetchAuthUser() {
-      await store.dispatch('users/getAuthUser', auth_user.value._id)
-    }
 
     onBeforeMount(async () => {
-      await fetchUsers()
-      // await fetchUsers()
-      await fetchAuthUser()
-      await getUsers()
+      await getUserCommunities()
       scrollToTop()
     })
 
@@ -167,8 +201,8 @@ export default {
       is_loading,
       message,
       topbar,
-      auth_user,
-      getUsers,
+      userCommunities,
+      getUserCommunities,
     }
   },
 }

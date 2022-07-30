@@ -409,10 +409,21 @@ export default {
       await getAllPostsByUser()
     }
 
+    // fetch data from store
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+
+    //
+    const scrollToTop = () => {
+      window.scrollTo(0, 0)
+    }
+
     onBeforeMount(async () => {
       // await store.dispatch('_requests/getAllPosts')
       // await store.dispatch('_requests/getAllUsers')
-
+      await scrollToTop()
+      await fetchUsers()
       await getAllPostsByUser()
     })
 

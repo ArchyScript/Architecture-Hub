@@ -44,7 +44,7 @@
             <span
               v-if="is_auth_user_a_follower"
               @click="unfollowRecommended(user_profile._id)"
-              class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              class="btn py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
             >
               unfollow
             </span>
@@ -90,9 +90,7 @@
                   : user_profile.username
               }}
             </h4>
-            <span
-              class="text-sm sm:text-base block cursor-pointer text-gray-500 truncate"
-            >
+            <span class="text-sm sm:text-base block text-gray-500 truncate">
               @{{ user_profile.username }}
             </span>
           </div>
@@ -109,7 +107,10 @@
           </p>
 
           <p class="flex items-center text-base mt-2 px-2 space-x-8">
-            <span class="flex space-x-2">
+            <!-- <router-link
+              :to="`/user/${user_profile.username}/followings`"
+              class="flex space-x-2 hover:underline"
+            >
               <span class="text-gray-600 font-bold">
                 {{ user_profile.no_of_followings }}
               </span>
@@ -125,30 +126,62 @@
               >
                 followings
               </span>
+            </router-link> -->
+
+            <span class="flex space-x-2">
+              <span v-if="user_profile.no_of_followings < 1">
+                <span class="text-gray-600 font-bold">
+                  {{ user_profile.no_of_followings }}
+                </span>
+
+                <span class="text-gray-500">
+                  following
+                </span>
+              </span>
+
+              <router-link
+                :to="`/user/${user_profile.username}/followings`"
+                v-if="user_profile.no_of_followings >= 1"
+                class="hover:underline"
+              >
+                <span class="text-gray-600 font-bold">
+                  {{ user_profile.no_of_followings }}
+                </span>
+
+                <span class="text-gray-500">
+                  followings
+                </span>
+              </router-link>
             </span>
 
             <span class="flex space-x-2">
-              <span class="text-gray-600 font-bold">
-                {{ user_profile.no_of_followers }}
+              <span v-if="user_profile.no_of_followers < 1">
+                <span class="text-gray-600 font-bold">
+                  {{ user_profile.no_of_followers }}
+                </span>
+
+                <span class="text-gray-500">
+                  follower
+                </span>
               </span>
-              <span
-                v-if="user_profile.no_of_followers <= 1"
-                class="text-gray-500"
+
+              <router-link
+                :to="`/user/${user_profile.username}/followers`"
+                v-if="user_profile.no_of_followers >= 1"
+                class="hover:underline"
               >
-                follower
-              </span>
-              <span
-                v-if="user_profile.no_of_followers > 1"
-                class="text-gray-500"
-              >
-                followers
-              </span>
+                <span class="text-gray-600 font-bold">
+                  {{ user_profile.no_of_followers }}
+                </span>
+
+                <span class="text-gray-500">
+                  followers
+                </span>
+              </router-link>
             </span>
           </p>
         </div>
       </div>
-
-      <!-- <VueNotificationList /> -->
     </section>
   </section>
 </template>
@@ -195,15 +228,6 @@ export default {
     const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserData = async (username: any) => {
-      // const response = await fetchSingleUserByUsername(username)
-      // const { data, status, error } = response
-
-      // if (error || status === 400 || !data || typeof data === 'string')
-      //   return router.push(`/profile/${username}`)
-      if (storeUsers.value.length < 1) {
-        await fetchUsers()
-      }
-
       storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
           const {
@@ -246,30 +270,28 @@ export default {
     const followRecommended = async (user_to_follow_id: string) => {
       const params = {
         current_user_id: auth_user.value._id,
-        user_to_follow_id: user_to_follow_id,
+        user_to_follow_id,
       }
 
       const response = await followUser(params)
       const { error, data, status } = response
 
       if (error || status === 400 || !data) return
-      console.log(data)
-
-      // await getUserDetails(props.eachUser)
-      is_auth_user_a_follower.value = true
 
       const result = await fetchSingleUserById(user_to_follow_id)
       if (result.error || result.status === 400 || !result.data) return
 
+      is_auth_user_a_follower.value = true
       user_profile.value.no_of_followers = result.data.followers.length
 
+      await fetchAuthUser()
       await fetchUsers()
     }
 
     const unfollowRecommended = async (user_to_unfollow_id: string) => {
       const params = {
         current_user_id: auth_user.value._id,
-        user_to_unfollow_id: user_to_unfollow_id,
+        user_to_unfollow_id,
       }
 
       const response = await unfollowUser(params)
@@ -279,13 +301,12 @@ export default {
       console.log(data)
 
       const result = await fetchSingleUserById(user_to_unfollow_id)
-      // await getUserDetails(props.eachUser)
 
       if (result.error || result.status === 400 || !result.data) return
       is_auth_user_a_follower.value = false
       user_profile.value.no_of_followers = result.data.followers.length
 
-      await getUserData(result.data.username)
+      await fetchAuthUser()
       await fetchUsers()
     }
 
@@ -293,12 +314,15 @@ export default {
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
+    async function fetchAuthUser() {
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
+    }
 
     //
     onBeforeMount(async () => {
       const { username } = route.params
-      console.log(username)
       await getUserData(username)
+      await fetchAuthUser()
     })
 
     return {

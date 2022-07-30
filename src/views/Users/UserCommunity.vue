@@ -1,6 +1,11 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
-    <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
+    <MainPageTopBarVue
+      class="hidden"
+      :page_title="topbar.title"
+      :page_icon="topbar.icon"
+    />
+    {{ userCommunities }}
 
     <div class="mt-10 pb-8">
       <div class="" v-if="userCommunities.length < 1">
@@ -74,9 +79,7 @@
           v-for="(eachUserInUserCommunity, index) in userCommunities"
           :key="index"
         >
-          <UserCommunityVue
-            :eachUserInUserCommunity="eachUserInUserCommunity"
-          />
+          <UserContentVue :eachUser="eachUserInUserCommunity" />
         </div>
       </div>
     </div>
@@ -87,19 +90,21 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
-import UserCommunityVue from '@/components/Users/UserCommunity.vue'
 import AnimatedUserVue from '@/components/Animation/AnimatedUser.vue'
 import { useRoute } from 'vue-router'
+import UserContentVue from '@/components/Users/UserContent.vue'
+import { UserSchema } from '@/controller/typings'
 
 export default {
   name: 'Scholarships',
   components: {
     MainPageTopBarVue,
-    UserCommunityVue,
+    UserContentVue,
     AnimatedUserVue,
   },
   setup() {
     const store = useStore()
+    const route = useRoute()
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Users', icon: 'fas fa-users' })
@@ -107,7 +112,7 @@ export default {
     //   () => store.state._requests.allScholarships,
     // )
     const storeUsers = computed(() => store.state._requests.allUsers)
-    const userCommunities = ref([])
+    const userCommunities = ref<UserSchema[]>([])
     const auth_user = computed(() => store.state.users.auth_user)
     const open_new_post_modal = computed(
       () => store.state.component_handler.open_new_post_modal,
@@ -122,20 +127,21 @@ export default {
     }
 
     const getUserCommunities = async () => {
-      const { username, followers_or_followings } = useRoute().params
+      const { username, followers_or_followings } = route.params
 
-      is_loading.value = true
+      // is_loading.value = true
       updateResponseMessage('', '')
 
+      const userFollowers: any = []
+      const userFollowings: any = []
       //
       if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
-      storeUsers.value.forEach(async (eachUser: any) => {
+      await storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
           const { followers, followings } = eachUser
 
-          const userFollowers: any = []
-          const userFollowings: any = []
+          console.log(eachUser)
 
           if (followers_or_followings === 'followers') {
             await followers.forEach(async (follower: any) => {
@@ -146,7 +152,7 @@ export default {
               })
             })
 
-            userCommunities.value = userFollowers
+            userCommunities.value = await userFollowers
           }
 
           if (followers_or_followings === 'followings') {
@@ -176,9 +182,12 @@ export default {
       //   }, 5000)
       // }
 
-      updateResponseMessage('success', '')
-      is_loading.value = false
-      await fetchUsers()
+      console.log(userCommunities.value)
+
+      // updateResponseMessage('success', '')
+      // is_loading.value = false
+      // await fetchUsers()
+      console.log(userFollowers)
     }
 
     //
@@ -190,14 +199,21 @@ export default {
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
+    async function fetchAuthUser() {
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
+    }
 
     onBeforeMount(async () => {
+      await fetchAuthUser()
+      await fetchUsers()
       await getUserCommunities()
+      getUserCommunities()
       scrollToTop()
     })
 
     return {
       storeUsers,
+      auth_user,
       is_loading,
       message,
       topbar,

@@ -5,7 +5,7 @@
   >
     <div class="flex-shrink-0">
       <span
-        @click="router.go(-1)"
+        @click="router.back()"
         class="fa fa-arrow-left text-xl text-gray-700 hover:bg-archyhub-light hover:bg-opacity-80 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>

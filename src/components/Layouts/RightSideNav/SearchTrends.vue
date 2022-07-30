@@ -21,6 +21,7 @@
         </svg>
 
         <input
+          @input="searchUser"
           class="px-2 w-full outline-none border-none bg-transparent"
           type="search"
           v-model="search_value"
@@ -33,13 +34,17 @@
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { onBeforeMount, ref, computed } from 'vue'
 
 export default {
   name: 'SearchTrends',
   setup() {
     const scrollShadowBoolean = ref(true)
     const search_value = ref('')
+
+    const searchUser = async () => {
+      console.log(search_value.value)
+    }
 
     onBeforeMount(() => {
       window.addEventListener('scroll', () => handleScroll())
@@ -62,6 +67,7 @@ export default {
     }
 
     return {
+      searchUser,
       search_value,
       validateSearchParams,
       scrollShadowBoolean,
