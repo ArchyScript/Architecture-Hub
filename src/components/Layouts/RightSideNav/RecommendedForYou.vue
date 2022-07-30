@@ -1,21 +1,21 @@
 <template>
   <section
     v-if="recommended_people_to_follow.length >= 1"
-    class="flex items-center border rounded-2xl p-3 border-gray-200 inset-x-0 py-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl border-gray-200 inset-x-0 pt-4 shadow-sm md:shadow-none mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-semibold mb-6 px-2 text-gray-600">
+      <h4 class="text-xl font-semibold mb-6 px-5 text-gray-600">
         Recommended for You
       </h4>
 
-      <div v-if="recommended_people_to_follow.length < 1">
+      <div v-if="recommended_people_to_follow.length < 1" class="p-3">
         <div v-for="x in 3" :key="x">
           <AnimatedRecommendedVue />
         </div>
       </div>
 
       <div
-        class="flex flex-col space-y-6"
+        class="flex flex-col space-y-6 p-3"
         v-if="recommended_people_to_follow.length >= 1"
       >
         <div
@@ -75,6 +75,12 @@
           </div>
         </div>
       </div>
+
+      <p
+        class="w-full mt-3 py-2 sm:py-3 text-sm text-center sm:text-base italic border-t"
+      >
+        <router-link to="/users">see all</router-link>
+      </p>
     </div>
   </section>
 </template>

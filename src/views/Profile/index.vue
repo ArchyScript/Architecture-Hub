@@ -297,7 +297,6 @@ export default {
 
       const all_posts: any = []
       const all_posts_with_image: any = []
-
       if (storePosts.value && storePosts.value.length >= 1) {
         allPosts.value = storePosts.value
       } else {
@@ -305,7 +304,7 @@ export default {
       }
 
       await posts_array.forEach((post: any) => {
-        storePosts.value.forEach((eachPost: any) => {
+        allPosts.value.forEach((eachPost: any) => {
           const {
             _id,
             post_image: { avatar },
@@ -323,20 +322,15 @@ export default {
       })
 
       if (post_type === 'posts') {
-        // allPostsCreatedByUser.value = []
-
         allPostsCreatedByUser.value = all_posts
       }
       if (post_type === 'media') {
-        // allPostsWithImageByUser.value = []
-
         allPostsWithImageByUser.value = all_posts_with_image
       }
     }
 
     //
     const getBookmarkedPostsDetails = async (bookmarked_posts: any) => {
-      console.log(bookmarked_posts)
       if (bookmarked_posts.length < 1) return
 
       const all_bookmarked_posts: any = []

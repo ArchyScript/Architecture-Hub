@@ -52,33 +52,25 @@ export default {
     const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserProfileData = async () => {
-      // const { username } = route.params
+      const { username } = route.params
 
-      const {
-        bio: { display_name },
-        username,
-        posts,
-      } = auth_user.value
+      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
-      user_profile_data.value.no_of_posts = posts.length
-      user_profile_data.value.display_name = display_name
-      user_profile_data.value.username = username
+      storeUsers.value.forEach(async (eachUser: any) => {
+        if (eachUser.username === username) {
+          const {
+            bio: { display_name },
+            username,
+            posts,
+          } = eachUser
 
-      // await fetchUsers()
+          console.log(eachUser)
 
-      // storeUsers.value.forEach((eachUser: any) => {
-      //   if (eachUser.username === username) {
-      // const {
-      //   bio: { display_name },
-      //   username,
-      //   posts,
-      // } = eachUser
-
-      // user_profile_data.value.no_of_posts = posts.length
-      // user_profile_data.value.display_name = display_name
-      // user_profile_data.value.username = username
-      //   }
-      // })
+          user_profile_data.value.no_of_posts = posts.length
+          user_profile_data.value.display_name = display_name
+          user_profile_data.value.username = username
+        }
+      })
     }
 
     async function fetchUsers() {
@@ -93,14 +85,6 @@ export default {
       handleScroll()
       await getUserProfileData()
     })
-
-    // const getUserProfileData = async (username: any) => {
-    //   const response = await fetchSingleUserByUsername(username)
-    //   const { data, status, error } = response
-
-    //   if (error || status === 400 || !data || typeof data === 'string')
-    //     return router.push(`/profile/${username}`)
-    // }
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {

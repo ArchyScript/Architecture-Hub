@@ -21,14 +21,34 @@
           ></div>
         </span>
 
-        <div v-if="user_profile._id === auth_user._id" class="mt-2">
-          <router-link :to="`/profile/${user_profile.username}/edit`">
+        <div class="mt-2">
+          <span v-if="user_profile._id === auth_user._id">
+            <router-link :to="`/profile/${user_profile.username}/edit`">
+              <span
+                class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              >
+                Edit Profile
+              </span>
+            </router-link>
+          </span>
+
+          <span v-if="user_profile._id !== auth_user._id">
             <span
+              v-if="!is_auth_user_a_follower"
+              @click="followRecommended(user_profile._id)"
               class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
-              Edit Profile
+              follow
             </span>
-          </router-link>
+
+            <span
+              v-if="is_auth_user_a_follower"
+              @click="unfollowRecommended(user_profile._id)"
+              class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+            >
+              unfollow
+            </span>
+          </span>
         </div>
       </div>
 
@@ -106,6 +126,7 @@
                 followings
               </span>
             </span>
+
             <span class="flex space-x-2">
               <span class="text-gray-600 font-bold">
                 {{ user_profile.no_of_followers }}
@@ -136,7 +157,12 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import { fetchSingleUserByUsername } from '@/controller/api/users.api'
+import {
+  fetchSingleUserById,
+  fetchSingleUserByUsername,
+  followUser,
+  unfollowUser,
+} from '@/controller/api/users.api'
 import router from '@/router'
 import {
   formatDateAndTime,
@@ -162,19 +188,12 @@ export default {
       no_of_followers: 0,
       no_of_followings: 0,
     })
+    const is_auth_user_a_follower = ref(false)
 
     const active_user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
     const storeUsers = computed(() => store.state._requests.allUsers)
 
-    onBeforeMount(async () => {
-      const { username } = route.params
-      console.log(username)
-      await getUserData(username)
-    })
-    async function fetchUsers() {
-      await store.dispatch('_requests/getAllUsers')
-    }
     const getUserData = async (username: any) => {
       // const response = await fetchSingleUserByUsername(username)
       // const { data, status, error } = response
@@ -213,16 +232,83 @@ export default {
           user_profile.value.no_of_followers = followers.length
           user_profile.value.no_of_followings = followings.length
 
+          auth_user.value.followings.forEach(async (following: any) => {
+            if (following.following_id === _id) {
+              is_auth_user_a_follower.value = true
+            }
+          })
+
           return
         }
       })
     }
+
+    const followRecommended = async (user_to_follow_id: string) => {
+      const params = {
+        current_user_id: auth_user.value._id,
+        user_to_follow_id: user_to_follow_id,
+      }
+
+      const response = await followUser(params)
+      const { error, data, status } = response
+
+      if (error || status === 400 || !data) return
+      console.log(data)
+
+      // await getUserDetails(props.eachUser)
+      is_auth_user_a_follower.value = true
+
+      const result = await fetchSingleUserById(user_to_follow_id)
+      if (result.error || result.status === 400 || !result.data) return
+
+      user_profile.value.no_of_followers = result.data.followers.length
+
+      await fetchUsers()
+    }
+
+    const unfollowRecommended = async (user_to_unfollow_id: string) => {
+      const params = {
+        current_user_id: auth_user.value._id,
+        user_to_unfollow_id: user_to_unfollow_id,
+      }
+
+      const response = await unfollowUser(params)
+      const { error, data, status } = response
+
+      if (error || status === 400 || !data) return
+      console.log(data)
+
+      const result = await fetchSingleUserById(user_to_unfollow_id)
+      // await getUserDetails(props.eachUser)
+
+      if (result.error || result.status === 400 || !result.data) return
+      is_auth_user_a_follower.value = false
+      user_profile.value.no_of_followers = result.data.followers.length
+
+      await getUserData(result.data.username)
+      await fetchUsers()
+    }
+
+    //
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
+
+    //
+    onBeforeMount(async () => {
+      const { username } = route.params
+      console.log(username)
+      await getUserData(username)
+    })
 
     return {
       auth_user,
       active_user,
       user_profile_id,
       user_profile,
+      is_auth_user_a_follower,
+      followRecommended,
+      unfollowRecommended,
     }
   },
 }

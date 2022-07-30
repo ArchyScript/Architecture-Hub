@@ -16,14 +16,15 @@
   </section>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script lang="ts">
+import { computed, onBeforeMount, ref } from 'vue'
 import SearchTrendsVue from '../RightSideNav/SearchTrends.vue'
 import WhoToFollowVue from './WhoToFollow.vue'
 import RecommendedWhoToFollowVue from './RecommendedForYou.vue'
 import TrendsForYouVue from './TrendsForYou.vue'
 import CompetitionSectionVue from './CompetitionsSection.vue'
 import ScholarshipsSectionVue from './ScholarshipsSection.vue'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'RightSideNav',
@@ -37,6 +38,20 @@ export default {
   },
 
   setup() {
+    // const currentRoute = computed(() => useRoute().params.fullPath)
+
+    // const openTargettedModal = () => {
+    //   // console.log(current_route)
+    //   // if (title.toLowerCase() === 'home') return
+    //   // if (title.toLowerCase() === 'competitions')
+    //   //   return store.dispatch('component_handler/openNewCompetitionModal')
+    //   // if (title.toLowerCase() === 'scholarships')
+    //   //   return store.dispatch('component_handler/openNewScholarshipModal')
+    // }
+
+    // onBeforeMount(() => {
+    //   openTargettedModal(currentRoute.value)
+    // })
     return {}
   },
 }

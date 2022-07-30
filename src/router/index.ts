@@ -13,7 +13,8 @@ const Scholarships = () => import('@/views/Scholarships/index.vue')
 // const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
-// const Notifications = () => import('@/views/Notifications/index.vue')
+const Users = () => import('@/views/Users/index.vue')
+const UserCommunity = () => import('@/views/Users/UserCommunity.vue')
 
 //
 const ContentDetailsLayout = () => import('@/views/ContentDetails/index.vue')
@@ -85,11 +86,12 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Scholarships',
         component: Scholarships,
       },
-      // {
-      //   path: '/notifications',
-      //   name: 'Notifications',
-      //   component: Notifications,
-      // },
+
+      {
+        path: '/users',
+        name: 'Users',
+        component: Users,
+      },
 
       {
         path: '/profile/:username/edit',
@@ -116,6 +118,11 @@ const routes: Array<RouteRecordRaw> = [
             name: 'ScholarshipDetails',
             component: ScholarshipDetails,
           },
+          // {
+          //   path: '/user/:username/:followers_or_followings',
+          //   name: 'UserCommunity',
+          //   component: UserCommunity,
+          // },
         ],
       },
     ],

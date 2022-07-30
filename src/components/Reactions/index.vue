@@ -12,9 +12,9 @@
     <br />
     {{ 'current_liked_post_id' + ' ' + current_liked_post_id }}... -->
 
-    <br />
+    <!-- <br />
     {{ post_comment_object }}
-    <br />
+    <br /> -->
     <!-- {{ no_of_likes }}
     <br />
     <br /> -->

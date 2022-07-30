@@ -12,30 +12,36 @@
 
     <div class="flex-1 items-center px-2">
       <h4 class="text-xl block font-bold text-gray-600">
-        Dasolu Daniel
+        {{
+          auth_user.bio.display_name === ''
+            ? auth_user.username
+            : auth_user.bio.display_name
+        }}
       </h4>
       <span
         class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
       >
-        700 posts
+        {{
+          auth_user.posts.length === 0
+            ? ` ${auth_user.posts.length} post`
+            : ` ${auth_user.posts.length} posts`
+        }}
       </span>
     </div>
   </nav>
 </template>
 
 <script>
-import { onBeforeMount, ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import router from '@/router'
+import { useStore } from 'vuex'
 
 export default {
   name: 'ProfileTopbar',
-  setup(context) {
+  setup() {
+    const store = useStore()
     const scrollShadowBoolean = ref(true)
-
-    onBeforeMount(() => {
-      handleScroll()
-      window.addEventListener('scroll', () => handleScroll())
-    })
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -47,14 +53,14 @@ export default {
       }
     }
 
-    const toggleLeftNav = () => {
-      return context.emit('toggleLeftNav')
-    }
-
+    onBeforeMount(() => {
+      handleScroll()
+      window.addEventListener('scroll', () => handleScroll())
+    })
     return {
       scrollShadowBoolean,
-      toggleLeftNav,
       router,
+      auth_user,
     }
   },
 }
