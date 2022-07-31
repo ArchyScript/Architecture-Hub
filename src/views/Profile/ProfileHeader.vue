@@ -228,8 +228,42 @@ export default {
     const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserData = async (username: any) => {
+      console.log(auth_user.value)
+      // check to update auth_user info
+      if (username === auth_user.value.username) {
+        const {
+          _id,
+          createdAt,
+          followers,
+          followings,
+          bio: { display_name, gender, description },
+          profile_picture: { avatar },
+        } = auth_user.value
+
+        const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+
+        const profile_picture: any = await getDisplayProfilePicture(
+          avatar,
+          gender,
+        )
+
+        user_profile.value._id = _id
+        user_profile.value.display_name = display_name
+        user_profile.value.username = username
+        user_profile.value.profile_picture = profile_picture
+        user_profile.value.description = description
+        user_profile.value.time = formattedTime
+        user_profile.value.date_joined = formattedDate
+        user_profile.value.no_of_followers = followers.length
+        user_profile.value.no_of_followings = followings.length
+      }
+
+      // get other user details
       storeUsers.value.forEach(async (eachUser: any) => {
-        if (eachUser.username === username) {
+        if (
+          eachUser.username === username &&
+          username !== auth_user.value.username
+        ) {
           const {
             _id,
             createdAt,
@@ -265,6 +299,9 @@ export default {
           return
         }
       })
+
+      await fetchAuthUser()
+      await fetchUsers()
     }
 
     const followRecommended = async (user_to_follow_id: string) => {
@@ -321,8 +358,10 @@ export default {
     //
     onBeforeMount(async () => {
       const { username } = route.params
+      console.log(username)
+      // await fetchAuthUser()
       await getUserData(username)
-      await fetchAuthUser()
+      await fetchUsers()
     })
 
     return {

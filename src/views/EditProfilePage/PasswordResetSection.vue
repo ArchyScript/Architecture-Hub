@@ -5,14 +5,13 @@
         <h6
           class="text-xs text-center justify-end uppercase text-red-800 font-semibold md:font-bold md:text-sm"
         >
-          ***If you update this section, you no longer have access to the old
-          email and username and you will be required to login with the updated
-          details***
+          ***If you change your password, you will be redirected to the login
+          page and required to login with the new password***
         </h6>
         <h4
           class="text-lg mt-4 uppercase justify-end text-gray-700 font-medium md:text-xl"
         >
-          Update Auth Info
+          Reset Password
         </h4>
       </div>
 
@@ -25,7 +24,7 @@
       </div>
 
       <form
-        @submit.prevent="UpdateAndSaveBio"
+        @submit.prevent="resetPasssword"
         class="bg-archyhub-light bg-opacity-40 p-3"
       >
         <div
@@ -41,37 +40,13 @@
 
             <div class="relative">
               <input
-                :class="
-                  is_email_edit_option_locked
-                    ? 'cursor-not-allowed pr-10'
-                    : 'cursor-text pr-12'
-                "
                 type="email"
-                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                class="w-full cursor-not-allowed text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="email"
                 placeholder="Email"
                 v-model="payload.email"
-                :readonly="is_email_edit_option_locked ? true : false"
+                readonly
               />
-
-              <span
-                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
-                @click="
-                  is_email_edit_option_locked = !is_email_edit_option_locked
-                "
-                :title="
-                  is_email_edit_option_locked ? 'Start Edit' : 'Stop Edit'
-                "
-              >
-                <i
-                  :class="
-                    is_email_edit_option_locked
-                      ? 'fa fa-lock  text-gray-800'
-                      : 'fa fa-unlock text-gray-500'
-                  "
-                  class="fa text-xl"
-                ></i>
-              </span>
             </div>
           </div>
 
@@ -85,20 +60,16 @@
 
             <div class="relative">
               <input
-                :class="
-                  is_username_edit_option_locked
-                    ? 'cursor-not-allowed pr-10'
-                    : 'cursor-text pr-12'
-                "
                 type="text"
-                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                class="w-full cursor-not-allowed text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="username"
                 placeholder="Username"
                 v-model="payload.username"
-                :readonly="is_username_edit_option_locked ? true : false"
+                readonly
               />
+              <!-- :readonly="is_username_edit_option_locked ? true : false" -->
 
-              <span
+              <!-- <span
                 class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
                 @click="
                   is_username_edit_option_locked = !is_username_edit_option_locked
@@ -115,27 +86,66 @@
                   "
                   class="fa text-xl"
                 ></i>
-              </span>
+              </span> -->
             </div>
           </div>
         </div>
 
-        <div class="grid gap-1 sm:gap-2 xl:gap-1 grid-cols-1">
+        <div
+          class="grid gap-1 md:gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2"
+        >
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
-              for="password"
+              for="new_password"
             >
-              Password
+              New Password
             </label>
 
             <div class="relative">
               <input
+                @input="resetErrorMessages"
                 :class="password_visibility ? ' pr-10' : 'cursor-text pr-12'"
                 class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="password"
                 placeholder="Password"
-                v-model="payload.password"
+                v-model="payload.new_password"
+                :type="password_visibility ? 'text' : 'password'"
+              />
+
+              <span
+                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                @click="password_visibility = !password_visibility"
+                :title="password_visibility ? 'Hide Password' : 'Show Password'"
+              >
+                <span
+                  :class="
+                    password_visibility
+                      ? 'fa fa-eye  text-gray-800'
+                      : 'fa fa-eye-slash text-gray-500'
+                  "
+                  class="fa text-xl"
+                ></span>
+              </span>
+            </div>
+          </div>
+
+          <div class="mb-1 p-1">
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-500"
+              for="new_password"
+            >
+              Confirm New Password
+            </label>
+
+            <div class="relative">
+              <input
+                @input="resetErrorMessages"
+                :class="password_visibility ? ' pr-10' : 'cursor-text pr-12'"
+                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                name="confirm_new_password"
+                placeholder="Password"
+                v-model="payload.confirm_new_password"
                 :type="password_visibility ? 'text' : 'password'"
               />
 
@@ -163,7 +173,7 @@
             class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none"
           >
             <div class="w-full flex justify-center items-center space-x-2">
-              <span>Update and Save</span>
+              <span>Reset Password</span>
 
               <svg
                 v-if="is_loading"
@@ -194,6 +204,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { updateUserAuth } from '@/controller/api/users.api'
 import router from '@/router'
+import { AuthApiService } from '@/controller/api/auth.api'
 
 export default {
   name: 'EditAuthInfo',
@@ -208,7 +219,8 @@ export default {
     const payload = ref({
       username: '',
       email: '',
-      password: '',
+      new_password: '',
+      confirm_new_password: '',
     })
     const auth_user = computed(() => store.state.users.auth_user)
 
@@ -228,38 +240,31 @@ export default {
       message.value.text = text
     }
 
-    const UpdateAndSaveBio = async () => {
+    const resetErrorMessages = (current_typing_state: boolean) => {
+      // is_typing.value = current_typing_state
+      // if (is_typing.value)
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
+    const resetPasssword = async () => {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      const user_id = auth_user.value._id
+      const response = await AuthApiService.resetPassword(payload.value)
+      const { data, status, error } = response
 
-      const response: any = await updateUserAuth(user_id, payload.value)
-      const { error, data, status } = response
+      if (error) return updateResponseMessage('error', error)
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      console.log(data)
 
-      if (!status || status === 400) {
-        updateResponseMessage('error', 'Sorry, an unknown error occurred')
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      await fetchAuthUser()
-      await fetchUsers()
       is_loading.value = false
-      // router.push(`/profile/${auth_user.value.username}`)
-
       await assignToken(null)
       // router.push('/auth/login')
     }
@@ -267,13 +272,8 @@ export default {
     async function assignToken(token: any) {
       await store.dispatch('users/assignToken', token)
     }
-    async function fetchUsers() {
-      await store.dispatch('_requests/getAllUsers')
-    }
-    async function fetchAuthUser() {
-      await store.dispatch('users/getAuthUser', auth_user.value._id)
-    }
 
+    //
     return {
       payload,
       is_loading,
@@ -282,7 +282,8 @@ export default {
       is_email_edit_option_locked,
       password_visibility,
       auth_user,
-      UpdateAndSaveBio,
+      resetPasssword,
+      resetErrorMessages,
       updateResponseMessage,
     }
   },

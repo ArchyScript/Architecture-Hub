@@ -5,7 +5,6 @@
       :page_title="topbar.title"
       :page_icon="topbar.icon"
     />
-    {{ userCommunities }}
 
     <div class="mt-10 pb-8">
       <div class="" v-if="userCommunities.length < 1">
@@ -129,7 +128,7 @@ export default {
     const getUserCommunities = async () => {
       const { username, followers_or_followings } = route.params
 
-      // is_loading.value = true
+      is_loading.value = true
       updateResponseMessage('', '')
 
       const userFollowers: any = []
@@ -168,26 +167,6 @@ export default {
           }
         }
       })
-
-      // if (!storeUsers.value) {
-      //   is_loading.value = false
-      //   updateResponseMessage(
-      //     'error',
-      //     'Sorry, an unknown error occurred... Check connection',
-      //   )
-
-      //   return setTimeout(() => {
-      //     is_loading.value = false
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
-
-      console.log(userCommunities.value)
-
-      // updateResponseMessage('success', '')
-      // is_loading.value = false
-      // await fetchUsers()
-      console.log(userFollowers)
     }
 
     //
@@ -204,9 +183,9 @@ export default {
     }
 
     onBeforeMount(async () => {
+      await getUserCommunities()
       await fetchAuthUser()
       await fetchUsers()
-      await getUserCommunities()
       getUserCommunities()
       scrollToTop()
     })

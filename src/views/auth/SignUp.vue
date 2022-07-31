@@ -93,11 +93,11 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-4xl"
+                      class="fa text-xl"
                       :class="
                         passwordVisibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -126,11 +126,11 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-4xl"
+                      class="fa text-xl"
                       :class="
                         passwordVisibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -160,7 +160,7 @@
 
               <button
                 type="submit"
-                class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
+                class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white focus:outline-none my-1"
               >
                 <div class="w-full flex justify-center items-center space-x-2">
                   <span>Create a free Account</span>

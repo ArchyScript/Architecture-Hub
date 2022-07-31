@@ -20,8 +20,8 @@
           </g>
         </svg>
 
+        <!-- @input="searchUser" -->
         <input
-          @input="searchUser"
           class="px-2 w-full outline-none border-none bg-transparent"
           type="search"
           v-model="search_value"

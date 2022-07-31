@@ -34,6 +34,7 @@
         <span class="md:hidden p-2 sm:p-3 cursor-pointer">
           <router-link :to="`/profile/${user.username}`">
             <div class="flex items-center cursor-pointer space-x-2">
+              
               <!-- <div class="flex-1 hidden sm:inline-block md:hidden">
                 <span
                   class="text-base md:text-lg block font-semibold text-gray-700 truncate"
@@ -119,10 +120,10 @@ export default {
 
     return {
       scrollShadowBoolean,
-      openLeftNav,
       props,
       user,
       auth_user,
+      openLeftNav,
       openTargettedModal,
       // side_nav_toggler
     }
@@ -131,6 +132,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky z-20 h-16   pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky z-20 h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

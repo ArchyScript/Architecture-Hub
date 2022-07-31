@@ -43,7 +43,7 @@ export const AuthApiService = {
   },
 
   //
-  async resetPasswoord(payload: any) {
+  async resetPassword(payload: any) {
     try {
       const response = await default_axios_instance
         .post(`auth/reset-password`, payload)

@@ -24,7 +24,7 @@
           </div>
 
           <div>
-            <form @submit.prevent="resetPasssword">
+            <form @submit.prevent="resetUserPassword">
               <div class="mb-1 p-1">
                 <label
                   class="block mb-1 mx-2 font-medium text-gray-600"
@@ -43,7 +43,7 @@
                 />
               </div>
 
-              <div class="p-1 mb-3" v-if="!login_with_email">
+              <div class="p-1 mb-3">
                 <label
                   class="block mb-1 mx-2 font-medium text-gray-600"
                   for="username"
@@ -79,11 +79,11 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-4xl"
+                      class="fa text-xl"
                       :class="
                         password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -112,11 +112,11 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-4xl"
+                      class="fa text-xl"
                       :class="
                         password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -129,7 +129,7 @@
 
               <button
                 type="submit"
-                class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
+                class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white focus:outline-none my-1"
               >
                 <div class="w-full flex justify-center items-center space-x-2">
                   <span>
@@ -215,12 +215,12 @@ export default {
       updateResponseMessage('', '')
     }
 
-    const resetPasssword = async () => {
+    const resetUserPassword = async () => {
       // event.preventDefault()
       is_loading.value = true
       updateResponseMessage('', '')
 
-      const response = await AuthApiService.resetPasswoord(payload.value)
+      const response = await AuthApiService.resetPassword(payload.value)
       const { data, status, error } = response
 
       if (error) return updateResponseMessage('error', error)
@@ -242,7 +242,7 @@ export default {
       payload,
       is_typing,
       togglePasswordVisibility,
-      resetPasssword,
+      resetUserPassword,
       resetErrorMessages,
     }
   },

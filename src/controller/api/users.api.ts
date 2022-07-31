@@ -45,10 +45,22 @@ export const fetchSingleUserByUsername = async (
   }
 }
 
-export const updateUser = async (_id: any, payload: any) => {
+export const updateUserBio = async (_id: any, payload: any) => {
   try {
     const response = await default_axios_instance
-      .patch(`users/update/${_id}`, payload)
+      .patch(`users/update/bio/${_id}`, payload)
+      .then(async (response) => response)
+
+    return HandleAxiosResponse(response)
+  } catch (error) {
+    return HandleAxiosError(error)
+  }
+}
+
+export const updateUserAuth = async (_id: any, payload: any) => {
+  try {
+    const response = await default_axios_instance
+      .patch(`users/update/auth/${_id}`, payload)
       .then(async (response) => response)
 
     return HandleAxiosResponse(response)

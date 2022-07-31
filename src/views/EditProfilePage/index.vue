@@ -33,7 +33,11 @@
           v-if="toggle_active_profile_page_link === 'Picture'"
         />
 
-        <EditAuthInfoVue v-if="toggle_active_profile_page_link === 'Account'" />
+        <div class="" v-if="toggle_active_profile_page_link === 'Account'">
+          <EditAuthInfoVue />
+
+          <AuthPasswordVue />
+        </div>
       </div>
     </div>
   </div>
@@ -49,6 +53,7 @@ import EditAuthInfoVue from './EditAuthInfo.vue'
 import router from '@/router'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import AuthPasswordVue from './PasswordResetSection.vue'
 
 export default {
   name: 'Profile',
@@ -58,6 +63,7 @@ export default {
     EditBioVue,
     EditProfilePictureVue,
     EditAuthInfoVue,
+    AuthPasswordVue,
   },
   setup() {
     const store = useStore()

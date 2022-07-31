@@ -16,7 +16,11 @@
           <div class="flex items-center mt-4 mb-8">
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
-              :class="login_with_email ? 'border-green-600 text-green-600' : ''"
+              :class="
+                login_with_email
+                  ? 'border-archyhub-main text-archyhub-main'
+                  : ''
+              "
               @click="login_with_email = true"
             >
               Email
@@ -25,7 +29,9 @@
             <span
               class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tr-lg rounded-br-lg border bordder-solid border-gray-300"
               :class="
-                login_with_email ? ' ' : 'border-green-600   text-green-600'
+                login_with_email
+                  ? ' '
+                  : 'border-archyhub-main   text-archyhub-main'
               "
               @click="login_with_email = false"
             >
@@ -96,11 +102,11 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 my-auto right-0 px-2 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-4xl"
+                      class="fa text-xl"
                       :class="
                         password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -119,7 +125,7 @@
 
               <button
                 type="submit"
-                class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none my-1"
+                class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none my-1"
               >
                 <div class="w-full flex justify-center items-center space-x-2">
                   <span>Login</span>
@@ -209,6 +215,7 @@ export default {
         const response = await AuthApiService.loginWithEmail(
           email_login_payload,
         )
+
         const { data, status, error } = response
 
         if (error) return updateResponseMessage('error', error)

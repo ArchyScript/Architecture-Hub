@@ -2,7 +2,9 @@
   <section class="flex flex-col top-0 mb-6 inset-x-0 pb-4">
     <div class="px-4 my-12">
       <div class="mb-2 w-full">
-        <h4 class="text-lg justify-end text-gray-700 font-medium md:text-xl">
+        <h4
+          class="text-lg uppercase justify-end text-gray-700 font-medium md:text-xl"
+        >
           Update Bio
         </h4>
       </div>
@@ -57,6 +59,22 @@
           <div class="mb-1 p-1">
             <label
               class="block mb-1 mx-2 font-medium text-gray-500"
+              for="display_name"
+            >
+              Display Name
+            </label>
+            <input
+              type="text"
+              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+              name="display_name"
+              placeholder="display name"
+              v-model="payload.bio.display_name"
+            />
+          </div>
+
+          <div class="mb-1 p-1">
+            <label
+              class="block mb-1 mx-2 font-medium text-gray-500"
               for="gender"
             >
               Gender: "{{ payload.bio.gender }}"
@@ -73,22 +91,6 @@
               <option>Annonymous</option>
             </select>
           </div>
-
-          <div class="mb-1 p-1">
-            <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
-              for="display_name"
-            >
-              Display Name
-            </label>
-            <input
-              type="text"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
-              name="display_name"
-              placeholder="display name"
-              v-model="payload.bio.display_name"
-            />
-          </div>
         </div>
 
         <div class="flex flex-col w-full mb-3 p-1">
@@ -102,6 +104,7 @@
           <textarea
             class="w-full text-sm md:text-base resize-none py-3 px-2 mb-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             rows="4"
+            v-model="payload.bio.description"
             name="description"
             placeholder="Describe yourself..."
           ></textarea>
@@ -144,6 +147,7 @@ import { ref, computed, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import router from '@/router'
+import { updateUserBio } from '@/controller/api/users.api'
 
 export default {
   name: 'EditBio',
@@ -173,8 +177,6 @@ export default {
       payload.value.bio.lastname = bio.lastname
     }
 
-    onBeforeMount(async () => await loadAuthUserInfo())
-
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
       message.value.text = text
@@ -182,41 +184,46 @@ export default {
 
     const UpdateAndSaveBio = async () => {
       is_loading.value = true
-      updateResponseMessage('error', 'error')
+      updateResponseMessage('', '')
 
-      // const response: any = await updateUserData(user_id, payload.value)
-      // const { error, data, status } = response
+      const user_id = auth_user.value._id
 
-      // if (error) {
-      //   updateResponseMessage('error', error)
-      //   is_loading.value = false
+      const response: any = await updateUserBio(user_id, payload.value)
+      const { error, data, status } = response
 
-      //   return setTimeout(() => {
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
+      if (error) {
+        updateResponseMessage('error', error)
+        is_loading.value = false
 
-      // if (!status || status === 400) {
-      //   updateResponseMessage('error', 'Sorry, an unknown error occurred')
+        return setTimeout(() => {
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
 
-      //   return setTimeout(() => {
-      //     is_loading.value = false
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
+      if (!status || status === 400) {
+        updateResponseMessage('error', 'Sorry, an unknown error occurred')
 
-      // // console.log(data)
+        return setTimeout(() => {
+          is_loading.value = false
+          return updateResponseMessage('', '')
+        }, 5000)
+      }
 
-      // updateResponseMessage(
-      //   'success',
-      //   'Profile successfully updated, please wait...',
-      // )
+      updateResponseMessage(
+        'success',
+        'Profile successfully updated, please wait...',
+      )
 
-      // await store.dispatch('users/getUser', user_id)
-      // is_loading.value = false
-
-      // return data
+      await fetchAuthUser()
+      is_loading.value = false
+      router.push(`/profile/${auth_user.value.username}`)
     }
+
+    async function fetchAuthUser() {
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
+    }
+
+    onBeforeMount(async () => await loadAuthUserInfo())
 
     return {
       payload,
