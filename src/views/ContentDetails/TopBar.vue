@@ -8,26 +8,22 @@
         @click="router.go(-1)"
         class="fa fa-arrow-left text-base text-gray-700 hover:bg-archyhub-light hover:bg-opacity-80 px-4 py-3 cursor-pointer rounded-full"
       ></span>
-      <span class="text-xl text-gray-700">Go back</span>
+      <span class="text-lg md:text-xl text-gray-700">{{ title }}</span>
     </div>
   </nav>
 </template>
 
 <script>
 import { onBeforeMount, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 export default {
   name: 'ProfileTopbar',
   setup(context) {
     const scrollShadowBoolean = ref(true)
+    const title = ref('')
 
     const router = useRouter()
-
-    onBeforeMount(() => {
-      handleScroll()
-      window.addEventListener('scroll', () => handleScroll())
-    })
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -39,13 +35,27 @@ export default {
       }
     }
 
-    const toggleLeftNav = () => {
-      return context.emit('toggleLeftNav')
+    const displayTopbarDetails = () => {
+      const { username, followers_or_followings } = useRoute().params
+      console.log(username, followers_or_followings)
+
+      if (username && followers_or_followings) {
+        title.value = `${username} ${followers_or_followings}`
+      } else {
+        title.value = 'Back'
+      }
     }
+
+    window.addEventListener('scroll', () => handleScroll())
+
+    onBeforeMount(() => {
+      handleScroll()
+      displayTopbarDetails()
+    })
 
     return {
       scrollShadowBoolean,
-      toggleLeftNav,
+      title,
       router,
     }
   },

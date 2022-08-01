@@ -1,11 +1,5 @@
 <template>
   <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
-    <MainPageTopBarVue
-      class="hidden"
-      :page_title="topbar.title"
-      :page_icon="topbar.icon"
-    />
-
     <div class="mt-10 pb-8">
       <div class="" v-if="userCommunities.length < 1">
         <div class="text-center font-medium mb-6">
@@ -88,7 +82,6 @@
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
-import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import AnimatedUserVue from '@/components/Animation/AnimatedUser.vue'
 import { useRoute } from 'vue-router'
 import UserContentVue from '@/components/Users/UserContent.vue'
@@ -97,7 +90,6 @@ import { UserSchema } from '@/controller/typings'
 export default {
   name: 'Scholarships',
   components: {
-    MainPageTopBarVue,
     UserContentVue,
     AnimatedUserVue,
   },
@@ -107,9 +99,6 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Users', icon: 'fas fa-users' })
-    // const storeUsers = computed(
-    //   () => store.state._requests.allScholarships,
-    // )
     const storeUsers = computed(() => store.state._requests.allUsers)
     const userCommunities = ref<UserSchema[]>([])
     const auth_user = computed(() => store.state.users.auth_user)

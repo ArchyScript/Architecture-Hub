@@ -75,7 +75,7 @@ export default {
       {
         route: '/scholarships',
         title: 'Scholarships',
-        icon: 'fas fa-medal',
+        icon: 'fas fa-award',
       },
       {
         route: '/competitions',

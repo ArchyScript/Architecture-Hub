@@ -99,7 +99,7 @@ export default {
     const allScholarships = ref<ScholarshipSchema[]>([])
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
-    const topbar = ref({ title: 'Scholarships', icon: 'fas fa-medal' })
+    const topbar = ref({ title: 'Scholarships', icon: 'fas fa-award' })
     const storeScholarships = computed(
       () => store.state._requests.allScholarships,
     )
