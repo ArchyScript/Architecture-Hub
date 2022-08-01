@@ -86,6 +86,7 @@ import AnimatedUserVue from '@/components/Animation/AnimatedUser.vue'
 import { useRoute } from 'vue-router'
 import UserContentVue from '@/components/Users/UserContent.vue'
 import { UserSchema } from '@/controller/typings'
+import router from '@/router'
 
 export default {
   name: 'Scholarships',
@@ -175,8 +176,14 @@ export default {
       await getUserCommunities()
       await fetchAuthUser()
       await fetchUsers()
+      await fetchUsers()
+      getUserCommunities()
       getUserCommunities()
       scrollToTop()
+      scrollToTop()
+
+      console.log(route.fullPath)
+      router.push(route.fullPath)
     })
 
     return {

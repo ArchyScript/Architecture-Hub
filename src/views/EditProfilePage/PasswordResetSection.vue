@@ -241,8 +241,6 @@ export default {
     }
 
     const resetErrorMessages = (current_typing_state: boolean) => {
-      // is_typing.value = current_typing_state
-      // if (is_typing.value)
       is_loading.value = false
       updateResponseMessage('', '')
     }
@@ -266,7 +264,6 @@ export default {
 
       is_loading.value = false
       await assignToken(null)
-      // router.push('/auth/login')
     }
 
     async function assignToken(token: any) {

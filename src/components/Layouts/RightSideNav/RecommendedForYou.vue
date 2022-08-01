@@ -76,11 +76,14 @@
         </div>
       </div>
 
-      <p
-        class="w-full mt-3 py-2 sm:py-3 text-sm text-center sm:text-base italic border-t"
+      <router-link
+        class="w-full hover:underline block mt-3 py-2 sm:py-3 text-sm text-center rounded-bl-2xl rounded-br-2xl sm:text-base italic border-t hover:bg-gray-300"
+        to="/users"
       >
-        <router-link to="/users">see all</router-link>
-      </p>
+        <span class="w-full">
+          see all
+        </span>
+      </router-link>
     </div>
   </section>
 </template>

@@ -96,6 +96,8 @@ import {
   deleteScholarship,
   fetchSingleScholarship,
 } from '@/controller/api/scholarships'
+import router from '@/router'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'Reactions',
@@ -447,9 +449,11 @@ export default {
       }
 
       console.log(reaction_object.value)
-      console.log(object_params)
+      console.log(useRoute().fullPath)
       console.log(props.reactions)
       await fetchAuthUser()
+      await fetchAuthUser()
+      router.push(useRoute().fullPath)
     }
 
     //

@@ -68,7 +68,16 @@
             @click="openNewPostModal"
             class="w-full text-lg lg:text-xl text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-semibold rounded-3xl py-3 sm:py-3"
           >
-            Create Post
+            <!-- Create Post -->
+            <span>
+              {{
+                route.fullPath === '/scholarships'
+                  ? 'New Scholarship'
+                  : route.fullPath === '/competitions'
+                  ? 'New Competition'
+                  : ' New Post'
+              }}
+            </span>
             <span class="fa fa-edit ml-2 sm:ml-3 text-lg lg:text-xl"></span>
           </button>
         </div>
@@ -179,7 +188,11 @@ export default {
 
     //
     const openNewPostModal = () => {
-      store.dispatch('component_handler/openNewPostModal')
+      if (route.fullPath === '/competitions')
+        return store.dispatch('component_handler/openNewCompetitionModal')
+      if (route.fullPath === '/scholarships')
+        return store.dispatch('component_handler/openNewScholarshipModal')
+      else store.dispatch('component_handler/openNewPostModal')
     }
 
     const logUserOut = async () => {
@@ -199,6 +212,7 @@ export default {
     })
 
     return {
+      route,
       navbar_links,
       current_active_route,
       auth_user_profile_image,

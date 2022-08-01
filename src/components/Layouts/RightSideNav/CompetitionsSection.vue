@@ -70,11 +70,14 @@
         </div>
       </div>
 
-      <!-- <div class="w-full mt-4"> -->
-      <p class="w-full py-2 sm:py-3 text-sm text-center sm:text-base italic">
-        <router-link to="/competitions">see all</router-link>
-      </p>
-      <!-- </div> -->
+      <router-link
+        class="w-full hover:underline block py-2 sm:py-3 text-sm text-center rounded-bl-2xl rounded-br-2xl sm:text-base italic border-t hover:bg-gray-300"
+        to="/competitions"
+      >
+        <span class="w-full">
+          see all
+        </span>
+      </router-link>
     </div>
   </section>
 </template>
