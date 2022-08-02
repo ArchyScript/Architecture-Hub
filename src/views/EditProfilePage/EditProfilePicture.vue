@@ -12,25 +12,29 @@
     </div>
 
     <form @submit.prevent="uploadPicture">
-      <div class="w-full mt-16 px-4">
-        <div class="h-96 w-full border shadow-md bg-archyhub-light rounded-3xl">
+      <div class="w-full mt-16 px-2 sm:px-4">
+        <div
+          class="h-96 w-full border rounded-2xl md:rounded-3xl bg-archyhub-light"
+        >
           <img
             :src="image_url"
-            class="w-full h-full rounded-3xl object-cover"
+            class="w-full h-full rounded-2xl md:rounded-3xl object-cover"
           />
         </div>
 
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
-          class="text-center font-medium mt-4"
+          class="text-sm sm:text-base text-center font-normal mb-4 px-4 sm:px-6 lg:px-8"
         >
           {{ message.text }}
         </div>
 
-        <div class="flex items-center gap-10 justify-around mt-6">
+        <div class="grid gap-3 sm:gap-10 grid-cols-1 sm:grid-cols-2 mt-6">
+          <!-- <div class="flex items-center gap-10 justify-around mt-6"> -->
           <label
-            class="w-full text-center cursor-pointer py-3 rounded-xl bg-gray-600 text-white hover:bg-green-dark focus:outline-none my-1"
+            :class="payload ? ' col-span-1' : ' col-span-2'"
+            class="w-full text-center text-sm sm:text-base cursor-pointer py-2 sm:py-3 rounded-lg sm:rounded-xl bg-gray-600 text-white hover:bg-green-dark focus:outline-none my-1"
             for="profile_picture"
           >
             {{ payload ? 'Change Picture' : 'Choose Picture' }}
@@ -39,7 +43,7 @@
           <button
             v-if="payload"
             type="submit"
-            class="w-full cursor-pointer text-center py-3 rounded-xl bg-green-500 text-white focus:outline-none my-1"
+            class="w-full cursor-pointer text-sm sm:text-base text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white outline-none my-1"
           >
             <div class="w-full flex justify-center items-center space-x-2">
               <span>Upload Picture</span>
@@ -69,9 +73,9 @@
       @submit.prevent="removeProfilePicture"
       v-if="user_have_profile_picture"
     >
-      <div class="px-4 my-4">
+      <div class="px-2 sm:px-4 my-4">
         <button
-          class="w-full text-center cursor-pointer py-3 rounded-xl bg-red-800 text-white focus:outline-none my-1"
+          class="w-full text-center cursor-pointer py-2 sm:py-3 rounded-lg sm:rounded-xl bg-red-800 text-white focus:outline-none my-1"
         >
           <div class="w-full flex justify-center items-center space-x-2">
             <span>
@@ -228,7 +232,7 @@ export default {
       const response = await deleteProfilePicture(auth_user.value._id)
       const { error, data, status } = response
 
-      if (error || status === 400 || !data) return
+      if (error || status === 400 || !data) return (is_loading.value = false)
 
       await store.dispatch('users/getAuthUser', auth_user.value._id)
 

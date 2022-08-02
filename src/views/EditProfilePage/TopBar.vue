@@ -6,19 +6,20 @@
     <div class="flex-shrink-0">
       <span
         @click="router.go(-1)"
-        class="fa fa-arrow-left text-base text-gray-700 hover:bg-archyhub-light hover:bg-opacity-80 px-4 py-3 cursor-pointer rounded-full"
+        class="fa fa-arrow-left text-base lg:text-lg text-gray-600 hover:bg-archyhub-light hover:bg-opacity-70 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>
 
     <div class="flex-1 items-center px-2">
-      <h4 class="text-xl block font-bold text-gray-600">
+      <h4 class="text-base md:text-lg block font-semibold text-gray-600">
         {{
           auth_user.bio.display_name === ''
             ? auth_user.username
             : auth_user.bio.display_name
         }}
       </h4>
-      <span
+
+      <!-- <span
         class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
       >
         {{
@@ -26,7 +27,7 @@
             ? ` ${auth_user.posts.length} post`
             : ` ${auth_user.posts.length} posts`
         }}
-      </span>
+      </span> -->
     </div>
   </nav>
 </template>
@@ -67,6 +68,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky h-12 sm:h-14 md:h-16  pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

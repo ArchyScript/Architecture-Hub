@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
+    class="flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:shadow-sm hover:bg-opacity-20"
   >
     <div class="flex w-full p-2 sm:p-3 xl:p-4 pb-2">
       <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
@@ -20,15 +20,13 @@
 
       <div class="mb-1 flex flex-1 px-1 w-full ml-1 sm:ml-2">
         <div class="flex-1 flex-col truncate" v-if="user_info.username !== ''">
-          <div class="flex justify-between items-center">
-            <p>
+          <div class="flex justify-between items-center space-x-4">
+            <p class="truncate">
               <router-link
                 :to="`/profile/${user_info.username}`"
-                class="items-center flex sm:space-x-2 hover:underline"
+                class="items-center text-gray-600 flex space-x-1 sm:space-x-2 hover:underline hover:text-archyhub-main truncate"
               >
-                <span
-                  class="text-sm md:text-base font-semibold text-gray-600 truncate"
-                >
+                <span class="text-sm md:text-base font-semibold truncate">
                   {{
                     user_info.display_name
                       ? user_info.display_name
@@ -36,17 +34,15 @@
                   }}
                 </span>
 
-                <span
-                  class="text-sm md:text-base font-normal text-gray-500 truncate"
-                >
-                  @{{ user_info.username || '...' }}
+                <span class="text-sm md:text-base font-normal truncate">
+                  @{{ user_info.username }}
                 </span>
               </router-link>
             </p>
 
             <span :class="user_info._id === auth_user._id ? 'hidden' : 'flex'">
               <span
-                class="btn py-1 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+                class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 flex-1 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
                 @click="followRecommended(user_info._id)"
                 v-if="!is_auth_user_a_follower"
               >
@@ -56,7 +52,7 @@
               <span
                 @click="unfollowRecommended(user_info._id)"
                 v-if="is_auth_user_a_follower"
-                class="btn py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
+                class="btn py-1 text-xs md:text-sm rounded-lg px-2 md:px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
               >
                 unfollow
               </span>
@@ -65,23 +61,29 @@
             <span :class="user_info._id === auth_user._id ? 'flex' : 'hidden'">
               <router-link
                 :to="`/profile/${user_info.username}`"
-                class="btn py-1 rounded-lg px-3 border-2 cursor-pointer hover:bg-gray-700 hover:text-gray-100 border-gray-700"
+                class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 border cursor-pointer hover:bg-gray-700 hover:text-gray-100 border-gray-700"
               >
                 View Profile
               </router-link>
             </span>
           </div>
 
-          <p class="text-base font-medium my-1 text-gray-500">
+          <blockquote
+            class="text-xs sm:text-sm md:text-base font-normal my-1 text-gray-500 truncate"
+          >
             {{ user_info.description }}
+          </blockquote>
+
+          <p class="text-base mt-1 sm:mt-2 truncate">
+            <span class="fa fa-calendar text-sm mr-2 text-gray-400"></span>
+            <span class="text-gray-500 text-xs md:text-sm">
+              Joined {{ user_info.date }}
+            </span>
           </p>
 
-          <p class="text-base mt-2">
-            <span class="fa fa-calendar text-xl mr-2 text-gray-400"></span>
-            <span class="text-gray-500">Joined {{ user_info.date }}</span>
-          </p>
-
-          <p class="flex items-center text-base mt-4 space-x-8">
+          <p
+            class="flex items-center text-xs md:text-sm xl:text-base mt-4 space-x-4 md:space-x-6 truncate"
+          >
             <span class="flex space-x-2">
               <span v-if="user_info.followings < 1">
                 <span class="text-gray-600 font-bold">
@@ -96,13 +98,16 @@
               <router-link
                 :to="`/user/${user_info.username}/followings`"
                 v-if="user_info.followings >= 1"
-                class="hover:underline"
+                class="hover:underline hover:text-archyhub-main text-gray-600"
               >
-                <span class="text-gray-600 font-bold">
+                <span class="font-semibold">
                   {{ user_info.followings }}
                 </span>
 
-                <span class="text-gray-500">
+                <span class="font-normal" v-if="user_info.followings === 1">
+                  following
+                </span>
+                <span class="font-normal" v-if="user_info.followings > 1">
                   followings
                 </span>
               </router-link>
@@ -122,13 +127,16 @@
               <router-link
                 :to="`/user/${user_info.username}/followers`"
                 v-if="user_info.followers >= 1"
-                class="hover:underline"
+                class="hover:underline hover:text-archyhub-main text-gray-600"
               >
-                <span class="text-gray-600 font-bold">
+                <span class="font-semibold">
                   {{ user_info.followers }}
                 </span>
 
-                <span class="text-gray-500">
+                <span class="font-normal" v-if="user_info.followers === 1">
+                  follower
+                </span>
+                <span class="font-normal" v-if="user_info.followers > 1">
                   followers
                 </span>
               </router-link>

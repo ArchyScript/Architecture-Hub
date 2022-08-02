@@ -1,17 +1,19 @@
 <template>
-  <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
+  <div class="w-full top-0 h-full z-4">
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
     <div class="mt-10 pb-8">
       <div class="" v-if="storeUsers.length < 1">
-        <div class="text-center font-medium mb-6">
+        <div
+          class="text-xs sm:text-sm lg:text-base rounded-lg md:rounded-xl text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-normal py-2 px-6 mb-6"
+        >
           <span>{{ is_loading ? '' : ' No user found' }}</span>
         </div>
 
         <div class="text-center">
           <form @submit.prevent="getUsers">
             <button
-              class="text-md text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
+              class="text-xs sm:text-sm lg:text-base rounded-lg md:rounded-xl text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-normal py-2 px-6"
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>{{ is_loading ? 'Loading' : 'Reload' }}</span>

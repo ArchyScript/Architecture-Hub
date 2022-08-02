@@ -2,11 +2,11 @@
   <section
     class="w-full sticky top-0 shadow-md min-h-screen z-4 bg-archyhub-light"
   >
-    <div class="hid den">
+    <div class="hidden">
       <SearchTrendsVue />
     </div>
 
-    <div class="px-4 lg:p-4 xl:p-6">
+    <div class="px-4 lg:p-4 xl:p-6 mt-8">
       <RecommendedWhoToFollowVue />
       <CompetitionSectionVue />
       <ScholarshipsSectionVue />

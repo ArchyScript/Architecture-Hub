@@ -1,13 +1,22 @@
 <template>
   <section class="flex flex-col top-0 mb-6 inset-x-0 pb-4">
-    <div class="h-60 w-full">
-      <span class="h-full w-full block bg-blue-400 border"></span>
+    <div
+      class="h-36 sm:h-44 lg:h-52 w-full flex justify-center items-center opac ity-60"
+    >
+      <!-- <img
+        v-if="user_profile.profile_picture !== ''"
+        class="w-full h-full object-fill"
+        :src="user_profile.profile_picture"
+      /> -->
+      <span
+        class="h-full w-full block bg-archyhub-main border bg-opacity-30"
+      ></span>
     </div>
 
-    <section class="px-4">
+    <section class="px-2 sm:px-6">
       <div class="flex justify-between">
         <span
-          class="h-24 w-24 md:h-28 md:w-28 xl:h-32 xl:w-32 -mt-12 md:-mt-14 xl:-mt-16 p-1 rounded-full block bg-archyhub-semi-light border"
+          class="h-20 w-20 sm:w-24 sm:h-24 md:h-28 md:w-28 xl:h-32 xl:w-32 -mt-10 sm:-mt-12 md:-mt-14 xl:-mt-16 p-1 rounded-full block bg-archyhub-semi-light bg-opacity-30"
         >
           <img
             v-if="user_profile.profile_picture !== ''"
@@ -21,11 +30,11 @@
           ></div>
         </span>
 
-        <div class="mt-2">
+        <div class="mt-1 sm:mt-2">
           <span v-if="user_profile._id === auth_user._id">
             <router-link :to="`/profile/${user_profile.username}/edit`">
               <span
-                class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+                class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-medium bg-archyhub-gray text-gray-700 rounded-md lg:rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
               >
                 Edit Profile
               </span>
@@ -36,7 +45,7 @@
             <span
               v-if="!is_auth_user_a_follower"
               @click="followRecommended(user_profile._id)"
-              class="py-1 inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
               follow
             </span>
@@ -44,7 +53,7 @@
             <span
               v-if="is_auth_user_a_follower"
               @click="unfollowRecommended(user_profile._id)"
-              class="btn py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
+              class="btn text-xs sm:text-sm lg:text-base py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
             >
               unfollow
             </span>
@@ -58,10 +67,10 @@
           class="flex-1 animate-pulse my-4"
         >
           <div
-            class="h-2 sm:h-3 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-2"
+            class="h-1 sm:h-2 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-2"
           ></div>
           <div
-            class="h-2 sm:h-3 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-1 sm:mb-2"
+            class="h-1 sm:h-2 p-1 w-3/4 sm:w-1/2 bg-gray-400 rounded-xl mb-1 sm:mb-2"
           ></div>
 
           <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl mb-1"></div>
@@ -76,13 +85,13 @@
           </div>
         </div>
 
-        <div class="" v-if="user_profile.username !== ''">
+        <div class="px-2" v-if="user_profile.username !== ''">
           <div
             v-if="user_profile.username !== ''"
-            class="fl ex-1 items-center px-2 mt-2 mb-2"
+            class="fl ex-1 items-center mt-2 mb-2"
           >
             <h4
-              class="text-base sm:text-lg lg:text-xl block font-semibold text-gray-600"
+              class="text-base sm:text-lg lg:text-xl block font-medium text-gray-600"
             >
               {{
                 user_profile.display_name
@@ -90,44 +99,27 @@
                   : user_profile.username
               }}
             </h4>
-            <span class="text-sm sm:text-base block text-gray-500 truncate">
+            <span
+              class="text-sm sm:text-base font-light block text-gray-500 truncate"
+            >
               @{{ user_profile.username }}
             </span>
           </div>
 
-          <p class="text-base font-medium my-1 px-2 text-gray-500">
+          <p class="text-xs sm:text-sm font-normal my-1 text-gray-500">
             {{ user_profile.description }}
           </p>
 
-          <p class="text-base mt-2 px-2">
-            <span class="fa fa-calendar text-xl mr-2 text-gray-400"></span>
-            <span class="text-gray-500">
+          <p class="text-xs sm:text-sm mt-2 space-x-1 sm:space-x-2">
+            <span class="fa fa-calendar text-sm text-gray-400"></span>
+            <span class="text-gray-500 font-light">
               Joined {{ user_profile.date_joined }}
             </span>
           </p>
 
-          <p class="flex items-center text-base mt-2 px-2 space-x-8">
-            <!-- <router-link
-              :to="`/user/${user_profile.username}/followings`"
-              class="flex space-x-2 hover:underline"
-            >
-              <span class="text-gray-600 font-bold">
-                {{ user_profile.no_of_followings }}
-              </span>
-              <span
-                v-if="user_profile.no_of_followings <= 1"
-                class="text-gray-500"
-              >
-                following
-              </span>
-              <span
-                v-if="user_profile.no_of_followings > 1"
-                class="text-gray-500"
-              >
-                followings
-              </span>
-            </router-link> -->
-
+          <p
+            class="flex items-center text-xs sm:text-sm mt-2 space-x-4 md:space-x-6"
+          >
             <span class="flex space-x-2">
               <span v-if="user_profile.no_of_followings < 1">
                 <span class="text-gray-600 font-bold">
@@ -148,7 +140,16 @@
                   {{ user_profile.no_of_followings }}
                 </span>
 
-                <span class="text-gray-500">
+                <span
+                  class="text-gray-500"
+                  v-if="user_profile.no_of_followings === 1"
+                >
+                  following
+                </span>
+                <span
+                  class="text-gray-500"
+                  v-if="user_profile.no_of_followings > 1"
+                >
                   followings
                 </span>
               </router-link>
@@ -174,7 +175,16 @@
                   {{ user_profile.no_of_followers }}
                 </span>
 
-                <span class="text-gray-500">
+                <span
+                  class="text-gray-500"
+                  v-if="user_profile.no_of_followers === 1"
+                >
+                  follower
+                </span>
+                <span
+                  class="text-gray-500"
+                  v-if="user_profile.no_of_followers > 1"
+                >
                   followers
                 </span>
               </router-link>

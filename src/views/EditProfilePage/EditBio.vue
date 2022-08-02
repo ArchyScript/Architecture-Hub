@@ -3,7 +3,7 @@
     <div class="px-4 my-12">
       <div class="mb-2 w-full">
         <h4
-          class="text-lg uppercase justify-end text-gray-700 font-medium md:text-xl"
+          class="text-base sm:text-lg uppercase justify-end text-gray-600 font-medium xl:text-xl"
         >
           Update Bio
         </h4>
@@ -12,42 +12,42 @@
       <div
         v-if="message.type !== ''"
         :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
-        class="text-center font-medium my-2 flex-wrap break-all px-2"
+        class="text-sm sm:text-base text-center font-normal mb-4 px-4 sm:px-6 lg:px-8"
       >
         {{ message.text }}
       </div>
 
       <form
         @submit.prevent="UpdateAndSaveBio"
-        class="bg-archyhub-light bg-opacity-40 p-3"
+        class="bg-archyhub-semi-light bg-opacity-70 p-2 sm:p-4"
       >
-        <div class="grid gap-1 md:gap-2 grid-cols-1 md:grid-cols-2">
-          <div class="mb-1 p-1">
+        <div class="grid gap-1 sm:gap-2 grid-cols-1 sm:grid-cols-2">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="firstname"
             >
               Firstname
             </label>
             <input
               type="text"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+              class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="firstname"
               placeholder="Firstname"
               v-model="payload.bio.firstname"
             />
           </div>
 
-          <div class="mb-1 p-1">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="lastname"
             >
               Lastname
             </label>
             <input
               type="text"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+              class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="lastname"
               placeholder="Lastname"
               v-model="payload.bio.lastname"
@@ -55,33 +55,34 @@
           </div>
         </div>
 
-        <div class="grid gap-1 md:gap-2 grid-cols-1 md:grid-cols-2">
-          <div class="mb-1 p-1">
+        <div class="grid gap-1 sm:gap-2 grid-cols-1 sm:grid-cols-2">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="display_name"
             >
               Display Name
             </label>
             <input
               type="text"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+              class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="display_name"
               placeholder="display name"
               v-model="payload.bio.display_name"
             />
           </div>
 
-          <div class="mb-1 p-1">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="gender"
             >
               Gender: "{{ payload.bio.gender }}"
             </label>
+
             <select
               v-model="payload.bio.gender"
-              class="w-full text-sm md:text-base resize-none py-2 md:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none cursor-pointer rounded-lg"
+              class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none cursor-pointer rounded-lg"
             >
               <option disabled value="">Please select one</option>
               <option class="bg-archyhub-light bg-opacity-75 cursor-pointer">
@@ -95,7 +96,7 @@
 
         <div class="flex flex-col w-full mb-3 p-1">
           <label
-            class="block mb-1 mx-2 font-medium text-gray-500"
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
             for="description"
           >
             Description
@@ -113,7 +114,7 @@
         <div class="my-2 px-1">
           <button
             type="submit"
-            class="w-full text-center py-3 rounded-xl bg-green-500 text-white hover:bg-green-dark focus:outline-none"
+            class="w-full text-center text-sm sm:text-base py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white outline-none my-1"
           >
             <div class="w-full flex justify-center items-center space-x-2">
               <span>Update and Save</span>

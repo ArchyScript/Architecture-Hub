@@ -7,21 +7,21 @@
 
       <article class="ml-2 flex-1 p-2">
         <div
-          class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
+          class="h-1 sm:h-2 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
         ></div>
 
         <div class="grid grid-cols-8 gap-2 mt-3">
-          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
-          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          <div class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"></div>
         </div>
 
         <div class="mt-4 space-y-2">
           <div
-            class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2 mb-1"
+            class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2 mb-1"
           ></div>
 
           <div
-            class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2 mb-1"
+            class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2 mb-1"
           ></div>
         </div>
       </article>

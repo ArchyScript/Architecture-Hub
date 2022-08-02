@@ -1,26 +1,32 @@
 <template>
-  <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
+  <div
+    class="w-full top-0 h-full bg-archyhub-semi-light bg-opacity-20 z-4 border-r border-l"
+  >
     <TopBarVue />
     <ProfileHeaderVue />
 
     <div class="">
-      <div class="w-full border-b flex items-center border-archyhub-light">
+      <div
+        class="w-full border-b flex items-center border-archyhub-semi-light border-opacity-60"
+      >
         <span
           v-for="profile_page_link in profile_page_links"
           :key="profile_page_link.title"
           @click="toggleActiveProfilePageLink(profile_page_link.title)"
           :class="
             toggle_active_profile_page_link === profile_page_link.title
-              ? 'border-b-4 border-red-400 text-red-500'
+              ? 'border-b-2  border-archyhub-main text-archyhub-main'
               : ''
           "
-          class="flex-1 py-4 space-x-1 items-center cursor-pointer text-center hover:text-red-700 hover:bg-red-500 hover:bg-opacity-10 text-gray-500 font-medium"
+          class="flex-1 py-2 sm:py-3 xl:py-4 space-x-1 sm:space-x-2 items-center cursor-pointer text-center hover:text-archyhub-main hover:bg-archyhub-main hover:bg-opacity-10 text-gray-500 font-medium"
         >
           <span
             :class="profile_page_link.icon"
-            class="text-sm sm:text-base"
+            class="text-xs sm:text-sm lg:text-base xl:text-lg hidden sm:inline-flex"
           ></span>
-          <span class="text-sm sm:text-base px-2">
+          <span
+            class="text-xs sm:text-sm lg:text-base xl:text-lg px-2 capitalize"
+          >
             {{ profile_page_link.title }}
           </span>
         </span>

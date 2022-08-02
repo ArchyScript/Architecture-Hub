@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20 pb-16"
+    class="flex flex-col inset-x-0 bg-archyhub-semi-light bg-opacity-20 pb-16"
   >
     <div class="" v-if="scholarship_info.creator_username === ''">
       <AnimatedSingleContentVue />
@@ -12,39 +12,48 @@
           <span class="flex-shrink-0 mr-3">
             <router-link :to="`/profile/${scholarship_info.creator_username}`">
               <img
-                class="w-14 h-14 sm:h-16 sm:w-16 rounded-full border cursor-pointer"
+                class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
                 :src="scholarship_info.creator_picture"
               />
             </router-link>
           </span>
 
           <div class="flex-1 flex-col truncate">
-            <p class="items-center flex sm:space-x-2">
-              <span
-                class="text-base md:text-lg font-semibold text-gray-600 truncate"
+            <p class="items-center flex justify-between">
+              <router-link
+                :to="`/profile/${scholarship_info.creator_username}`"
+                class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2"
               >
-                {{
-                  scholarship_info.display_name
-                    ? scholarship_info.display_name
-                    : scholarship_info.creator_username
-                }}
-              </span>
+                <span
+                  class="text-base md:text-lg font-semibold text-opacity-10 truncate"
+                >
+                  {{
+                    scholarship_info.display_name
+                      ? scholarship_info.display_name
+                      : scholarship_info.creator_username
+                  }}
+                </span>
 
-              <span
-                class="text-sm md:text-base font-normal text-gray-500 truncate"
+                <span class="text-sm md:text-base font-normal truncate">
+                  @{{ scholarship_info.creator_username }}
+                </span>
+              </router-link>
+
+              <!-- <span
+                class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
               >
-                @{{ scholarship_info.creator_username || '...' }}
-              </span>
+                <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
+              </span> -->
             </p>
 
             <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
+              class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="scholarship_info.date || scholarship_info.time"
             >
               <span class="">{{ scholarship_info.date }}</span>
 
               <span class="">
-                <strong class="font-semibold">@</strong>
+                <strong class="font-medium text-gray-600">@</strong>
                 {{ scholarship_info.time }}
               </span>
             </p>
@@ -53,11 +62,13 @@
 
         <article class="w-full flex-1 px-1 sm:px-2 mt-6 md:mt-8">
           <div class="mt-2 flex-col space-y-1 sm:space-y-2">
-            <span class="text-lg block sm:text-xl font-semibold text-gray-600">
+            <span
+              class="text-base block sm:text-lg lg:text-xl font-medium text-gray-600"
+            >
               {{ scholarship_info.title }}
             </span>
 
-            <span class="block pb-4 h-64 sm:h-80 lg:h-96 xl:h-96">
+            <span class="block pb-2 sm:pb-4 h-64 sm:h-80 lg:h-96 xl:h-96">
               <img
                 v-if="scholarship_info.scholarship_image !== ''"
                 class="w-full h-full object-fill border rounded-xl"
@@ -65,36 +76,46 @@
               />
             </span>
 
-            <p class="text-sm space-x-2 sm:text-base text-gray-500">
-              <span class="font-medium mr-1">Host:</span>
+            <p
+              class="text-sm space-x-1 sm:space-x-2 md:text-base text-gray-500"
+            >
+              <span class="font-normal text-gray-600">Host:</span>
               <span class="font-light flex-wrap break-all">
                 {{ scholarship_info.host }}
               </span>
             </p>
 
-            <p class="text-sm space-x-2 sm:text-base text-gray-500">
-              <span class="font-medium">Title:</span>
+            <p
+              class="text-sm space-x-1 sm:space-x-2 md:text-base text-gray-500"
+            >
+              <span class="font-normal text-gray-600">Title:</span>
               <span class="font-light flex-wrap break-all">
                 {{ scholarship_info.title }}
               </span>
             </p>
 
-            <p class="text-sm space-x-2 sm:text-base text-gray-500">
-              <span class="font-medium">Description:</span>
+            <p
+              class="text-sm space-x-1 sm:space-x-2 md:text-base text-gray-500"
+            >
+              <span class="font-normal text-gray-600">Description:</span>
               <span class="font-light flex-wrap break-all">
                 {{ scholarship_info.description }}
               </span>
             </p>
 
-            <p class="text-sm space-x-2 sm:text-base text-gray-500">
-              <span class="font-medium">Content:</span>
+            <p
+              class="text-sm space-x-1 sm:space-x-2 md:text-base text-gray-500"
+            >
+              <span class="font-normal text-gray-600">Content:</span>
               <span class="font-light flex-wrap break-all">
                 {{ scholarship_info.content }}
               </span>
             </p>
 
-            <p class="text-sm space-x-2 sm:text-base text-gray-500">
-              <span class="font-medium">Link:</span>
+            <p
+              class="text-sm space-x-1 sm:space-x-2 md:text-base text-gray-500"
+            >
+              <span class="font-normal text-gray-600">Link:</span>
               <a
                 class="font-light flex-wrap break-all hover:underline"
                 target="_blank"

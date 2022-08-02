@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
+  <div class="w-full top-0 h-full z-4">
     <div class="mt-10 pb-8">
       <div class="" v-if="userCommunities.length < 1">
         <div class="text-center font-medium mb-6">

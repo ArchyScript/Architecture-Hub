@@ -9,8 +9,9 @@
           email and username and you will be required to login with the updated
           details***
         </h6>
+
         <h4
-          class="text-lg mt-4 uppercase justify-end text-gray-700 font-medium md:text-xl"
+          class="text-base mt-6 sm:text-lg uppercase justify-end text-gray-600 font-medium xl:text-xl"
         >
           Update Auth Info
         </h4>
@@ -19,21 +20,21 @@
       <div
         v-if="message.type !== ''"
         :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
-        class="text-center font-medium my-2 flex-wrap break-all px-2"
+        class="text-sm sm:text-base text-center font-normal mb-4 px-4 sm:px-6 lg:px-8"
       >
         {{ message.text }}
       </div>
 
       <form
         @submit.prevent="UpdateAndSaveBio"
-        class="bg-archyhub-light bg-opacity-40 p-3"
+        class="bg-archyhub-semi-light bg-opacity-70 p-2 sm:p-4"
       >
         <div
           class="grid gap-1 md:gap-2 grid-cols-1 sm:grid-cols-2 md:grid-cols-1 xl:grid-cols-2"
         >
-          <div class="mb-1 p-1">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="email"
             >
               Email
@@ -47,7 +48,7 @@
                     : 'cursor-text pr-12'
                 "
                 type="email"
-                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="email"
                 placeholder="Email"
                 v-model="payload.email"
@@ -55,7 +56,7 @@
               />
 
               <span
-                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 rounded-xl cursor-pointer"
                 @click="
                   is_email_edit_option_locked = !is_email_edit_option_locked
                 "
@@ -63,21 +64,21 @@
                   is_email_edit_option_locked ? 'Start Edit' : 'Stop Edit'
                 "
               >
-                <i
+                <span
                   :class="
                     is_email_edit_option_locked
-                      ? 'fa fa-lock  text-gray-800'
+                      ? 'fa fa-lock  text-gray-700'
                       : 'fa fa-unlock text-gray-500'
                   "
-                  class="fa text-xl"
-                ></i>
+                  class="fa text-lg sm:text-xl"
+                ></span>
               </span>
             </div>
           </div>
 
-          <div class="mb-1 p-1">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="username"
             >
               Username
@@ -91,7 +92,7 @@
                     : 'cursor-text pr-12'
                 "
                 type="text"
-                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="username"
                 placeholder="Username"
                 v-model="payload.username"
@@ -99,7 +100,7 @@
               />
 
               <span
-                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 rounded-xl cursor-pointer"
                 @click="
                   is_username_edit_option_locked = !is_username_edit_option_locked
                 "
@@ -107,23 +108,23 @@
                   is_username_edit_option_locked ? 'Start Edit' : 'Stop Edit'
                 "
               >
-                <i
+                <span
                   :class="
                     is_username_edit_option_locked
-                      ? 'fa fa-lock  text-gray-800'
+                      ? 'fa fa-lock  text-gray-700'
                       : 'fa fa-unlock text-gray-500'
                   "
-                  class="fa text-xl"
-                ></i>
+                  class="fa text-lg sm:text-xl"
+                ></span>
               </span>
             </div>
           </div>
         </div>
 
         <div class="grid gap-1 sm:gap-2 xl:gap-1 grid-cols-1">
-          <div class="mb-1 p-1">
+          <div class="mb-1 sm:mb-2 p-1">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-500"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
               for="password"
             >
               Password
@@ -132,7 +133,7 @@
             <div class="relative">
               <input
                 :class="password_visibility ? ' pr-10' : 'cursor-text pr-12'"
-                class="w-full text-sm md:text-base resize-none py-2 md:py-3 pl-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+                class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="password"
                 placeholder="Password"
                 v-model="payload.password"
@@ -140,17 +141,17 @@
               />
 
               <span
-                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-2 sm:px-3 py-1 rounded-xl cursor-pointer"
                 @click="password_visibility = !password_visibility"
                 :title="password_visibility ? 'Hide Password' : 'Show Password'"
               >
                 <span
                   :class="
                     password_visibility
-                      ? 'fa fa-eye  text-gray-800'
+                      ? 'fa fa-eye  text-gray-700'
                       : 'fa fa-eye-slash text-gray-500'
                   "
-                  class="fa text-xl"
+                  class="fa text-lg sm:text-xl"
                 ></span>
               </span>
             </div>
@@ -160,7 +161,7 @@
         <div class="mt-8 px-1">
           <button
             type="submit"
-            class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none"
+            class="w-full text-center py-2 sm:py-3 rounded-xl bg-archyhub-main text-white outline-none"
           >
             <div class="w-full flex justify-center items-center space-x-2">
               <span>Update and Save</span>

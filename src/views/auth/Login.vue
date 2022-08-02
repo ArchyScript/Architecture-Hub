@@ -104,7 +104,7 @@
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-lg sm:rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
@@ -112,7 +112,7 @@
                       :class="
                         password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
-                          : ' fa-eye  text-gray-800'
+                          : ' fa-eye  text-gray-700'
                       "
                     ></i>
                   </span>
@@ -130,7 +130,7 @@
               <div class="mb-1 py-3 p-1">
                 <button
                   type="submit"
-                  class="w-full text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none my-1"
+                  class="w-full text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white outline-none my-1"
                 >
                   <div
                     class="w-full flex justify-center items-center space-x-2"
@@ -261,7 +261,7 @@ export default {
         "You've successfully logged in, you'll be redirected in a moment",
       )
 
-      await store.dispatch('users/getUser', auth_user_id)
+      // await store.dispatch('users/getUser', auth_user_id)
       await assignToken(token)
       await fetchAuthUser(auth_user_id)
       // await store.dispatch('users/assignToken', token)

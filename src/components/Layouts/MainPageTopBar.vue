@@ -19,7 +19,9 @@
             />
           </svg>
         </span>
-        <h4 class="text-lg sm:text-xl px-2 font-bold text-gray-500">
+        <h4
+          class="text-base sm:text-lg md:text-xl px-2 font-bold text-gray-500"
+        >
           {{ props.page_title }}
         </h4>
       </div>
@@ -76,7 +78,6 @@ export default {
     const store = useStore()
     const scrollShadowBoolean = ref(true)
 
-    const user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
     const auth_user_details = ref({
       profile_image: '',
@@ -85,13 +86,16 @@ export default {
 
     const getAuthUserProfile = async () => {
       const {
+        username,
         bio: { gender },
         profile_picture: { avatar },
       } = auth_user.value
       const picture_image = await getDisplayProfilePicture(avatar, gender)
 
       auth_user_details.value.profile_image = picture_image
+      auth_user_details.value.username = username
     }
+
     window.addEventListener('scroll', () => handleScroll())
 
     onBeforeMount(() => {
@@ -135,6 +139,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky z-20 h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky z-20 h-12 sm:h-14 md:h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light bg-opacity-70 shadow-md;
 }
 </style>

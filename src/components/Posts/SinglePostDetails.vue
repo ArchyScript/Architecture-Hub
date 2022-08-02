@@ -22,11 +22,9 @@
             <p class="items-center flex justify-between">
               <router-link
                 :to="`/profile/${post_info.username}`"
-                class="hover:underline items-center flex flex-1 sm:space-x-2"
+                class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2"
               >
-                <span
-                  class="text-base md:text-lg font-semibold text-gray-600 truncate"
-                >
+                <span class="text-base md:text-lg font-semibold truncate">
                   {{
                     post_info.display_name
                       ? post_info.display_name
@@ -34,28 +32,26 @@
                   }}
                 </span>
 
-                <span
-                  class="text-sm md:text-base font-normal text-gray-500 truncate"
-                >
+                <span class="text-sm md:text-base font-normal truncate">
                   @{{ post_info.username }}
                 </span>
               </router-link>
 
-              <span
+              <!-- <span
                 class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
               >
                 <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
-              </span>
+              </span> -->
             </p>
 
             <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
+              class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="post_info.date || post_info.time"
             >
               <span class="">{{ post_info.date }}</span>
 
               <span class="">
-                <strong class="font-semibold">@</strong>
+                <strong class="font-medium text-gray-600">@</strong>
                 {{ post_info.time }}
               </span>
             </p>
@@ -85,7 +81,11 @@
 
       <div class="mt-6">
         <div class="" v-if="!does_post_have_comment">
-          <span class="block text-center">No comment found</span>
+          <span
+            class="block text-center text-gray-700 font-normal text-sm sm:text-base"
+          >
+            No comment found
+          </span>
         </div>
 
         <div

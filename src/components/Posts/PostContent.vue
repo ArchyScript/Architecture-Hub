@@ -24,14 +24,12 @@
             v-if="post_info.username !== ''"
             class="flex-1 flex-col truncate"
           >
-            <p class="flex justify-between items-center">
+            <p class="flex justify-between items-center truncate">
               <router-link
                 :to="`/profile/${post_info.username}`"
-                class="hover:underline items-center flex flex-1 sm:space-x-2"
+                class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2 truncate"
               >
-                <span
-                  class="text-sm md:text-base font-semibold text-gray-600 truncate"
-                >
+                <span class="text-sm md:text-base font-medium truncate">
                   {{
                     post_info.display_name
                       ? post_info.display_name
@@ -39,28 +37,26 @@
                   }}
                 </span>
 
-                <span
-                  class="text-sm md:text-base font-normal text-gray-500 truncate"
-                >
+                <span class="text-sm md:text-base font-normal truncate">
                   @{{ post_info.username }}
                 </span>
               </router-link>
 
-              <span
-                class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
+              <!-- <span
+                class="text-gray-600 hidden hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
               >
                 <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
-              </span>
+              </span> -->
             </p>
 
             <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
+              class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="post_info.date || post_info.time"
             >
               <span class="">{{ post_info.date }}</span>
 
               <span class="">
-                <strong class="font-semibold">@</strong>
+                <strong class="font-medium text-gray-600">@</strong>
                 {{ post_info.time }}
               </span>
             </p>
@@ -88,11 +84,13 @@
               {{ eachPost.content }}
             </p>
 
+            <!-- <div class="flex justify-center items-center"> -->
             <img
               v-if="eachPost.post_image.avatar !== ''"
               class="w-full h-60 mt-2 sm:h-72 lg:h-80 object-fill border rounded-xl"
               :src="eachPost.post_image.avatar"
             />
+            <!-- </div> -->
           </router-link>
         </div>
       </article>

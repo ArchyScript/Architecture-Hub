@@ -1,17 +1,17 @@
 <template>
   <nav
     :class="{ scrolled: !scrollShadowBoolean }"
-    class="flex items-center top-0 inset-x-0 pt-6 pb-4 px-4"
+    class="flex items-center top-0 inset-x-0 py-3 sm:py-4 px-2 sm:px-4"
   >
     <div class="flex-shrink-0">
       <span
         @click="router.back()"
-        class="fa fa-arrow-left text-xl text-gray-700 hover:bg-archyhub-light hover:bg-opacity-80 px-4 py-3 cursor-pointer rounded-full"
+        class="fa fa-arrow-left text-base lg:text-lg text-gray-600 hover:bg-archyhub-light hover:bg-opacity-70 px-4 py-3 cursor-pointer rounded-full"
       ></span>
     </div>
 
     <div class="flex-1 items-center px-2">
-      <h4 class="text-xl block font-bold text-gray-600">
+      <h4 class="text-base md:text-lg block font-semibold text-gray-600">
         {{
           user_profile_data.display_name === ''
             ? user_profile_data.username
@@ -19,7 +19,7 @@
         }}
       </h4>
       <span
-        class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
+        class="text-sm lg:text-base block italic cursor-pointer font-normal text-gray-500 truncate"
       >
         {{
           user_profile_data.no_of_posts === 0
@@ -108,6 +108,6 @@ export default {
 </script>
 <style scoped>
 nav.scrolled {
-  @apply sticky h-16 pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
+  @apply sticky h-12 sm:h-14 md:h-16  pt-0 pb-0 bg-gradient-to-r from-archyhub-semi-light to-archyhub-light  shadow-md;
 }
 </style>

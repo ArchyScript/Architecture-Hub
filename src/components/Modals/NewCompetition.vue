@@ -3,90 +3,99 @@
     class="flex flex-col items-center h-full w-full bg-opacity-40 bg-archyhub-main py-10 overflow-scroll"
   >
     <div
-      class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
+      class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
     >
       <form class="w-full flex-1" @submit="newCompetition">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
-          class="text-center font-medium mb-4 px-8"
+          class="text-sm sm:text-base text-center font-normal mb-4 px-4 sm:px-6 lg:px-8"
         >
           {{ message.text }}
         </div>
 
-        <div class="mb-1 p-1">
-          <label class="block mb-1 mx-2 font-medium text-gray-700" for="title">
+        <div class="mb-1 sm:mb-2 px-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+            for="title"
+          >
             Title
           </label>
 
           <input
             type="text"
-            class="w-full text-xl resize-none p-4 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+            class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="title"
             placeholder="Title"
             v-model="payload.title"
           />
         </div>
 
-        <div class="mb-1 p-1">
-          <label class="block mb-1 mx-2 font-medium text-gray-700" for="host">
+        <div class="mb-1 sm:mb-2 px-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+            for="host"
+          >
             Host
           </label>
 
           <input
             type="text"
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+            class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="host"
             placeholder="Competition Host"
             v-model="payload.host"
           />
         </div>
 
-        <div class="mb-1 p-1">
-          <label class="block mb-1 mx-2 font-medium text-gray-700" for="link">
+        <div class="mb-1 sm:mb-2 px-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+            for="link"
+          >
             Link
           </label>
 
           <input
             type="text"
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
+            class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="link"
-            placeholder="Link to apply (e.g https://link.com)"
+            placeholder="Link to apply (e.g https://competition-link.com)"
             v-model="payload.link"
           />
         </div>
 
-        <div class="mb-1 p-1">
+        <div class="mb-1 sm:mb-2 px-1">
           <label
-            class="block mb-1 mx-2 font-medium text-gray-700"
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
             for="description"
           >
             Description
           </label>
           <textarea
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-lg"
+            class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
             placeholder="Describe this Competition"
             v-model="payload.description"
           ></textarea>
         </div>
 
-        <div class="mb-1 p-1">
+        <div class="mb-1 sm:mb-2 px-1">
           <label
-            class="block mb-1 mx-2 font-medium text-gray-700"
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
             for="content"
           >
             Content
           </label>
           <textarea
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-lg"
+            class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
             placeholder="Provide litle hint about the competition"
             v-model="payload.content"
           ></textarea>
         </div>
 
-        <div class="mb-2 p-1">
+        <div class="mb-1 sm:mb-2 p-1">
           <div class="flex justify-center">
             <input
               @change="onFileChange"
@@ -94,19 +103,19 @@
               type="file"
               name="competition_image"
               id="competition_image"
-              accept="image/gif, image/jpeg, image/png"
+              accept="image/jpeg, image/jpg, image/png"
             />
           </div>
 
           <div class="w-full">
             <label
-              class="block mb-1 mx-2 font-medium text-gray-700"
-              for="title"
+              class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+              for="competition_image_selector"
             >
               {{ payload.image_file ? 'Change Image' : 'Select Image' }}
             </label>
 
-            <div class="w-full border shadow-md bg-archyhub-light rounded-3xl">
+            <div class="w-full shadow-md bg-archyhub-light rounded-3xl">
               <img
                 v-if="payload.image_file"
                 :src="image_url"
@@ -119,7 +128,7 @@
               class="flex items-center"
             >
               <label
-                class="text-ce nter cursor-pointer py-2 px-6 rounded-xl bg-gray-700 text-white hover:bg-green-dark focus:outline-none my-1"
+                class="text-center text-xs sm:text-sm lg:text-base cursor-pointer py-2 px-4 md:px-6 rounded-lg md:rounded-xl bg-gray-600 text-archyhub-light focus:outline-none my-1"
                 for="competition_image"
               >
                 <span class="fa fa-image mr-1"></span>
@@ -131,20 +140,22 @@
         </div>
 
         <div class="flex justify-between items-center mt-20">
-          <div class="flex-shrink-0 sm:hi dden">
+          <div class="flex-shrink-0">
             <img
-              class="w-12 h-12 rounded-full border"
-              src="@/assets/script.jpg"
+              class="w-10 h-10 sm:w-12 sm:h-12 md:h-14 md:w-14 rounded-full border"
+              :src="auth_user_profile_picture"
             />
           </div>
 
           <div class="">
             <button
-              class="text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-lg sm:rounded-xl md:rounded-lg py-2 sm:py-3 px-4 sm:px-8"
+              class="text-archyhub-semi-light text-sm sm:text-base lg:text-lg bg-archyhub-main hover:text-archyhub-light font-normal lg:font-medimum rounded-lg sm:rounded-xl md:rounded-lg py-2 sm:py-3 px-4 sm:px-8"
             >
-              <div class="w-full flex justify-center items-center space-x-2">
+              <div
+                class="w-full flex justify-center items-center space-x-1 sm:space-x-2"
+              >
                 <span>
-                  {{ is_loading ? 'Creating...' : 'Create Competition' }}
+                  {{ is_loading ? 'Creating...' : 'New Competition' }}
                 </span>
 
                 <svg
@@ -175,6 +186,7 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { createCompetition } from '@/controller/api/competitions'
+import { getDisplayProfilePicture } from '@/controller/utilities'
 
 export default {
   name: 'CreateCompetitionModal',
@@ -193,6 +205,21 @@ export default {
       image_file: null,
     })
     const auth_user = computed(() => store.state.users.auth_user)
+    const auth_user_profile_picture = ref('')
+
+    const getUserProfilePicture = async () => {
+      const {
+        bio: { gender },
+        profile_picture: { avatar },
+      } = auth_user.value
+
+      const profile_picture: any = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      auth_user_profile_picture.value = profile_picture
+    }
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -253,10 +280,13 @@ export default {
       await store.dispatch('_requests/getAllCompetitions')
     }
 
+    onBeforeMount(async () => await getUserProfilePicture())
+
     return {
       post_id,
       is_loading,
       payload,
+      auth_user_profile_picture,
       image_url,
       message,
       auth_user,

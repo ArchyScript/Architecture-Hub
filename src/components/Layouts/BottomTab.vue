@@ -1,5 +1,7 @@
 <template>
-  <section class="fixed md:hidden border-t bottom-0 inset-x-0 w-full">
+  <section
+    class="fixed md:hidden border-t border-opacity-80 border-archyhub-semi-light bottom-0 inset-x-0 w-full"
+  >
     <span
       class="absolute right-2 bottom-16 sm:right-3 sm:bottom-20 p-2 mr-2 cursor-pointer rounded-full shadow-2xl"
       :class="
@@ -24,25 +26,25 @@
       </svg>
     </span>
 
-    <div class="flex items-center bg-archyhub-semi-light">
+    <div class="flex items-center bg-archyhub-semi-light bg-opacity-80">
       <div
         v-for="bottom_bar_link in bottom_bar_links"
         :key="bottom_bar_link.route"
         class="w-full flex items-center"
       >
         <div
-          class="flex-1 h-full space-x-1 border-l border-gray-300 text-gray-600 bg-opacity-80 items-center cursor-pointer text-center font-bold"
+          class="flex-1 h-full space-x-1 border-l text-gray-600 border-opacity-40 items-center cursor-pointer text-center"
           :class="
             current_active_route === bottom_bar_link.route
               ? 'bg-archyhub-semi-light text-archyhub-main'
-              : ''
+              : 'border-archyhub-light bg-opacity-90'
           "
           @click="toggleCurrentActiveNavLink(bottom_bar_link.route)"
         >
           <router-link :to="bottom_bar_link.route">
             <span
               :class="bottom_bar_link.icon"
-              class="text-base sm:text-lg p-2 sm:p-3 w-full font-extrabold h-full text-center"
+              class="text-base sm:text-lg p-2 sm:p-3 w-full h-full text-center"
             ></span>
           </router-link>
         </div>
@@ -87,7 +89,7 @@ export default {
       {
         route: `/profile/${auth_user.value.username}`,
         title: 'Profile',
-        icon: 'fa fa-auth_user',
+        icon: 'fa fa-user',
       },
     ])
 

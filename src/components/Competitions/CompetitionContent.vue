@@ -23,14 +23,12 @@
           class="flex-1 flex-col truncate"
           v-if="competition_info.username !== ''"
         >
-          <p class="flex justify-between items-center">
+          <p class="flex justify-between items-center truncate">
             <router-link
               :to="`/profile/${competition_info.username}`"
-              class="hover:underline items-center flex flex-1 sm:space-x-2 truncate"
+              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 sm:space-x-2 truncate"
             >
-              <span
-                class="text-sm md:text-base font-semibold text-gray-600 truncate"
-              >
+              <span class="text-sm md:text-base font-semibold truncate">
                 {{
                   competition_info.display_name
                     ? competition_info.display_name
@@ -38,28 +36,26 @@
                 }}
               </span>
 
-              <span
-                class="text-sm md:text-base font-normal text-gray-500 truncate"
-              >
-                @{{ competition_info.username || '...' }}
+              <span class="text-sm md:text-base font-normal truncate">
+                @{{ competition_info.username }}
               </span>
             </router-link>
 
-            <span
+            <!-- <span
               class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
             >
               <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
-            </span>
+            </span> -->
           </p>
 
           <p
-            class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
+            class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
             v-if="competition_info.date || competition_info.time"
           >
             <span class="">{{ competition_info.date }}</span>
 
             <span class="">
-              <strong class="font-semibold">@</strong>
+              <strong class="font-medium text-gray-600">@</strong>
               {{ competition_info.time }}
             </span>
           </p>
@@ -85,19 +81,19 @@
       <div class="px-1 sm:px-2 mt-2">
         <router-link :to="`/competitions/${eachCompetition._id}`">
           <span
-            class="text-base md:text-lg block font-meium text-gray-600 break-all"
+            class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
           >
             {{ eachCompetition.title }}
           </span>
 
           <img
             v-if="eachCompetition.competition_image.avatar !== ''"
-            class="text-sm md:text-base w-full h-60 mt-2 sm:h-72 lg:h-80 mb-5 object-fill border rounded-xl"
+            class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 object-fill border rounded-xl"
             :src="eachCompetition.competition_image.avatar"
           />
 
           <span
-            class="text-sm md:text-base block font-normal text-gray-600 break-all"
+            class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
           >
             {{ eachCompetition.description }}
           </span>
