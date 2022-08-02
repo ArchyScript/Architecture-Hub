@@ -3,18 +3,18 @@
     class="flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
   >
     <div class="flex w-full p-2 sm:p-3 xl:p-4 pb-2">
-      <div class="flex-shrink-0 mr-1">
+      <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
         <router-link :to="`/profile/${user_info.username}`">
           <img
-            v-if="user_info.profile_picture_avatar !== ''"
-            class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
-            :src="user_info.profile_picture_avatar"
+            v-if="user_info.profile_picture !== ''"
+            class="w-full h-full rounded-full border cursor-pointer"
+            :src="user_info.profile_picture"
           />
         </router-link>
 
         <span
-          v-if="user_info.profile_picture_avatar === ''"
-          class="block w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer bg-gray-500 animate-pulse"
+          v-if="user_info.profile_picture === ''"
+          class="block w-full h-full rounded-full border cursor-pointer bg-gray-500 animate-pulse"
         ></span>
       </div>
 
@@ -76,27 +76,12 @@
             {{ user_info.description }}
           </p>
 
-          <p class="text-base mt-2 px-2">
+          <p class="text-base mt-2">
             <span class="fa fa-calendar text-xl mr-2 text-gray-400"></span>
             <span class="text-gray-500">Joined {{ user_info.date }}</span>
           </p>
 
           <p class="flex items-center text-base mt-4 space-x-8">
-            <!-- <router-link
-              :to="`/user/${user_info.username}/followings`"
-              class="flex space-x-2 hover:underline"
-            >
-              <span class="text-gray-600 font-bold">
-                {{ user_info.followings }}
-              </span>
-              <span v-if="user_info.followings <= 1" class="text-gray-500">
-                following
-              </span>
-              <span v-if="user_info.followings > 1" class="text-gray-500">
-                followings
-              </span>
-            </router-link> -->
-
             <span class="flex space-x-2">
               <span v-if="user_info.followings < 1">
                 <span class="text-gray-600 font-bold">
@@ -148,21 +133,6 @@
                 </span>
               </router-link>
             </span>
-
-            <!-- <router-link
-              :to="`/user/${user_info.username}/followers`"
-              class="flex space-x-2 hover:underline"
-            >
-              <span class="text-gray-600 font-bold">
-                {{ user_info.followers }}
-              </span>
-              <span v-if="user_info.followers <= 1" class="text-gray-500">
-                follower
-              </span>
-              <span v-if="user_info.followers > 1" class="text-gray-500">
-                followers
-              </span>
-            </router-link> -->
           </p>
         </div>
       </div>
@@ -201,7 +171,7 @@ export default {
       display_name: '',
       _id: '',
       username: '',
-      profile_picture_avatar: '',
+      profile_picture: '',
       time: '',
       date: '',
       description: '',
@@ -220,7 +190,7 @@ export default {
         followings,
         followers,
       } = eachUserProps
-      const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+      const { formattedFullDate, formattedTime } = formatDateAndTime(createdAt)
 
       //
       if (storeUsers.value.length < 1) await fetchUsers()
@@ -233,7 +203,7 @@ export default {
         }
       })
 
-      const profile_picture_avatar: any = await getDisplayProfilePicture(
+      const profile_picture: any = await getDisplayProfilePicture(
         avatar,
         gender,
       )
@@ -245,8 +215,8 @@ export default {
       user_info.value.username = username
       user_info.value._id = _id
       user_info.value.time = formattedTime
-      user_info.value.date = formattedDate
-      user_info.value.profile_picture_avatar = profile_picture_avatar
+      user_info.value.date = formattedFullDate
+      user_info.value.profile_picture = profile_picture
 
       return await fetchUsers()
     }

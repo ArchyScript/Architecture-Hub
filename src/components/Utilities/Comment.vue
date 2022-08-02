@@ -1,22 +1,26 @@
 <template>
-  <section class="inset-x-0 border-b hover:bg-red-300 hover:bg-opacity-20">
+  <section
+    class="inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-40"
+  >
     <div class="flex py-2 px-4">
       <span class="flex-shrink-0 mr-1">
         <router-link :to="`/profile/${eachPostComment.commneter_username}`">
           <img
-            class="w-10 h-10 sm:h-12 sm:w-12 rounded-full border cursor-pointer"
+            class="w-8 h-8 sm:h-10 sm:w-10 rounded-full border cursor-pointer"
             :src="eachPostComment.commenter_image"
           />
         </router-link>
       </span>
 
       <div class="flex-col flex-1 ml-2 sm:ml-3">
-        <p class="flex-1 text-xs sm:text-sm my-2 sm:mb-3 flex-wrap break-all">
+        <p
+          class="flex-1 text-xs sm:text-sm my-2 text-gray-700 sm:mb-3 flex-wrap break-all"
+        >
           {{ eachPostComment.comment }}
         </p>
 
         <p
-          class="flex justify-end items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
+          class="flex justify-end items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
           v-if="eachPostComment.date || eachPostComment.time"
         >
           <span class="">{{ eachPostComment.date }}</span>

@@ -5,12 +5,14 @@
       <div class="lg:hidden h-full">
         <nav
           v-if="open_left_nav"
-          class="top-0 bottom-0 z-30 bg-opacity-40 bg-red-500 h-full w-full hidden md:flex"
+          class="top-0 bottom-0 z-30 bg-opacity-20 bg-archyhub-main h-full w-full hidden md:flex"
           :class="open_left_nav ? 'fixed' : 'hidden '"
           id="nav_modal"
         >
           <!-- open_left_nav ? 'hidden md:block fixed' : 'hidden ' -->
-          <div class="w-3/4 sm:w-3/5 md:w-2/5 md: h-full shadow-md">
+          <div
+            class="w-3/4 sm:w-3/5 md:w-2/5 md: h-full shadow-md min-h-screen"
+          >
             <LeftSideNav />
           </div>
 
@@ -33,31 +35,9 @@
         <section class="grid grid-cols-9">
           <!-- entry point -->
           <main
-            class="relative col-span-full bg-archyhub-semi-light bg-opacity-40 md:col-span-5 min-h-screen pb-20 md:pb-8"
+            class="rela tive col-span-full bg-archyhub-semi-light bg-opacity-20 md:col-span-5 min-h-screen pb-20 md:pb-8"
           >
             <router-view :key="route.fullPath"></router-view>
-
-            <!-- <div
-              class="sticky inline-block w-auto bg-black ml-5 bottom-10 p-2 mr-2 cursor-pointer rounded-full shadow-2xl"
-              :class="
-                route.fullPath === '/competitions'
-                  ? ' bg-pink-500'
-                  : route.fullPath === '/scholarships'
-                  ? 'bg-red-500'
-                  : ' hidden'
-              "
-              @click="openTargettedModal"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-12 h-12 p-2 text-white"
-                viewBox="0 0 448 512"
-              >
-                <path
-                  d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"
-                />
-              </svg>
-            </div> -->
           </main>
 
           <!-- right side nav -->
@@ -77,30 +57,8 @@
         <LeftSideNav />
       </div>
       <!-- entry point -->
-      <main class="relative col-span-5 bg-archyhub-semi-light bg-opacity-40">
+      <main class="relative col-span-5 bg-archyhub-semi-light bg-opacity-20">
         <router-view :key="route.fullPath"></router-view>
-
-        <!-- <div
-          class="inline-block w-auto to-white ml-5 bottom-10 right-3 p-2 mr-2 cursor-pointer rounded-full shadow-2xl"
-          :class="
-            route.fullPath === '/competitions'
-              ? ' bg-pink-500'
-              : route.fullPath === '/scholarships'
-              ? 'bg-red-500'
-              : ' hidden'
-          "
-          @click="openTargettedModal"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="w-14 h-14 p-1 text-white"
-            viewBox="0 0 448 512"
-          >
-            <path
-              d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"
-            />
-          </svg>
-        </div> -->
       </main>
 
       <!-- right side nav -->

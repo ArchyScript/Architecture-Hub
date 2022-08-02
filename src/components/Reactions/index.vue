@@ -1,22 +1,18 @@
 <template>
   <section
-    class="flex flex-col items-center border-gray-200 inset-x-0 mt-2 bg-red-300 bg-opacity-10"
+    class="flex flex-col items-center inset-x-0 mt-2 bg-archyhub-semi-light bg-opacity-40"
   >
-    {{ reaction_object }}
+    <!-- {{ reaction_object }} -->
 
     <div class="w-full flex items-center justify-around space-x-2">
       <span
         :title="`Comment on ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-bold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-semibold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
-          class="fa fa-comment-o text-base lg:text-lg xl:text-xl px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
+          class="fa fa-comment-o text-base lg:text-lg px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
           @click="commentOnPost(reaction_object)"
         ></span>
-        <!-- <span
-          class="fa fa-comment text-base lg:text-lg xl:text-xl px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
-          @click="commentOnPost(reaction_object)"
-        ></span> -->
 
         <span>
           {{ reaction_object.no_of_comments }}
@@ -25,13 +21,13 @@
 
       <span
         :title="`Like ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-bold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-semibold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
           :class="
             is_post_liked_by_auth_user ? 'fa fa-heart   ' : 'fa fa-heart-o'
           "
-          class="text-lg lg:text-xl px-3 py-2 rounded-full text-red-700 hover:bg-red-500 hover:bg-opacity-10"
+          class="text-base lg:text-lg px-3 py-2 rounded-full text-red-700 hover:bg-red-500 hover:bg-opacity-10"
           @click="
             handleLikePost(
               current_liked_post_id,
@@ -57,7 +53,7 @@
               ? 'fa fa-bookmark   '
               : 'fa fa-bookmark-o'
           "
-          class="text-lg lg:text-xl px-4 py-2 rounded-full text-purple-700 hover:bg-purple-500 hover:bg-opacity-10"
+          class="text-base lg:text-lg px-4 py-2 rounded-full text-purple-700 hover:bg-purple-500 hover:bg-opacity-10"
           @click="
             handleBookmark(is_post_bookmarked_by_auth_user, reaction_object)
           "
@@ -68,10 +64,10 @@
       <span
         :title="`Delete ${reaction_object.post_type}`"
         :class="is_auth_user_creator_of_post ? '' : 'hidden'"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-bold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-semibold hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
-          class="text-lg fa fa-trash-o lg:text-xl px-4 py-2 rounded-full text-red-700 hover:bg-red-500 hover:bg-opacity-10"
+          class="text-base lg:text-lg fa fa-trash-o px-4 py-2 rounded-full text-red-700 hover:bg-red-500 hover:bg-opacity-10"
           @click="handleDeletion(reaction_object)"
         ></span>
       </span>

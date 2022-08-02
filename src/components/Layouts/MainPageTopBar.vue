@@ -19,47 +19,34 @@
             />
           </svg>
         </span>
-        <h4 class="text-lg sm:text-xl px-2 font-bold text-gray-700">
+        <h4 class="text-lg sm:text-xl px-2 font-bold text-gray-500">
           {{ props.page_title }}
         </h4>
       </div>
 
       <div class="flex justify-center items-start">
+        <!-- @click="openTargettedModal(props.page_title)" -->
         <span
-          @click="openTargettedModal(props.page_title)"
           :class="props.page_icon"
-          class="hidden md:flex text-2xl text-gray-700 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
+          class="hidden md:flex text-xl text-gray-500 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
         ></span>
 
         <span class="md:hidden p-2 sm:p-3 cursor-pointer">
-          <router-link :to="`/profile/${user.username}`">
-            <div class="flex items-center cursor-pointer space-x-2">
-              
-              <!-- <div class="flex-1 hidden sm:inline-block md:hidden">
-                <span
-                  class="text-base md:text-lg block font-semibold text-gray-700 truncate"
-                >
-                  {{
-                    user.bio.display_name !== ''
-                      ? user.bio.display_name
-                      : user.username
-                  }}
-                </span>
-                <span
-                  class="text-sm block font-semibold text-gray-600 truncate"
-                >
-                  @{{ user.username }}
-                </span>
-              </div> -->
-
+          <router-link :to="`/profile/${auth_user_details.username}`">
+            <div
+              class="flex items-center cursor-pointer space-x-2 border border-archyhub-semi-light w-10 h-10 sm:h-12 sm:w-12 rounded-full"
+            >
               <img
-                class="w-10 h-10 sm:h-12 sm:w-auto12 rounded-full"
-                :src="
-                  user.profile_picture.avatar !== ''
-                    ? user.profile_picture.avatar
-                    : ''
-                "
+                v-if="auth_user_details.profile_image !== ''"
+                class="rounded-full w-full h-full"
+                :src="auth_user_details.profile_image"
+                :alt="auth_user_details.username"
               />
+
+              <div
+                v-if="auth_user_details.profile_image === ''"
+                class="w-full h-full bg-gray-400 rounded-full animate-pulse"
+              ></div>
             </div>
           </router-link>
         </span>
@@ -71,6 +58,7 @@
 <script lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
 import { useStore } from 'vuex'
+import { getDisplayProfilePicture } from '@/controller/utilities'
 
 export default {
   name: 'HomeTopbar',
@@ -90,10 +78,25 @@ export default {
 
     const user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
+    const auth_user_details = ref({
+      profile_image: '',
+      username: '',
+    })
+
+    const getAuthUserProfile = async () => {
+      const {
+        bio: { gender },
+        profile_picture: { avatar },
+      } = auth_user.value
+      const picture_image = await getDisplayProfilePicture(avatar, gender)
+
+      auth_user_details.value.profile_image = picture_image
+    }
+    window.addEventListener('scroll', () => handleScroll())
 
     onBeforeMount(() => {
       handleScroll()
-      window.addEventListener('scroll', () => handleScroll())
+      getAuthUserProfile()
     })
 
     const handleScroll = () => {
@@ -121,8 +124,8 @@ export default {
     return {
       scrollShadowBoolean,
       props,
-      user,
       auth_user,
+      auth_user_details,
       openLeftNav,
       openTargettedModal,
       // side_nav_toggler

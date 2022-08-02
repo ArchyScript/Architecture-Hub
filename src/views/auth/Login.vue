@@ -5,17 +5,19 @@
         class="container max-w-sm md:max-w-md mx-auto flex-1 flex flex-col items-center justify-center px-2"
       >
         <div
-          class="my-10 bg-white px-6 py-8 shadow-lg text-black w-full rounded-tl-3xl rounded-tr-3xl"
+          class="my-10 bg-white px-3 sm:px-6 py-8 shadow-lg text-black w-full rounded-tl-3xl rounded-tr-3xl"
         >
           <div>
-            <h1 class="mb-8 text-3xl text-center font-semibold text-gray-700">
+            <h1
+              class="mb-8 text-2xl md:text-3xl text-center font-semibold text-gray-700"
+            >
               Login
             </h1>
           </div>
 
-          <div class="flex items-center mt-4 mb-8">
+          <div class="flex items-center justify-center mt-4 mb-8 px-2">
             <span
-              class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
+              class="cursor-pointer text-sm md:text-base flex-1 text-center py-2 font-medium text-gray-700 rounded-tl-lg rounded-bl-lg border bordder-solid border-gray-300"
               :class="
                 login_with_email
                   ? 'border-archyhub-main text-archyhub-main'
@@ -27,7 +29,7 @@
             </span>
 
             <span
-              class="cursor-pointer flex-1 text-center py-2 font-semibold text-gray-700 px-6 rounded-tr-lg rounded-br-lg border bordder-solid border-gray-300"
+              class="cursor-pointer flex-1 text-sm md:text-base text-center py-2 font-medium text-gray-700 rounded-tr-lg rounded-br-lg border bordder-solid border-gray-300"
               :class="
                 login_with_email
                   ? ' '
@@ -44,7 +46,7 @@
             :class="
               message.type === 'error' ? 'text-red-500' : 'text-green-500'
             "
-            class="text-center font-medium mb-4"
+            class="text-sm sm:text-base text-center font-normal mb-4"
           >
             {{ message.text }}
           </div>
@@ -53,7 +55,7 @@
             <form @submit.prevent="logUserIn">
               <div class="p-1 mb-3" v-if="login_with_email">
                 <label
-                  class="block mb-1 mx-2 font-medium text-gray-600"
+                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
                   for="email"
                 >
                   Email
@@ -61,7 +63,7 @@
 
                 <input
                   type="text"
-                  class="block border rounded-xl w-full p-3 outline-none"
+                  class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="email"
                   placeholder="Email"
                   v-model="payload.email"
@@ -70,7 +72,7 @@
 
               <div class="p-1 mb-3" v-if="!login_with_email">
                 <label
-                  class="block mb-1 mx-2 font-medium text-gray-600"
+                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
                   for="username"
                 >
                   Username
@@ -78,7 +80,7 @@
 
                 <input
                   type="text"
-                  class="block border rounded-xl w-full p-3 outline-none"
+                  class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="username"
                   placeholder="Username"
                   v-model="payload.username"
@@ -95,18 +97,18 @@
                 <div class="relative">
                   <input
                     :type="password_visibility ? 'text' : 'password'"
-                    class="block border w-full p-3 rounded-xl outline-none pr-14"
+                    class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none pr-14 text-sm sm:text-base"
                     name="password"
                     placeholder="Password"
                     v-model="payload.password"
                     title="toggle password visibility"
                   />
                   <span
-                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-xl cursor-pointer"
+                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 border border-gray-300 border-solid rounded-lg sm:rounded-xl cursor-pointer"
                     @click="togglePasswordVisibility"
                   >
                     <i
-                      class="fa text-xl"
+                      class="fa text-lg sm:text-xl"
                       :class="
                         password_visibility
                           ? 'fa fa-eye-slash text-gray-500'
@@ -117,40 +119,46 @@
                 </div>
               </div>
 
-              <div class="text-grey-dark my-6 text-right underline">
+              <div
+                class="text-grey-dark px-2 my-6 text-right underline text-sm sm:text-base"
+              >
                 <router-link :to="{ name: 'ResetPassword' }">
                   Forgot Password?
                 </router-link>
               </div>
 
-              <button
-                type="submit"
-                class="w-full text-center py-3 rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none my-1"
-              >
-                <div class="w-full flex justify-center items-center space-x-2">
-                  <span>Login</span>
-
-                  <svg
-                    v-if="is_loading"
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="w-6 h-6 text-white animate-spin"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+              <div class="mb-1 py-3 p-1">
+                <button
+                  type="submit"
+                  class="w-full text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white hover:bg-green-dark focus:outline-none my-1"
+                >
+                  <div
+                    class="w-full flex justify-center items-center space-x-2"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="1"
-                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                    />
-                  </svg>
-                </div>
-              </button>
+                    <span>Login</span>
+
+                    <svg
+                      v-if="is_loading"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="w-6 h-6 text-white animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                      />
+                    </svg>
+                  </div>
+                </button>
+              </div>
             </form>
           </div>
 
-          <div class="text-grey-dark mt-6 text-center">
+          <div class="text-gray-700 mt-6 text-center text-sm sm:text-base">
             Don't have an account?
 
             <span class="underline ml-1">

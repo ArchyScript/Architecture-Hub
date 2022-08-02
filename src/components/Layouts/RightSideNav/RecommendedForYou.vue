@@ -1,10 +1,10 @@
 <template>
   <section
     v-if="recommended_people_to_follow.length >= 1"
-    class="flex items-center border rounded-2xl border-gray-200 inset-x-0 pt-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-semibold mb-6 px-5 text-gray-600">
+      <h4 class="text-lg md:text-xl font-semibold mb-6 px-5 text-gray-600">
         Recommended for You
       </h4>
 
@@ -26,10 +26,10 @@
           <div class="flex-shrink-0">
             <router-link :to="`/profile/${recommended.username}`">
               <img
-                class="w-12 h-12 md:w-14 md:h-14 rounded-full border border-gray-100"
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-100"
                 :src="recommended.profile_image"
-                :alt="recommended.username"
               />
+              <!-- :alt="recommended.username" -->
             </router-link>
           </div>
 
@@ -37,7 +37,7 @@
             <div class="mb-1 flex items-center">
               <div class="flex-1">
                 <span
-                  class="text-lg block font-medium text-gray-900 truncate dark:text-white"
+                  class="text-base block font-medium text-gray-700 truncate dark:text-white"
                 >
                   {{
                     recommended.display_name !== ''
@@ -53,7 +53,7 @@
               </div>
 
               <span
-                class="btn py-1 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+                class="btn py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
                 @click="followRecommended(recommended._id)"
                 v-if="just_followed_user_id !== recommended._id"
               >
@@ -62,22 +62,22 @@
 
               <span
                 v-if="just_followed_user_id === recommended._id"
-                class="btn py-1 rounded-lg px-3 border border-gray-700 bg-gray-700 cursor-not-allowed text-gray-100"
+                class="btn py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-700 bg-gray-700 cursor-not-allowed text-gray-100"
               >
                 following
               </span>
             </div>
 
-            <p class="text-gray-400 font-normal italic items-center text-sm">
+            <p class="text-gray-500 font-light italic items-center text-sm">
               <span>promoted</span>
-              <span class="fa fa-edit ml-2"></span>
+              <span class="fa fa-edit ml-2 text-sm"></span>
             </p>
           </div>
         </div>
       </div>
 
       <router-link
-        class="w-full hover:underline block mt-3 py-2 sm:py-3 text-sm text-center rounded-bl-2xl rounded-br-2xl sm:text-base italic border-t hover:bg-gray-300"
+        class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/users"
       >
         <span class="w-full">

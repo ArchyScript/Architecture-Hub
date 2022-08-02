@@ -1,20 +1,20 @@
 <template>
   <section
-    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
+    class="flex flex-col inset-x-0 hover:bg-archyhub-semi-light hover:shadow-sm hover:bg-opacity-30"
   >
-    <div class="flex -col w-full p-2 sm:p-3 xl:p-4 pb-2">
-      <div class="flex-shrink-0 mr-1">
+    <div class="w-full flex p-2 sm:p-3 xl:p-4 pb-2">
+      <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
         <router-link :to="`/profile/${post_info.username}`">
           <img
             v-if="post_info.profile_picture_avatar !== ''"
-            class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
+            class="w-full h-full rounded-full border cursor-pointer"
             :src="post_info.profile_picture_avatar"
           />
         </router-link>
 
         <span
           v-if="post_info.profile_picture_avatar === ''"
-          class="block w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer bg-gray-500 animate-pulse"
+          class="block h-full w-full rounded-full border cursor-pointer bg-gray-500 animate-pulse"
         ></span>
       </div>
 
@@ -24,28 +24,37 @@
             v-if="post_info.username !== ''"
             class="flex-1 flex-col truncate"
           >
-            <p class="items-center flex sm:space-x-2">
-              <span
-                class="text-sm md:text-base font-semibold text-gray-600 truncate"
+            <p class="flex justify-between items-center">
+              <router-link
+                :to="`/profile/${post_info.username}`"
+                class="hover:underline items-center flex flex-1 sm:space-x-2"
               >
-                {{
-                  post_info.display_name
-                    ? post_info.display_name
-                    : post_info.username
-                }}
-              </span>
-
-              <router-link :to="`/profile/${post_info.username}`">
                 <span
-                  class="text-sm md:text-base font-normal text-gray-500 hover:underline truncate"
+                  class="text-sm md:text-base font-semibold text-gray-600 truncate"
                 >
-                  @{{ post_info.username || '...' }}
+                  {{
+                    post_info.display_name
+                      ? post_info.display_name
+                      : post_info.username
+                  }}
+                </span>
+
+                <span
+                  class="text-sm md:text-base font-normal text-gray-500 truncate"
+                >
+                  @{{ post_info.username }}
                 </span>
               </router-link>
+
+              <span
+                class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
+              >
+                <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
+              </span>
             </p>
 
             <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
+              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="post_info.date || post_info.time"
             >
               <span class="">{{ post_info.date }}</span>
@@ -59,23 +68,23 @@
 
           <div v-if="post_info.username === ''" class="animate-pulse w-full">
             <div
-              class="h-1 sm:h-2 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
+              class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
             ></div>
 
             <div class="grid grid-cols-8 gap-2">
               <div
-                class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"
+                class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"
               ></div>
               <div
-                class="h-1 sm:h-2 p-1 bg-gray-400 rounded-xl col-span-2"
+                class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"
               ></div>
             </div>
           </div>
         </div>
 
-        <div class="px-1 sm:px-2 mt-2">
+        <div class="px-1 sm:px-2 mt-2 md:mt-3">
           <router-link :to="`/posts/${eachPost._id}`">
-            <p class="text-sm xl:text-base font-normal text-gray-500 break-all">
+            <p class="text-sm md:text-base font-normal text-gray-500 break-all">
               {{ eachPost.content }}
             </p>
 

@@ -9,8 +9,6 @@
           ? ' bg-pink-500'
           : current_active_route === '/scholarships'
           ? 'bg-red-500'
-          : current_active_route === `/profile/${user.username}`
-          ? ' hidden'
           : 'hidden'
       "
       @click="openTargettedModal"
@@ -44,7 +42,7 @@
           <router-link :to="bottom_bar_link.route">
             <span
               :class="bottom_bar_link.icon"
-              class="text-lg sm:text-xl p-3 sm:p-4 w-full font-extrabold h-full text-center"
+              class="text-base sm:text-lg p-2 sm:p-3 w-full font-extrabold h-full text-center"
             ></span>
           </router-link>
         </div>
@@ -64,7 +62,6 @@ export default {
     const route = useRoute()
     const store = useStore()
     const current_active_route = ref('/home')
-    const user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
     const bottom_bar_links = ref([
       {
@@ -73,24 +70,24 @@ export default {
         icon: 'fa fa-home',
       },
       {
-        route: '/scholarships',
-        title: 'Scholarships',
-        icon: 'fas fa-award',
+        route: '/users',
+        title: 'Connections',
+        icon: 'fa fa-search',
       },
       {
         route: '/competitions',
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
-      // {
-      //   route: '/notifications',
-      //   title: 'Notifications',
-      //   icon: 'fa fa-bell',
-      // },
       {
-        route: `/profile/${user.value.username}`,
+        route: '/scholarships',
+        title: 'Scholarships',
+        icon: 'fas fa-award',
+      },
+      {
+        route: `/profile/${auth_user.value.username}`,
         title: 'Profile',
-        icon: 'fa fa-user',
+        icon: 'fa fa-auth_user',
       },
     ])
 
@@ -115,7 +112,6 @@ export default {
 
     return {
       bottom_bar_links,
-      user,
       auth_user,
       current_active_route,
       toggleCurrentActiveNavLink,

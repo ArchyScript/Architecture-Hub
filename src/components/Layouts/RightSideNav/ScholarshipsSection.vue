@@ -1,9 +1,9 @@
 <template>
   <section
-    class="flex items-center border rounded-2xl border-gray-200 inset-x-0 pt-4 shadow-sm md:shadow-none mb-10"
+    class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
     <div class="w-full">
-      <h4 class="text-xl font-semibold mb-4 px-6 text-gray-600">
+      <h4 class="text-lg md:text-xl font-semibold mb-4 px-6 text-gray-600">
         Latest Scholarships
       </h4>
 
@@ -15,24 +15,24 @@
 
       <div class="flex flex-col" v-if="scholarships.length >= 1">
         <div
-          class="flex items -center space-x-4 shadow-sm px-4 py-4"
+          class="flex space-x-4 px-4 py-4"
           :key="scholarship.category"
           v-for="scholarship in scholarships"
         >
           <div class="flex-1 w-full">
             <div class="mb-1 flex items-center">
               <span
-                class="flex-1 text-sm block text-gray-500 truncate font-medium italic dark:text-gray-400"
+                class="flex-1 text-xs md:text-sm block text-gray-500 truncate font-normal italic"
               >
                 scholarship
-                <span class="btn py-1 rounded-lg px-2 border bg-green-200">
+                <span class="btn py-1 rounded-lg px-2 bg-green-200">
                   new
                 </span>
               </span>
 
               <router-link :to="`/scholarships/${scholarship._id}`">
                 <span
-                  class="btn py-1 italic text-gray-700 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+                  class="btn text-xs md:text-sm py-1 italic text-gray-700 rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
                 >
                   more details
                 </span>
@@ -41,13 +41,13 @@
 
             <div class="flex-1 truncate mr-4">
               <span
-                class="text-lg block font-medium text-gray-900 truncate text-ellipsis dark:text-white"
+                class="text-base block font-medium text-gray-700 truncate text-ellipsis dark:text-white"
               >
                 {{ scholarship.title }}
               </span>
             </div>
 
-            <p class="">
+            <p class="text-sm text-gray-700">
               {{
                 is_more_description_boolean &&
                 read_more_scholarship_id == scholarship._id
@@ -70,11 +70,14 @@
         </div>
       </div>
 
-      <!-- <div class="w-full mt-4"> -->
-      <p class="w-full py-2 sm:py-3 text-sm text-center sm:text-base italic">
-        <router-link to="/scholarships">see all</router-link>
-      </p>
-      <!-- </div> -->
+      <router-link
+        class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
+        to="/scholarships"
+      >
+        <span class="w-full">
+          see all
+        </span>
+      </router-link>
     </div>
   </section>
 </template>

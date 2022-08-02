@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20 pb-16"
+    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-10 pb-16"
   >
     <div class="" v-if="post_info.username === ''">
       <AnimatedSingleContentVue />
@@ -12,33 +12,44 @@
           <span class="flex-shrink-0 mr-3">
             <router-link :to="`/profile/${post_info.username}`">
               <img
-                class="w-14 h-14 sm:h-16 sm:w-16 rounded-full border cursor-pointer"
+                class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
                 :src="post_info.poster_picture"
               />
             </router-link>
           </span>
 
           <div class="flex-1 flex-col truncate">
-            <p class="items-center flex sm:space-x-2">
-              <span
-                class="text-base md:text-lg font-semibold text-gray-600 truncate"
+            <p class="items-center flex justify-between">
+              <router-link
+                :to="`/profile/${post_info.username}`"
+                class="hover:underline items-center flex flex-1 sm:space-x-2"
               >
-                {{
-                  post_info.display_name
-                    ? post_info.display_name
-                    : post_info.username
-                }}
-              </span>
+                <span
+                  class="text-base md:text-lg font-semibold text-gray-600 truncate"
+                >
+                  {{
+                    post_info.display_name
+                      ? post_info.display_name
+                      : post_info.username
+                  }}
+                </span>
+
+                <span
+                  class="text-sm md:text-base font-normal text-gray-500 truncate"
+                >
+                  @{{ post_info.username }}
+                </span>
+              </router-link>
 
               <span
-                class="text-sm md:text-base font-normal text-gray-500 truncate"
+                class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
               >
-                @{{ post_info.username || '...' }}
+                <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
               </span>
             </p>
 
             <p
-              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-500 truncate"
+              class="hidden sm:flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="post_info.date || post_info.time"
             >
               <span class="">{{ post_info.date }}</span>
@@ -83,7 +94,9 @@
           v-for="post_comment in post_comments"
           :key="post_comment.username"
         >
+          <!-- <div v-if="post_comment.comment !== undefined"> -->
           <CommentVue :eachPostComment="post_comment" />
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -238,7 +251,8 @@ export default {
           comments.forEach(async (eachPostComment: any) => {
             const { comment_id } = eachPostComment
 
-            await fetchAllPostComments()
+            if (storePostComments.value < 1) await fetchAllPostComments()
+
             storePostComments.value.forEach(
               async (each_store_post_comment: any) => {
                 if (comment_id === each_store_post_comment._id) {
@@ -339,9 +353,8 @@ export default {
     }
 
     const fetchAllPostComments = async () => {
-      if (storePostComments.value < 1) {
-        await store.dispatch('_requests/getAllPostComments')
-      }
+      // if (storePostComments.value < 1) {
+      await store.dispatch('_requests/getAllPostComments')
     }
 
     onBeforeMount(async () => {

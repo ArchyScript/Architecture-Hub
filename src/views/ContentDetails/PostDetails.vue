@@ -1,5 +1,7 @@
 <template>
-  <div class="w-full top-0 h-full bg-archyhub-semi-light z-4 border-r border-l">
+  <div
+    class="w-full top-0 h-full bg-archyhub-semi-light bg-opacity-20 z-4 border-r border-l"
+  >
     <div class="">
       <SinglePostDetailsVue />
     </div>

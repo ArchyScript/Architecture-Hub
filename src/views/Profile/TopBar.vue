@@ -36,6 +36,7 @@ import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { fetchSingleUserByUsername } from '@/controller/api/users.api'
+import { formatNumbers } from '@/controller/utilities'
 
 export default {
   name: 'ProfileTopbar',

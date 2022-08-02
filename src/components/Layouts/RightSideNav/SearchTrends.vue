@@ -46,17 +46,21 @@ export default {
       console.log(search_value.value)
     }
 
+    window.addEventListener('scroll', () => handleScroll())
+
     onBeforeMount(() => {
-      window.addEventListener('scroll', () => handleScroll())
+      handleScroll()
     })
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
         // user is scrolled
-        if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
+        // if (scrollShadowBoolean.value)
+        scrollShadowBoolean.value = false
       } else {
         // user is at top of page
-        if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
+        // if (!scrollShadowBoolean.value)
+        scrollShadowBoolean.value = true
       }
     }
 

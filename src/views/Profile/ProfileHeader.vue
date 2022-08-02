@@ -240,7 +240,9 @@ export default {
           profile_picture: { avatar },
         } = auth_user.value
 
-        const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+        const { formattedFullDate, formattedTime } = formatDateAndTime(
+          createdAt,
+        )
 
         const profile_picture: any = await getDisplayProfilePicture(
           avatar,
@@ -253,7 +255,7 @@ export default {
         user_profile.value.profile_picture = profile_picture
         user_profile.value.description = description
         user_profile.value.time = formattedTime
-        user_profile.value.date_joined = formattedDate
+        user_profile.value.date_joined = formattedFullDate
         user_profile.value.no_of_followers = followers.length
         user_profile.value.no_of_followings = followings.length
       }
@@ -273,7 +275,9 @@ export default {
             profile_picture: { avatar },
           } = await eachUser
 
-          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
+          const { formattedFullDate, formattedTime } = formatDateAndTime(
+            createdAt,
+          )
 
           const profile_picture: any = await getDisplayProfilePicture(
             avatar,
@@ -286,7 +290,7 @@ export default {
           user_profile.value.profile_picture = profile_picture
           user_profile.value.description = description
           user_profile.value.time = formattedTime
-          user_profile.value.date_joined = formattedDate
+          user_profile.value.date_joined = formattedFullDate
           user_profile.value.no_of_followers = followers.length
           user_profile.value.no_of_followings = followings.length
 
