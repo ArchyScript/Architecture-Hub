@@ -84,8 +84,6 @@ import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import ScholarshipContentVue from '@/components/Scholarships/ScholarshipContent.vue'
 import AnimatedPostContentVue from '@/components/Animation/AnimatedPostContent.vue'
-import { ScholarshipSchema } from '@/controller/typings'
-import { fetchAllScholarships } from '@/controller/api/scholarships'
 
 export default {
   name: 'Scholarships',
@@ -96,20 +94,11 @@ export default {
   },
   setup() {
     const store = useStore()
-    const allScholarships = ref<ScholarshipSchema[]>([])
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Scholarships', icon: 'fas fa-award' })
     const storeScholarships = computed(
       () => store.state._requests.allScholarships,
-    )
-
-    const auth_user = computed(() => store.state.users.auth_user)
-    const open_new_post_modal = computed(
-      () => store.state.component_handler.open_new_post_modal,
-    )
-    const open_new_comment_modal = computed(
-      () => store.state.component_handler.open_new_comment_modal,
     )
 
     const updateResponseMessage = (type: string, text: string) => {
@@ -121,7 +110,6 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      //
       if (storeScholarships.value && storeScholarships.value.length < 1)
         await fetchScholarships()
 

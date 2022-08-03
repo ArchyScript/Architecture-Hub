@@ -35,7 +35,6 @@
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 import { formatNumbers } from '@/controller/utilities'
 
 export default {
@@ -45,12 +44,12 @@ export default {
     const route = useRoute()
     const scrollShadowBoolean = ref(true)
     const router = useRouter()
+    const storeUsers = computed(() => store.state._requests.allUsers)
     const user_profile_data = ref({
       no_of_posts: 0,
       display_name: '',
       username: '',
     })
-    const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserProfileData = async () => {
       const { username } = route.params
@@ -65,7 +64,6 @@ export default {
             posts,
           } = eachUser
 
-          console.log(eachUser)
           const no_of_posts = await formatNumbers(+posts.length)
 
           user_profile_data.value.no_of_posts = no_of_posts
@@ -76,17 +74,10 @@ export default {
     }
 
     async function fetchUsers() {
-      if (storeUsers.value && storeUsers.value.length < 1)
-        return await store.dispatch('_requests/getAllUsers')
+      return await store.dispatch('_requests/getAllUsers')
     }
 
-    const auth_user = computed(() => store.state.users.auth_user)
     window.addEventListener('scroll', () => handleScroll())
-
-    onBeforeMount(async () => {
-      handleScroll()
-      await getUserProfileData()
-    })
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -98,11 +89,15 @@ export default {
       }
     }
 
+    onBeforeMount(async () => {
+      handleScroll()
+      await getUserProfileData()
+    })
+
     return {
       scrollShadowBoolean,
       router,
       user_profile_data,
-      auth_user,
     }
   },
 }

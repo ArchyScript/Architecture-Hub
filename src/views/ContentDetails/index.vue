@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
-import TopBarVue from '../../components/Layouts/CommunityTopbar.vue'
+import TopBarVue from '../../components/Layouts/DetailsTopbar.vue'
 import { useRoute } from 'vue-router'
 
 export default {

@@ -93,6 +93,12 @@ export default {
       () => store.state.component_handler.open_left_nav,
     )
 
+    // if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
+    // if (storeScholarships.value && storeScholarships.value.length < 1)
+    //         await fetchScholarships()
+    // if (storeCompetitions.value && storeCompetitions.value.length < 1)
+    //   await fetchCompetitions()
+
     window.addEventListener('click', (event: any) => {
       const nav_modal = document.getElementById('nav_modal')
       if (event.target === nav_modal) return closeAllModals()
@@ -115,6 +121,12 @@ export default {
       if (route.fullPath === '/scholarships')
         return store.dispatch('component_handler/openNewScholarshipModal')
     }
+
+    //
+    const openScholarshipModal = () =>
+      store.dispatch('component_handler/openNewScholarshipModal')
+    const openCompetitionModal = () =>
+      store.dispatch('component_handler/openNewCompetitionModal')
 
     const scrollToTop = () => {
       window.scrollTo(0, 0)

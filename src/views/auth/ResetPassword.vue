@@ -36,7 +36,7 @@
                 </label>
 
                 <input
-                  @input="resetErrorMessages(false)"
+                  @input="resetErrorMessages"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="email"
                   type="email"
@@ -54,7 +54,7 @@
                 </label>
 
                 <input
-                  @input="resetErrorMessages(false)"
+                  @input="resetErrorMessages"
                   type="text"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="username"
@@ -72,7 +72,7 @@
                 </label>
                 <div class="relative">
                   <input
-                    @input="resetErrorMessages(false)"
+                    @input="resetErrorMessages"
                     :type="password_visibility ? 'text' : 'password'"
                     class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                     name="new_password"
@@ -106,7 +106,7 @@
 
                 <div class="relative">
                   <input
-                    @input="resetErrorMessages(false)"
+                    @input="resetErrorMessages"
                     :type="password_visibility ? 'text' : 'password'"
                     class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                     name="confirm_new_password"
@@ -186,8 +186,6 @@ import router from '@/router'
 export default {
   name: 'ResetPassword',
   setup() {
-    const store = useStore()
-    const route = useRoute()
     const is_loading = ref(false)
     const is_typing = ref(true)
     const email = ref('')
@@ -205,25 +203,18 @@ export default {
     }
 
     const updateResponseMessage = (type: string, text: string) => {
-      if (message.value.type === 'error') is_loading.value = false
+      if (type === 'error') is_loading.value = false
 
       message.value.type = type
       message.value.text = text
-
-      // return setTimeout(() => {
-      //   return updateResponseMessage('', '')
-      // }, 5000)
     }
 
-    const resetErrorMessages = (current_typing_state: boolean) => {
-      // is_typing.value = current_typing_state
-      // if (is_typing.value)
+    const resetErrorMessages = () => {
       is_loading.value = false
       updateResponseMessage('', '')
     }
 
     const resetUserPassword = async () => {
-      // event.preventDefault()
       is_loading.value = true
       updateResponseMessage('', '')
 
@@ -238,6 +229,7 @@ export default {
           'Sorry, an unknown error occurred... Check connection',
         )
 
+      //
       router.push('/auth/login')
     }
 

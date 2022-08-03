@@ -84,8 +84,6 @@ import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import CompetitionContentVue from '@/components/Competitions/CompetitionContent.vue'
 import AnimatedPostContentVue from '@/components/Animation/AnimatedPostContent.vue'
-import { CompetitionSchema } from '@/controller/typings'
-import { fetchAllCompetitions } from '@/controller/api/competitions'
 
 export default {
   name: 'Competitions',
@@ -129,31 +127,6 @@ export default {
           return updateResponseMessage('', '')
         }, 5000)
       }
-      // }
-
-      // const response = await fetchAllCompetitions()
-      // const { error, data, status } = response
-
-      // if (error) {
-      //   updateResponseMessage('error', error)
-      //   is_loading.value = false
-
-      //   return setTimeout(() => {
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
-
-      // if (!status || status === 400 || !data) {
-      //   updateResponseMessage(
-      //     'error',
-      //     'Sorry, an unknown error occurred... Check connection',
-      //   )
-
-      //   return setTimeout(() => {
-      //     is_loading.value = false
-      //     return updateResponseMessage('', '')
-      //   }, 5000)
-      // }
 
       updateResponseMessage('success', '')
       is_loading.value = false

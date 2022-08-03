@@ -42,6 +42,7 @@
 
             <div class="relative">
               <input
+                @input="resetErrorMessages"
                 :class="
                   is_email_edit_option_locked
                     ? 'cursor-not-allowed pr-10'
@@ -86,6 +87,7 @@
 
             <div class="relative">
               <input
+                @input="resetErrorMessages"
                 :class="
                   is_username_edit_option_locked
                     ? 'cursor-not-allowed pr-10'
@@ -132,6 +134,7 @@
 
             <div class="relative">
               <input
+                @input="resetErrorMessages"
                 :class="password_visibility ? ' pr-10' : 'cursor-text pr-12'"
                 class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
                 name="password"
@@ -191,27 +194,26 @@
 
 <script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { updateUserAuth } from '@/controller/api/users.api'
-import router from '@/router'
 
 export default {
   name: 'EditAuthInfo',
   setup() {
     const store = useStore()
-    const route = useRoute()
+    const router = useRouter()
     const is_loading = ref(false)
     const is_email_edit_option_locked = ref(true)
     const password_visibility = ref(false)
     const is_username_edit_option_locked = ref(true)
+    const auth_user = computed(() => store.state.users.auth_user)
     const message = ref({ type: '', text: '' })
     const payload = ref({
       username: '',
       email: '',
       password: '',
     })
-    const auth_user = computed(() => store.state.users.auth_user)
 
     const loadAuthUserInfo = () => {
       const { username, email } = auth_user.value
@@ -220,11 +222,14 @@ export default {
       payload.value.email = email
     }
 
-    onBeforeMount(() => {
-      loadAuthUserInfo()
-    })
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
 
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
@@ -238,23 +243,14 @@ export default {
       const response: any = await updateUserAuth(user_id, payload.value)
       const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (error) return
+      updateResponseMessage('error', error)
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      if (!status || status === 400) {
-        updateResponseMessage('error', 'Sorry, an unknown error occurred')
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
 
       await fetchAuthUser()
       await fetchUsers()
@@ -275,6 +271,10 @@ export default {
       await store.dispatch('users/getAuthUser', auth_user.value._id)
     }
 
+    onBeforeMount(() => {
+      loadAuthUserInfo()
+    })
+
     return {
       payload,
       is_loading,
@@ -285,6 +285,7 @@ export default {
       auth_user,
       UpdateAndSaveBio,
       updateResponseMessage,
+      resetErrorMessages,
     }
   },
 }

@@ -220,7 +220,7 @@ export default {
       message.value.text = text
     }
 
-    const resetErrorMessages = (current_typing_state: boolean) => {
+    const resetErrorMessages = () => {
       is_loading.value = false
       updateResponseMessage('', '')
     }

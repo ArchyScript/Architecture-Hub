@@ -89,7 +89,7 @@ import { UserSchema } from '@/controller/typings'
 import router from '@/router'
 
 export default {
-  name: 'Scholarships',
+  name: 'UserCommunities',
   components: {
     UserContentVue,
     AnimatedUserVue,
@@ -103,12 +103,6 @@ export default {
     const storeUsers = computed(() => store.state._requests.allUsers)
     const userCommunities = ref<UserSchema[]>([])
     const auth_user = computed(() => store.state.users.auth_user)
-    const open_new_post_modal = computed(
-      () => store.state.component_handler.open_new_post_modal,
-    )
-    const open_new_comment_modal = computed(
-      () => store.state.component_handler.open_new_comment_modal,
-    )
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -121,16 +115,14 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
+      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
+
       const userFollowers: any = []
       const userFollowings: any = []
-      //
-      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
       await storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
           const { followers, followings } = eachUser
-
-          console.log(eachUser)
 
           if (followers_or_followings === 'followers') {
             await followers.forEach(async (follower: any) => {
@@ -176,19 +168,11 @@ export default {
       await getUserCommunities()
       await fetchAuthUser()
       await fetchUsers()
-      await fetchUsers()
-      getUserCommunities()
       getUserCommunities()
       scrollToTop()
-      scrollToTop()
-
-      console.log(route.fullPath)
-      router.push(route.fullPath)
     })
 
     return {
-      storeUsers,
-      auth_user,
       is_loading,
       message,
       topbar,

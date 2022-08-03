@@ -1,5 +1,5 @@
 <template>
-  <div class="bg_ image bg-archyhub-semi-light bg-opacity-40">
+  <div class="bg-archyhub-semi-light bg-opacity-40">
     <router-view></router-view>
   </div>
 </template>

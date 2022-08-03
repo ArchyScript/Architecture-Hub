@@ -10,7 +10,7 @@
       ></span>
     </div>
 
-    <div class="flex-1 items-center px-2">
+    <div v-if="!is_topbar_for_details" class="flex-1 items-center px-2">
       <h4 class="text-base md:text-lg block font-medium text-gray-600">
         {{
           profile_data.display_name === ''
@@ -23,9 +23,12 @@
       >
         {{ profile_data.no_of_followers_or_followings }}
       </span>
-      <!-- <= 1
-            ? `${profile_data.no_of_followers_or_followings} ${profile_data.is_followers_or_followings}`
-            : `${profile_data.no_of_followers_or_followings} ${profile_data.is_followers_or_followings}s` -->
+    </div>
+
+    <div v-if="is_topbar_for_details" class="flex-1 items-center px-2">
+      <h4 class="text-base md:text-lg block font-medium text-gray-600">
+        Back to {{ detail_title }}
+      </h4>
     </div>
   </nav>
 </template>
@@ -49,11 +52,21 @@ export default {
       username: '',
     })
     const storeUsers = computed(() => store.state._requests.allUsers)
+    const is_topbar_for_details = ref(true)
+    const detail_title = ref('')
 
     const getUserProfileData = async () => {
-      const { username, followers_or_followings } = route.params
+      const {
+        username,
+        followers_or_followings,
+        post_id,
+        competition_id,
+        scholarship_id,
+      } = route.params
 
       if (username && followers_or_followings) {
+        is_topbar_for_details.value = false
+
         if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
         storeUsers.value.forEach(async (eachUser: any) => {
@@ -89,22 +102,19 @@ export default {
           }
         })
       } else {
-        console.log('hghe')
+        is_topbar_for_details.value = true
+
+        if (post_id) return (detail_title.value = 'Posts')
+        if (competition_id) return (detail_title.value = 'Competitions')
+        if (scholarship_id) return (detail_title.value = 'Scholarships')
       }
     }
 
     async function fetchUsers() {
-      if (storeUsers.value && storeUsers.value.length < 1)
-        return await store.dispatch('_requests/getAllUsers')
+      return await store.dispatch('_requests/getAllUsers')
     }
 
-    const auth_user = computed(() => store.state.users.auth_user)
     window.addEventListener('scroll', () => handleScroll())
-
-    onBeforeMount(async () => {
-      handleScroll()
-      await getUserProfileData()
-    })
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -116,11 +126,17 @@ export default {
       }
     }
 
+    onBeforeMount(async () => {
+      handleScroll()
+      await getUserProfileData()
+    })
+
     return {
       scrollShadowBoolean,
       router,
       profile_data,
-      auth_user,
+      is_topbar_for_details,
+      detail_title,
     }
   },
 }

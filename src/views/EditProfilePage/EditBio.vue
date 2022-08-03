@@ -30,6 +30,7 @@
               Firstname
             </label>
             <input
+              @input="resetErrorMessages"
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="firstname"
@@ -46,6 +47,7 @@
               Lastname
             </label>
             <input
+              @input="resetErrorMessages"
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="lastname"
@@ -64,6 +66,7 @@
               Display Name
             </label>
             <input
+              @input="resetErrorMessages"
               type="text"
               class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
               name="display_name"
@@ -81,6 +84,7 @@
             </label>
 
             <select
+              @change="resetErrorMessages"
               v-model="payload.bio.gender"
               class="w-full text-sm md:text-base resize-none py-2 sm:py-3 px-3 md:px-4 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none cursor-pointer rounded-lg"
             >
@@ -103,6 +107,7 @@
           </label>
 
           <textarea
+            @input="resetErrorMessages"
             class="w-full text-sm md:text-base resize-none py-3 px-2 mb-3 text-gray-500 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             rows="4"
             v-model="payload.bio.description"
@@ -144,7 +149,6 @@
 
 <script lang="ts">
 import { ref, computed, onBeforeMount } from 'vue'
-// import { updateUserData } from '@/controller/api/users.api'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import router from '@/router'
@@ -178,7 +182,14 @@ export default {
       payload.value.bio.lastname = bio.lastname
     }
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
@@ -192,23 +203,13 @@ export default {
       const response: any = await updateUserBio(user_id, payload.value)
       const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (error) return updateResponseMessage('error', error)
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      if (!status || status === 400) {
-        updateResponseMessage('error', 'Sorry, an unknown error occurred')
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred... Check connection',
+        )
 
       updateResponseMessage(
         'success',
@@ -234,6 +235,7 @@ export default {
       auth_user,
       UpdateAndSaveBio,
       updateResponseMessage,
+      resetErrorMessages,
     }
   },
 }

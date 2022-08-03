@@ -62,6 +62,7 @@
                 </label>
 
                 <input
+                  @input="resetErrorMessages"
                   type="text"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="email"
@@ -79,6 +80,7 @@
                 </label>
 
                 <input
+                  @input="resetErrorMessages"
                   type="text"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
                   name="username"
@@ -96,6 +98,7 @@
                 </label>
                 <div class="relative">
                   <input
+                    @input="resetErrorMessages"
                     :type="password_visibility ? 'text' : 'password'"
                     class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none pr-14 text-sm sm:text-base"
                     name="password"
@@ -172,7 +175,7 @@
 </template>
 
 <script lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import router from '@/router'
 import { useStore } from 'vuex'
 import { AuthApiService } from '@/controller/api/auth.api'
@@ -183,30 +186,35 @@ export default {
 
   setup() {
     const store = useStore()
+    const is_typing = ref(true)
     const is_loading = ref(false)
     const login_with_email = ref(true)
     const login_method = ref('')
     const password_visibility = ref(true)
-    const payload = ref({ email: '', username: '', password: '' })
     const message = ref({ type: '', text: '' })
+    const payload = ref({
+      email: '',
+      username: '',
+      password: '',
+    })
 
     const togglePasswordVisibility = () => {
       password_visibility.value = !password_visibility.value
     }
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
-      if (message.value.type === 'error') is_loading.value = false
+      if (type === 'error') is_loading.value = false
 
       message.value.type = type
       message.value.text = text
-
-      return setTimeout(() => {
-        return updateResponseMessage('', '')
-      }, 5000)
     }
 
     const logUserIn = async (event: any) => {
-      event.preventDefault()
       is_loading.value = true
       updateResponseMessage('', '')
       login_method.value =
@@ -219,6 +227,7 @@ export default {
       const email_login_payload = { email, password }
       const username_login_payload = { username, password }
 
+      //
       if (login_method.value === 'email') {
         const response = await AuthApiService.loginWithEmail(
           email_login_payload,
@@ -238,6 +247,7 @@ export default {
         auth_user_id = await HandleTokenResponse(token)
       }
 
+      //
       if (login_method.value === 'username') {
         const response = await AuthApiService.loginWithUsername(
           username_login_payload,
@@ -261,14 +271,13 @@ export default {
         "You've successfully logged in, you'll be redirected in a moment",
       )
 
-      // await store.dispatch('users/getUser', auth_user_id)
       await assignToken(token)
       await fetchAuthUser(auth_user_id)
-      // await store.dispatch('users/assignToken', token)
 
       is_loading.value = false
       updateResponseMessage('', '')
 
+      //
       return router.push('/')
     }
 
@@ -286,6 +295,7 @@ export default {
       is_loading,
       message,
       payload,
+      resetErrorMessages,
       togglePasswordVisibility,
       logUserIn,
     }

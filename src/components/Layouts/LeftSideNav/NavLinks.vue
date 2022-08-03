@@ -2,7 +2,10 @@
   <section class="flex items-center rounded-2xl sm:px-2 mt-10">
     <div class="w-full">
       <router-link :to="`/profile/${auth_user.username}`">
-        <div class="mb-16 flex items-center cursor-pointer">
+        <div
+          @click="closeAllModals"
+          class="mb-16 flex items-center cursor-pointer"
+        >
           <span class="w-12 h-12 lg:w-14 lg:h-14 rounded-full">
             <img
               v-if="auth_user_profile_image !== ''"
@@ -177,6 +180,10 @@ export default {
       store.dispatch('component_handler/closeAllModals')
     }
 
+    const closeAllModals = async () => {
+      store.dispatch('component_handler/closeAllModals')
+    }
+
     const getCurrentActiveRoute = () => {
       current_active_route.value = route.fullPath
     }
@@ -222,6 +229,7 @@ export default {
       auth_user,
       openNewPostModal,
       toggleCurrentActiveNavLink,
+      closeAllModals,
       logUserOut,
     }
   },

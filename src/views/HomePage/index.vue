@@ -83,8 +83,6 @@ import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import MainPageTopBarVue from '@/components/Layouts/MainPageTopBar.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
-import { PostSchema } from '@/controller/typings'
-import { fetchAllPosts } from '@/controller/api/posts.api'
 import AnimatedPostContentVue from '@/components/Animation/AnimatedPostContent.vue'
 
 export default {
@@ -96,19 +94,10 @@ export default {
   },
   setup() {
     const store = useStore()
-    const allPosts = ref<PostSchema[]>([])
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Home', icon: 'fa fa-home' })
     const storePosts = computed(() => store.state._requests.allPosts)
-    const auth_user = computed(() => store.state.users.auth_user)
-
-    const open_new_post_modal = computed(
-      () => store.state.component_handler.open_new_post_modal,
-    )
-    const open_new_comment_modal = computed(
-      () => store.state.component_handler.open_new_comment_modal,
-    )
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -118,12 +107,6 @@ export default {
     const getAllPosts = async () => {
       is_loading.value = true
       updateResponseMessage('', '')
-
-      // if (storePosts.value && storePosts.value.length >= 1) {
-      //   allPosts.value = storePosts.value
-      // } else {
-      //   await fetchPosts()
-      // if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
 
       if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
 
@@ -139,11 +122,11 @@ export default {
           return updateResponseMessage('', '')
         }, 5000)
       }
-      // }
 
       updateResponseMessage('success', '')
       is_loading.value = false
-      // await fetchPosts()
+
+      await fetchPosts()
     }
 
     const scrollToTop = () => {
@@ -162,7 +145,6 @@ export default {
     })
 
     return {
-      auth_user,
       storePosts,
       is_loading,
       message,

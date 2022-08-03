@@ -86,9 +86,6 @@ export default {
     const route = useRoute()
     const username = ref('')
     const auth_user = computed(() => store.state.users.auth_user)
-    const user = computed(() => {
-      return store.state.users.user
-    })
     const storeUsers = computed(() => store.state._requests.allUsers)
     const auth_user_profile = ref({
       _id: '',
@@ -137,7 +134,6 @@ export default {
     })
 
     return {
-      user,
       username,
       auth_user,
       auth_user_profile,

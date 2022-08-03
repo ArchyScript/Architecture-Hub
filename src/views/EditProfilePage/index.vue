@@ -51,14 +51,14 @@
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
+import router from '@/router'
 import TopBarVue from './TopBar.vue'
 import ProfileHeaderVue from './ProfileHeader.vue'
 import EditBioVue from './EditBio.vue'
 import EditProfilePictureVue from './EditProfilePicture.vue'
 import EditAuthInfoVue from './EditAuthInfo.vue'
-import router from '@/router'
-import { useRoute } from 'vue-router'
-import { useStore } from 'vuex'
 import AuthPasswordVue from './PasswordResetSection.vue'
 
 export default {
@@ -74,9 +74,8 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
-    const test_ref = ref('testing')
+    const auth_user = computed(() => store.state.users.auth_user)
     const toggle_active_profile_page_link = ref('Bio')
-
     const profile_page_links = ref([
       {
         title: 'Bio',
@@ -94,10 +93,7 @@ export default {
 
     const toggleActiveProfilePageLink = (current_active: string) => {
       toggle_active_profile_page_link.value = current_active
-      console.log(current_active)
     }
-
-    const auth_user = computed(() => store.state.users.auth_user)
 
     const loadAuthUserInfo = () => {
       const { username } = route.params
@@ -108,13 +104,13 @@ export default {
     const scrollToTop = () => {
       window.scrollTo(0, 0)
     }
+
     onBeforeMount(() => {
       loadAuthUserInfo()
       scrollToTop()
     })
 
     return {
-      test_ref,
       profile_page_links,
       toggle_active_profile_page_link,
       toggleActiveProfilePageLink,

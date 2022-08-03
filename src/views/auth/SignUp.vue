@@ -26,159 +26,155 @@
             {{ message.text }}
           </div>
 
-          <div v-if="!otherLoginOptions">
-            <form @submit="signUserUp">
-              <div class="mb-3 p-1">
-                <label
-                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
-                  for="email"
-                >
-                  Email
-                </label>
+          <form @submit="signUserUp">
+            <div class="mb-3 p-1">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+                for="email"
+              >
+                Email
+              </label>
 
+              <input
+                @input="resetErrorMessages"
+                type="email"
+                class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
+                name="email"
+                placeholder="Email"
+                v-model="payload.email"
+              />
+            </div>
+
+            <div class="mb-3 p-1">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+                for="username"
+              >
+                Username
+              </label>
+
+              <input
+                @input="resetErrorMessages"
+                type="text"
+                class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
+                name="username"
+                placeholder="Username"
+                v-model="payload.username"
+              />
+            </div>
+
+            <div class="mb-3 p-1">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+                for="password"
+              >
+                Password
+              </label>
+
+              <div class="relative">
                 <input
-                  type="email"
+                  @input="resetErrorMessages"
+                  :type="passwordVisibility ? 'text' : 'password'"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
-                  name="email"
-                  placeholder="Email"
-                  v-model="payload.email"
+                  name="password"
+                  placeholder="Password"
+                  v-model="payload.password"
+                  title="toggle password visibility"
                 />
-              </div>
-
-              <div class="mb-3 p-1">
-                <label
-                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
-                  for="username"
+                <span
+                  class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"
+                  @click="togglePasswordVisibility"
                 >
-                  Username
-                </label>
+                  <i
+                    class="fa text-lg sm:text-xl"
+                    :class="
+                      passwordVisibility
+                        ? 'fa fa-eye-slash text-gray-500'
+                        : ' fa-eye  text-gray-700'
+                    "
+                  ></i>
+                </span>
+              </div>
+            </div>
 
+            <div class="mb-3 p-1 relative">
+              <label
+                class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+                for="confirm_password"
+              >
+                Confirm Password
+              </label>
+
+              <div class="relative">
                 <input
-                  type="text"
+                  @input="resetErrorMessages"
+                  :type="passwordVisibility ? 'text' : 'password'"
                   class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
-                  name="username"
-                  placeholder="Username"
-                  v-model="payload.username"
+                  name="confirm_password"
+                  placeholder="Confirm Password"
+                  v-model="payload.confirm_password"
+                  title="toggle password visibility"
                 />
-              </div>
-
-              <div class="mb-3 p-1">
-                <label
-                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
-                  for="password"
+                <span
+                  class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"
+                  @click="togglePasswordVisibility"
                 >
-                  Password
-                </label>
+                  <i
+                    class="fa text-lg sm:text-xl"
+                    :class="
+                      passwordVisibility
+                        ? 'fa fa-eye-slash text-gray-500'
+                        : ' fa-eye  text-gray-700'
+                    "
+                  ></i>
+                </span>
+              </div>
+            </div>
 
-                <div class="relative">
-                  <input
-                    :type="passwordVisibility ? 'text' : 'password'"
-                    class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
-                    name="password"
-                    placeholder="Password"
-                    v-model="payload.password"
-                    title="toggle password visibility"
-                  />
-                  <span
-                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"
-                    @click="togglePasswordVisibility"
+            <div class="text-sm sm:text-base text-grey-dark my-6 px-2">
+              By signing up, you agree to the
+              <a
+                class="no-underline border-b border-grey-dark text-grey-dark"
+                href="#"
+              >
+                Terms of Service
+              </a>
+              and
+              <a
+                class="no-underline border-b border-grey-dark text-grey-dark"
+                href="#"
+              >
+                Privacy Policy
+              </a>
+            </div>
+
+            <div class="mb-1 mt-6 p-1">
+              <button
+                type="submit"
+                class="w-full text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white outline-none my-1"
+              >
+                <div class="w-full flex justify-center items-center space-x-2">
+                  <span>Create a free Account</span>
+
+                  <svg
+                    v-if="is_loading"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-6 h-6 text-white animate-spin"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <i
-                      class="fa text-lg sm:text-xl"
-                      :class="
-                        passwordVisibility
-                          ? 'fa fa-eye-slash text-gray-500'
-                          : ' fa-eye  text-gray-700'
-                      "
-                    ></i>
-                  </span>
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="1"
+                      d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+                    />
+                  </svg>
                 </div>
-              </div>
-
-              <div class="mb-3 p-1 relative">
-                <label
-                  class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
-                  for="confirm_password"
-                >
-                  Confirm Password
-                </label>
-
-                <div class="relative">
-                  <input
-                    :type="passwordVisibility ? 'text' : 'password'"
-                    class="block border rounded-lg sm:rounded-xl w-full p-2 sm:p-3 outline-none text-sm sm:text-base"
-                    name="confirm_password"
-                    placeholder="Confirm Password"
-                    v-model="payload.confirm_password"
-                    title="toggle password visibility"
-                  />
-                  <span
-                    class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"
-                    @click="togglePasswordVisibility"
-                  >
-                    <i
-                      class="fa text-lg sm:text-xl"
-                      :class="
-                        passwordVisibility
-                          ? 'fa fa-eye-slash text-gray-500'
-                          : ' fa-eye  text-gray-700'
-                      "
-                    ></i>
-                  </span>
-                </div>
-              </div>
-
-              <div class="text-sm sm:text-base text-grey-dark my-6 px-2">
-                By signing up, you agree to the
-                <a
-                  class="no-underline border-b border-grey-dark text-grey-dark"
-                  href="#"
-                >
-                  Terms of Service
-                </a>
-                and
-                <a
-                  class="no-underline border-b border-grey-dark text-grey-dark"
-                  href="#"
-                >
-                  Privacy Policy
-                </a>
-              </div>
-
-              <div class="mb-1 mt-6 p-1">
-                <button
-                  type="submit"
-                  class="w-full text-center py-2 sm:py-3 rounded-lg sm:rounded-xl bg-archyhub-main text-white outline-none my-1"
-                >
-                  <div
-                    class="w-full flex justify-center items-center space-x-2"
-                  >
-                    <span>Create a free Account</span>
-
-                    <svg
-                      v-if="is_loading"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="w-6 h-6 text-white animate-spin"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="1"
-                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                      />
-                    </svg>
-                  </div>
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <div v-if="otherLoginOptions" class="my-12">
-            <OtherSigninOptions />
-          </div>
+              </button>
+            </div>
+          </form>
 
           <div class="text-gray-700 mt-6 text-center text-sm sm:text-base">
             Already have an account?
@@ -194,7 +190,6 @@
 </template>
 
 <script lang="ts">
-import OtherSigninOptions from './OtherSigninOptions.vue'
 import { ref } from 'vue'
 import { AuthApiService } from '@/controller/api/auth.api'
 import { useStore } from 'vuex'
@@ -202,15 +197,13 @@ import router from '@/router'
 import { HandleTokenResponse } from '@/controller/utilities/axios_return_response'
 
 export default {
-  name: 'Login',
-  components: {
-    OtherSigninOptions,
-  },
+  name: 'SignUp',
+
   setup() {
     const store = useStore()
     const is_loading = ref(false)
-    const otherLoginOptions = ref(false)
     const passwordVisibility = ref(true)
+    const message = ref({ type: '', text: '' })
     const payload = ref({
       email: '',
       username: '',
@@ -218,13 +211,18 @@ export default {
       confirm_password: '',
     })
 
-    const message = ref({ type: '', text: '' })
-
     const togglePasswordVisibility = () => {
       passwordVisibility.value = !passwordVisibility.value
     }
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
@@ -237,28 +235,13 @@ export default {
       const response: any = await AuthApiService.signup(payload.value)
       const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (error) return updateResponseMessage('error', error)
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      if (!status || status === 400) {
-        updateResponseMessage('error', 'Sorry, an unknown error occurred')
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      updateResponseMessage(
-        'success',
-        'Signup token successfully generated, please wait...',
-      )
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred',
+        )
 
       const token = data.token
       const auth_user_id = await HandleTokenResponse(token)
@@ -268,13 +251,13 @@ export default {
         "You've successfully signed up and logged in, you'll be redirected in a moment",
       )
 
-      await store.dispatch('users/getUser', auth_user_id)
-      // await store.dispatch('users/getAuthUser', auth_user_id)
-      await store.dispatch('users/assignToken', token)
       await assignToken(token)
       await fetchAuthUser(auth_user_id)
 
       is_loading.value = false
+      updateResponseMessage('', '')
+
+      //
       return router.push('/')
     }
 
@@ -287,14 +270,13 @@ export default {
     }
 
     return {
-      otherLoginOptions,
       passwordVisibility,
       is_loading,
       payload,
       message,
-      // toggleSignUpOption,
       togglePasswordVisibility,
       signUserUp,
+      resetErrorMessages,
     }
   },
 }

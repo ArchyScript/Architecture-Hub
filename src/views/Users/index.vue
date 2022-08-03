@@ -103,7 +103,7 @@ import AnimatedUserVue from '@/components/Animation/AnimatedUser.vue'
 import { UserSchema } from '@/controller/typings/index'
 
 export default {
-  name: 'Scholarships',
+  name: 'Users',
   components: {
     MainPageTopBarVue,
     UserContentVue,
@@ -128,7 +128,6 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      //
       if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
       if (!storeUsers.value) {
@@ -146,6 +145,7 @@ export default {
 
       sorted_user_by_no_of_followers.value = []
       sorted_user_by_no_of_followings.value = []
+
       const sortedByMostFollowers = storeUsers.value.sort(
         (user_1: any, user_2: any) => {
           return user_2.followers.length - user_1.followers.length
@@ -186,9 +186,8 @@ export default {
     }
 
     onBeforeMount(async () => {
-      await fetchUsers()
-      // await fetchUsers()
       await fetchAuthUser()
+      await fetchUsers()
       await getUsers()
       scrollToTop()
     })
@@ -198,7 +197,6 @@ export default {
       is_loading,
       message,
       topbar,
-      auth_user,
       sorted_user_by_no_of_followers,
       sorted_user_by_no_of_followings,
       getUsers,

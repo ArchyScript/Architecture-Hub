@@ -155,8 +155,8 @@ export default {
 
       await checkIfPostHaveBeenLikedByAuthUser(reaction_object.value)
       await fetchAuthUser()
-      await checkIfAuthUserCanDeletePost(reaction_object.value)
       await checkIfPostHaveBeenBookmarkedByAuthUser(reaction_object.value)
+      // await checkIfAuthUserCanDeletePost(reaction_object.value)
     }
 
     //

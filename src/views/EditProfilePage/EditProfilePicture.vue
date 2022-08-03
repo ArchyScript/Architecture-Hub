@@ -126,15 +126,22 @@ export default {
     const user_have_profile_picture = ref(false)
     const message = ref({ type: '', text: '' })
     const auth_user = computed(() => store.state.users.auth_user)
-    const user = computed(() => store.state.users.user)
     const storeUsers = computed(() => store.state._requests.allUsers)
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
 
     const onFileChange = async (event: any) => {
+      resetErrorMessages()
       const file = event.target.files[0]
 
       payload.value = file
@@ -237,6 +244,10 @@ export default {
       await store.dispatch('users/getAuthUser', auth_user.value._id)
 
       return router.push(`/profile/${auth_user.value.username}`)
+    }
+
+    async function fetchAuthUser() {
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
     }
 
     onBeforeMount(() => loadAuthUserInfo())

@@ -202,25 +202,25 @@ import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import {
   fetchSingleUserById,
-  fetchSingleUserByUsername,
   followUser,
   unfollowUser,
 } from '@/controller/api/users.api'
-import router from '@/router'
 import {
   formatDateAndTime,
   formatNumbers,
   getDisplayProfilePicture,
 } from '@/controller/utilities'
-// import { VueNotificationList } from '@dafcoe/vue-notification'
 
 export default {
   name: 'ProfileHeader',
-  // components: { VueNotificationList },
   setup() {
     const store = useStore()
     const route = useRoute()
     const user_profile_id: any = ref('')
+    const is_auth_user_a_follower = ref(false)
+    const active_user = computed(() => store.state.users.user)
+    const auth_user = computed(() => store.state.users.auth_user)
+    const storeUsers = computed(() => store.state._requests.allUsers)
     const user_profile = ref({
       _id: '',
       display_name: '',
@@ -232,14 +232,8 @@ export default {
       no_of_followers: 0,
       no_of_followings: 0,
     })
-    const is_auth_user_a_follower = ref(false)
-
-    const active_user = computed(() => store.state.users.user)
-    const auth_user = computed(() => store.state.users.auth_user)
-    const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserData = async (username: any) => {
-      console.log(auth_user.value)
       // check to update auth_user info
       if (username === auth_user.value.username) {
         const {
@@ -354,7 +348,6 @@ export default {
       const { error, data, status } = response
 
       if (error || status === 400 || !data) return
-      console.log(data)
 
       const result = await fetchSingleUserById(user_to_unfollow_id)
 
@@ -377,8 +370,6 @@ export default {
     //
     onBeforeMount(async () => {
       const { username } = route.params
-      console.log(username)
-      // await fetchAuthUser()
       await getUserData(username)
       await fetchUsers()
     })
