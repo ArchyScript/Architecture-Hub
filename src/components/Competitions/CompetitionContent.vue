@@ -104,16 +104,6 @@
     <div class="mt-3 sm:mt-4 lg:mt-6">
       <ReactionsVue :reactions="reactions" />
     </div>
-
-    <!-- <p class="py-2 w-f ull font-normal text-gray-500 space-x-2 italic">
-      <a
-        :href="eachCompetition.link"
-        target="_blank"
-        class="flex justify-center items-center space-x-1 sm:space-x-2 hover:underline"
-      >
-        participate now
-      </a>
-    </p> -->
   </section>
 </template>
 

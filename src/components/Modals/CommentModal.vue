@@ -39,7 +39,7 @@
 
           <div class="">
             <button
-              class="text-md text-archyhub-semi-light bg-archyhub-main hover:text-archyhub-light font-bold rounded-lg sm:rounded-xl md:rounded-2xl py-2 sm:py-3 px-4 sm:px-8"
+              class="text-archyhub-semi-light text-sm sm:text-base lg:text-lg bg-archyhub-main hover:text-archyhub-light font-normal lg:font-medimum rounded-lg sm:rounded-xl md:rounded-lg py-2 sm:py-3 px-4 sm:px-8"
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>{{ is_loading ? 'loading...' : 'Comment' }}</span>

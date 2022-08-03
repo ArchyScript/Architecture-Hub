@@ -3,27 +3,21 @@
     class="fixed md:hidden border-t border-opacity-80 border-archyhub-semi-light bottom-0 inset-x-0 w-full"
   >
     <span
-      class="absolute right-2 bottom-16 sm:right-3 sm:bottom-20 p-2 mr-2 cursor-pointer rounded-full shadow-2xl"
+      class="absolute bg-archyhub-main right-2 bottom-16 sm:right-3 sm:bottom-20 mr-2 cursor-pointer rounded-full shadow-2xl"
       :class="
         current_active_route === '/home'
-          ? 'bg-archyhub-main'
+          ? ''
           : current_active_route === '/competitions'
-          ? ' bg-pink-500'
+          ? ' '
           : current_active_route === '/scholarships'
-          ? 'bg-red-500'
+          ? ''
           : 'hidden'
       "
       @click="openTargettedModal"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        class="w-8 h-8 sm:h-10 sm:w-10 p-2 text-white"
-        viewBox="0 0 448 512"
-      >
-        <path
-          d="M432 256c0 17.69-14.33 32.01-32 32.01H256v144c0 17.69-14.33 31.99-32 31.99s-32-14.3-32-31.99v-144H48c-17.67 0-32-14.32-32-32.01s14.33-31.99 32-31.99H192v-144c0-17.69 14.33-32.01 32-32.01s32 14.32 32 32.01v144h144C417.7 224 432 238.3 432 256z"
-        />
-      </svg>
+      <span
+        class="fa fa-plus text-lg sm:text-xl text-archyhub-light py-3 px-5 sm:py-4 sm:px-6"
+      ></span>
     </span>
 
     <div class="flex items-center bg-archyhub-semi-light bg-opacity-80">

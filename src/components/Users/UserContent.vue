@@ -20,7 +20,7 @@
 
       <div class="mb-1 flex flex-1 px-1 w-full ml-1 sm:ml-2">
         <div class="flex-1 flex-col truncate" v-if="user_info.username !== ''">
-          <div class="flex justify-between items-center space-x-4">
+          <div class="flex justify-between items-center space-x-4 w-full">
             <p class="truncate">
               <router-link
                 :to="`/profile/${user_info.username}`"

@@ -129,7 +129,7 @@ export default {
 
       storeScholarships.value.forEach(
         async (scholarship: any, index: number) => {
-          if (index <= 2) {
+          if (index < 2) {
             const { _id, creator_id, content, title } = scholarship
 
             const latest_scholarship = {

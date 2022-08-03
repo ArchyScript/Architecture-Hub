@@ -126,7 +126,7 @@ export default {
 
       storeCompetitions.value.forEach(
         async (competition: any, index: number) => {
-          if (index <= 2) {
+          if (index < 2) {
             const { _id, creator_id, content, title } = competition
 
             const latest_competition = {

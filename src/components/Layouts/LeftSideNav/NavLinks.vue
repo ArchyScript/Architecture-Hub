@@ -151,6 +151,11 @@ export default {
         icon: 'fa fa-home',
       },
       {
+        route: '/users',
+        title: 'Explore',
+        icon: 'fas fa-users',
+      },
+      {
         route: '/scholarships',
         title: 'Scholarships',
         icon: 'fas fa-award',

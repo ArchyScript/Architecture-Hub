@@ -75,6 +75,20 @@
         <div v-for="(eachUser, index) in storeUsers" :key="index">
           <UserContentVue :eachUser="eachUser" />
         </div>
+
+        <!-- <div
+          v-for="(eachSortedUserByMostFollowings,
+          index) in sorted_user_by_no_of_followings"
+          :key="index"
+        >
+          <UserContentVue :eachUser="eachSortedUserByMostFollowings" />
+        </div> -->
+        <!-- <div
+          v-for="(eachSortedUserByMostFollowers, index) in sorted_user_by_no_of_followers"
+          :key="index"
+        >
+          <UserContentVue :eachUser="eachSortedUserByMostFollowers" />
+        </div> -->
       </div>
     </div>
   </div>
@@ -100,18 +114,10 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Users', icon: 'fas fa-users' })
-    // const storeUsers = computed(
-    //   () => store.state._requests.allScholarships,
-    // )
     const storeUsers = computed(() => store.state._requests.allUsers)
-
     const auth_user = computed(() => store.state.users.auth_user)
-    const open_new_post_modal = computed(
-      () => store.state.component_handler.open_new_post_modal,
-    )
-    const open_new_comment_modal = computed(
-      () => store.state.component_handler.open_new_comment_modal,
-    )
+    const sorted_user_by_no_of_followers = ref<UserSchema[]>([])
+    const sorted_user_by_no_of_followings = ref<UserSchema[]>([])
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -137,6 +143,29 @@ export default {
           return updateResponseMessage('', '')
         }, 5000)
       }
+
+      sorted_user_by_no_of_followers.value = []
+      sorted_user_by_no_of_followings.value = []
+      const sortedByMostFollowers = storeUsers.value.sort(
+        (user_1: any, user_2: any) => {
+          return user_2.followers.length - user_1.followers.length
+        },
+      )
+      const sortedByMostFollowings = storeUsers.value.sort(
+        (user_1: any, user_2: any) => {
+          return user_2.followings.length - user_1.followings.length
+        },
+      )
+
+      //
+      sortedByMostFollowers.forEach(async (more_followers_user: any) => {
+        sorted_user_by_no_of_followers.value.push(more_followers_user)
+      })
+
+      //
+      sortedByMostFollowings.forEach(async (more_followings_user: any) => {
+        sorted_user_by_no_of_followings.value.push(more_followings_user)
+      })
 
       updateResponseMessage('success', '')
       is_loading.value = false
@@ -170,6 +199,8 @@ export default {
       message,
       topbar,
       auth_user,
+      sorted_user_by_no_of_followers,
+      sorted_user_by_no_of_followings,
       getUsers,
     }
   },
