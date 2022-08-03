@@ -1,4 +1,4 @@
-export const formatNumbers = (number: number) => {
+export const formatNumbers = (number: number | any) => {
   if (number > 999 && number < 1000000) return (number / 1000).toFixed(1) + 'K'
 
   if (number > 1000000 && number < 1000000000)

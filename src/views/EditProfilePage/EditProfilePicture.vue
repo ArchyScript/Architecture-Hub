@@ -33,7 +33,7 @@
         <div class="grid gap-3 sm:gap-10 grid-cols-1 sm:grid-cols-2 mt-6">
           <!-- <div class="flex items-center gap-10 justify-around mt-6"> -->
           <label
-            :class="payload ? ' col-span-1' : ' col-span-2'"
+            :class="payload ? 'col-span-1' : ' col-span-2'"
             class="w-full text-center text-sm sm:text-base cursor-pointer py-2 sm:py-3 rounded-lg sm:rounded-xl bg-gray-600 text-white hover:bg-green-dark focus:outline-none my-1"
             for="profile_picture"
           >

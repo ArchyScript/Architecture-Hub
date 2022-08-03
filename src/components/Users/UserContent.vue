@@ -154,6 +154,7 @@ import type { PropType } from 'vue'
 import { ScholarshipSchema, UserSchema } from '@/controller/typings/index'
 import {
   formatDateAndTime,
+  formatNumbers,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
 import { useStore } from 'vuex'
@@ -218,13 +219,17 @@ export default {
 
       user_info.value.display_name = display_name
       user_info.value.description = description
-      user_info.value.followings = followings.length
-      user_info.value.followers = followers.length
       user_info.value.username = username
       user_info.value._id = _id
       user_info.value.time = formattedTime
       user_info.value.date = formattedFullDate
       user_info.value.profile_picture = profile_picture
+
+      const no_of_followers = await formatNumbers(+followers.length)
+      const no_of_followings = await formatNumbers(+followings.length)
+
+      user_info.value.followers = no_of_followers
+      user_info.value.followings = no_of_followings
 
       return await fetchUsers()
     }

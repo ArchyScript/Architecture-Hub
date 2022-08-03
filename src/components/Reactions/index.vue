@@ -94,6 +94,7 @@ import {
 } from '@/controller/api/scholarships'
 import router from '@/router'
 import { useRoute } from 'vue-router'
+import { formatNumbers } from '@/controller/utilities'
 
 export default {
   name: 'Reactions',
@@ -135,13 +136,15 @@ export default {
         no_of_likes,
       } = await props.reactions
 
-      // post_comment_object.value.post_type = post_type
-      // post_comment_object.value.post_id = post_id
-
       reaction_object.value.post_type = post_type
       reaction_object.value.post_id = post_id
-      reaction_object.value.no_of_comments = no_of_comments
-      reaction_object.value.no_of_likes = no_of_likes
+
+      const total_comments = await formatNumbers(+no_of_comments)
+      const total_likes = await formatNumbers(+no_of_likes)
+
+      reaction_object.value.no_of_comments = total_comments
+      reaction_object.value.no_of_likes = total_likes
+
       //
       reaction_object.value.no_of_comments < 1
         ? ''
@@ -338,8 +341,11 @@ export default {
         if (error || status === 400 || !data) return
 
         const { likes, comments } = data
-        reaction_object.value.no_of_comments = comments.length
-        reaction_object.value.no_of_likes = likes.length
+        const total_comments = await formatNumbers(+comments.length)
+        const total_likes = await formatNumbers(+likes.length)
+
+        reaction_object.value.no_of_comments = total_comments
+        reaction_object.value.no_of_likes = total_likes
       }
       if (post_type === 'competition') {
         const response = await fetchSingleCompetition(post_id)
@@ -347,8 +353,11 @@ export default {
         if (error || status === 400 || !data) return
 
         const { likes, comments } = data
-        reaction_object.value.no_of_comments = comments.length
-        reaction_object.value.no_of_likes = likes.length
+        const total_comments = await formatNumbers(+comments.length)
+        const total_likes = await formatNumbers(+likes.length)
+
+        reaction_object.value.no_of_comments = total_comments
+        reaction_object.value.no_of_likes = total_likes
       }
       if (post_type === 'scholarship') {
         const response = await fetchSingleScholarship(post_id)
@@ -356,8 +365,11 @@ export default {
         if (error || status === 400 || !data) return
 
         const { likes, comments } = data
-        reaction_object.value.no_of_comments = comments.length
-        reaction_object.value.no_of_likes = likes.length
+        const total_comments = await formatNumbers(+comments.length)
+        const total_likes = await formatNumbers(+likes.length)
+
+        reaction_object.value.no_of_comments = total_comments
+        reaction_object.value.no_of_likes = total_likes
       }
     }
 

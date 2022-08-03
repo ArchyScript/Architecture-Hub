@@ -209,6 +209,7 @@ import {
 import router from '@/router'
 import {
   formatDateAndTime,
+  formatNumbers,
   getDisplayProfilePicture,
 } from '@/controller/utilities'
 // import { VueNotificationList } from '@dafcoe/vue-notification'
@@ -266,8 +267,12 @@ export default {
         user_profile.value.description = description
         user_profile.value.time = formattedTime
         user_profile.value.date_joined = formattedFullDate
-        user_profile.value.no_of_followers = followers.length
-        user_profile.value.no_of_followings = followings.length
+
+        const no_of_followers = await formatNumbers(+followers.length)
+        const no_of_followings = await formatNumbers(+followings.length)
+
+        user_profile.value.no_of_followers = no_of_followers
+        user_profile.value.no_of_followings = no_of_followings
       }
 
       // get other user details

@@ -2,7 +2,7 @@
   <div
     class="w-full top-0 h-full bg-archyhub-semi-light bg-opacity-20 z-4 border-r border-l"
   >
-    <TopBarVue class="hid den" />
+    <TopBarVue />
 
     <section>
       <router-view></router-view>
@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
-import TopBarVue from './TopBar.vue'
+import TopBarVue from '../../components/Layouts/CommunityTopbar.vue'
 import { useRoute } from 'vue-router'
 
 export default {

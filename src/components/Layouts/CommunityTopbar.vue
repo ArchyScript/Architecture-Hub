@@ -11,22 +11,21 @@
     </div>
 
     <div class="flex-1 items-center px-2">
-      <h4 class="text-base md:text-lg block font-semibold text-gray-600">
+      <h4 class="text-base md:text-lg block font-medium text-gray-600">
         {{
-          user_profile_data.display_name === ''
-            ? user_profile_data.username
-            : user_profile_data.display_name
+          profile_data.display_name === ''
+            ? `@${profile_data.username}`
+            : `${profile_data.display_name} (@${profile_data.username})`
         }}
       </h4>
       <span
         class="text-sm lg:text-base block italic cursor-pointer font-normal text-gray-500 truncate"
       >
-        {{
-          user_profile_data.no_of_posts === 0
-            ? ` ${user_profile_data.no_of_posts} post`
-            : ` ${user_profile_data.no_of_posts} posts`
-        }}
+        {{ profile_data.no_of_followers_or_followings }}
       </span>
+      <!-- <= 1
+            ? `${profile_data.no_of_followers_or_followings} ${profile_data.is_followers_or_followings}`
+            : `${profile_data.no_of_followers_or_followings} ${profile_data.is_followers_or_followings}s` -->
     </div>
   </nav>
 </template>
@@ -35,7 +34,6 @@
 import { onBeforeMount, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { fetchSingleUserByUsername } from '@/controller/api/users.api'
 import { formatNumbers } from '@/controller/utilities'
 
 export default {
@@ -45,33 +43,54 @@ export default {
     const route = useRoute()
     const scrollShadowBoolean = ref(true)
     const router = useRouter()
-    const user_profile_data = ref({
-      no_of_posts: 0,
+    const profile_data = ref({
+      no_of_followers_or_followings: '',
       display_name: '',
       username: '',
     })
     const storeUsers = computed(() => store.state._requests.allUsers)
 
     const getUserProfileData = async () => {
-      const { username } = route.params
+      const { username, followers_or_followings } = route.params
 
-      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
+      if (username && followers_or_followings) {
+        if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
 
-      storeUsers.value.forEach(async (eachUser: any) => {
-        if (eachUser.username === username) {
-          const {
-            bio: { display_name },
-            username,
-            posts,
-          } = eachUser
+        storeUsers.value.forEach(async (eachUser: any) => {
+          if (eachUser.username === username) {
+            const {
+              bio: { display_name },
+              username,
+              followers,
+              followings,
+            } = eachUser
 
-          console.log(eachUser)
+            let no_of_followers_or_followings = ''
 
-          user_profile_data.value.no_of_posts = posts.length
-          user_profile_data.value.display_name = display_name
-          user_profile_data.value.username = username
-        }
-      })
+            if (followers_or_followings === 'followers') {
+              let no_of_follower = await formatNumbers(+followers.length)
+
+              no_of_followers_or_followings =
+                no_of_follower <= 1
+                  ? `${no_of_follower} follower`
+                  : `${no_of_follower} followers`
+            } else {
+              let no_of_followings = await formatNumbers(+followings.length)
+
+              no_of_followers_or_followings =
+                no_of_followings <= 1
+                  ? `${no_of_followings} following`
+                  : `${no_of_followings} followings`
+            }
+
+            profile_data.value.no_of_followers_or_followings = no_of_followers_or_followings
+            profile_data.value.display_name = display_name
+            profile_data.value.username = username
+          }
+        })
+      } else {
+        console.log('hghe')
+      }
     }
 
     async function fetchUsers() {
@@ -100,7 +119,7 @@ export default {
     return {
       scrollShadowBoolean,
       router,
-      user_profile_data,
+      profile_data,
       auth_user,
     }
   },

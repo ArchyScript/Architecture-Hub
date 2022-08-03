@@ -66,8 +66,9 @@ export default {
           } = eachUser
 
           console.log(eachUser)
+          const no_of_posts = await formatNumbers(+posts.length)
 
-          user_profile_data.value.no_of_posts = posts.length
+          user_profile_data.value.no_of_posts = no_of_posts
           user_profile_data.value.display_name = display_name
           user_profile_data.value.username = username
         }
