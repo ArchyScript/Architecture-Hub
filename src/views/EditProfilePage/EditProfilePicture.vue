@@ -75,7 +75,7 @@
     >
       <div class="px-2 sm:px-4 my-4">
         <button
-          class="w-full text-center cursor-pointer py-2 sm:py-3 rounded-lg sm:rounded-xl bg-red-800 text-white focus:outline-none my-1"
+          class="w-full text-center cursor-pointer text-sm sm:text-base py-2 sm:py-3 rounded-lg sm:rounded-xl bg-red-800 text-white focus:outline-none my-1"
         >
           <div class="w-full flex justify-center items-center space-x-2">
             <span>
@@ -158,34 +158,17 @@ export default {
       const response = await uploadProfilePicture(user_id, payload.value)
       const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (error) return updateResponseMessage('error', error)
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
-
-      if (!status || status === 400 || !data) {
-        updateResponseMessage(
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
           'error',
-          'Sorry, an unknown error occurred... Check connection',
+          'Sorry, an unknown error occurred',
         )
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
 
       updateResponseMessage('success', `${data} please wait...'`)
 
-      // await store.dispatch('users/getUser', user_id)
-      await store.dispatch('users/getAuthUser', user_id)
-
-      console.log(auth_user.value)
-
+      await fetchAuthUser()
       is_loading.value = false
 
       return router.push(`/profile/${auth_user.value.username}`)
@@ -193,16 +176,12 @@ export default {
 
     const loadAuthUserInfo = async () => {
       const { username } = route.params
-      console.log(username)
 
-      if (storeUsers.value.length < 1) {
-        await fetchUsers()
-      }
+      if (storeUsers.value.length < 1) await fetchUsers()
 
       storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
           const {
-            _id,
             bio: { gender },
             profile_picture: { avatar },
           } = await eachUser
@@ -211,27 +190,9 @@ export default {
 
           const profile_picture = await getDisplayProfilePicture(avatar, gender)
 
-          image_url.value = profile_picture
-
-          return
+          return (image_url.value = profile_picture)
         }
       })
-
-      // const {
-      //   profile_picture: { avatar },
-      //   bio: { gender },
-      // } = auth_user.value
-
-      // const profile_picture_avatar = await getDisplayProfilePicture(
-      //   avatar,
-      //   gender,
-      // )
-
-      // image_url.value = profile_picture_avatar
-    }
-
-    async function fetchUsers() {
-      await store.dispatch('_requests/getAllUsers')
     }
 
     const removeProfilePicture = async () => {
@@ -241,11 +202,14 @@ export default {
 
       if (error || status === 400 || !data) return (is_loading.value = false)
 
-      await store.dispatch('users/getAuthUser', auth_user.value._id)
-
+      await fetchAuthUser()
       return router.push(`/profile/${auth_user.value.username}`)
     }
 
+    //
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
     async function fetchAuthUser() {
       await store.dispatch('users/getAuthUser', auth_user.value._id)
     }

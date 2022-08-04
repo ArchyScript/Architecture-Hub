@@ -252,13 +252,12 @@ export default {
           'Sorry, an unknown error occurred... Check connection',
         )
 
-      await fetchAuthUser()
-      await fetchUsers()
+      // await fetchAuthUser()
+      // await fetchUsers()
       is_loading.value = false
-      // router.push(`/profile/${auth_user.value.username}`)
 
       await assignToken(null)
-      // router.push('/auth/login')
+      router.push('/auth/login')
     }
 
     async function assignToken(token: any) {

@@ -23,6 +23,7 @@
           </label>
 
           <input
+            @input="resetErrorMessages"
             type="text"
             class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="title"
@@ -40,6 +41,7 @@
           </label>
 
           <input
+            @input="resetErrorMessages"
             type="text"
             class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="host"
@@ -57,6 +59,7 @@
           </label>
 
           <input
+            @input="resetErrorMessages"
             type="text"
             class="w-full text-sm sm:text-base p-2 sm:p-3 mb-1 text-gray-700 bg-archyhub-light bg-opacity-75 focus:outline-none rounded-lg"
             name="link"
@@ -73,6 +76,7 @@
             Description
           </label>
           <textarea
+            @input="resetErrorMessages"
             class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
             placeholder="Describe this Scholarship"
@@ -88,6 +92,7 @@
             Content
           </label>
           <textarea
+            @input="resetErrorMessages"
             class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
             placeholder="Provide litle hint about the scholarship"
@@ -142,7 +147,7 @@
         <div class="flex justify-between items-center mt-20">
           <div class="flex-shrink-0">
             <img
-              class="w-10 h-10 sm:w-12 sm:h-12 md:h-14 md:w-14 rounded-full border"
+              class="w-10 h-10 sm:w-14 sm:h-14 md:h-16 md:w-16 rounded-full border"
               :src="auth_user_profile_picture"
             />
           </div>
@@ -195,6 +200,8 @@ export default {
     const post_id = ref('')
     const image_url = ref('')
     const is_loading = ref(false)
+    const auth_user = computed(() => store.state.users.auth_user)
+    const auth_user_profile_picture = ref('')
     const message = ref({ type: '', text: '' })
     const payload = ref({
       title: '',
@@ -204,8 +211,6 @@ export default {
       content: '',
       image_file: null,
     })
-    const auth_user = computed(() => store.state.users.auth_user)
-    const auth_user_profile_picture = ref('')
 
     const getUserProfilePicture = async () => {
       const {
@@ -221,7 +226,14 @@ export default {
       auth_user_profile_picture.value = profile_picture
     }
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
@@ -236,22 +248,23 @@ export default {
       const response = await createScholarship(creator_id, payload.value)
       const { error, data, status } = response
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
+      if (error) return updateResponseMessage('error', error)
 
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred.. Check internet connection',
+        )
 
-      is_loading.value = false
-
+      updateResponseMessage('success', data)
       await fetchScholarships()
+      is_loading.value = false
+      scrollToTop()
       closeAllModals()
     }
 
     const onFileChange = (e: any) => {
+      resetErrorMessages()
       const file = e.target.files[0]
 
       payload.value.image_file = file
@@ -259,14 +272,14 @@ export default {
     }
 
     //
+    async function fetchScholarships() {
+      await store.dispatch('_requests/getAllScholarships')
+    }
     const closeAllModals = () => {
       store.dispatch('component_handler/closeAllModals')
     }
 
-    //
-    async function fetchScholarships() {
-      await store.dispatch('_requests/getAllScholarships')
-    }
+    const scrollToTop = () => window.scrollTo(0, 0)
 
     onBeforeMount(async () => await getUserProfilePicture())
 
@@ -281,6 +294,7 @@ export default {
       message,
       newScholarship,
       onFileChange,
+      resetErrorMessages,
     }
   },
 }

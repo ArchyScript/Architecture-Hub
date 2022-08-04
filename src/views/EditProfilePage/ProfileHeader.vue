@@ -80,7 +80,7 @@ import {
 } from '@/controller/utilities'
 
 export default {
-  name: 'ProfileHeader',
+  name: 'EditProfileHeader',
   setup() {
     const store = useStore()
     const route = useRoute()

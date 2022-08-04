@@ -34,7 +34,7 @@
           <span v-if="user_profile._id === auth_user._id">
             <router-link :to="`/profile/${user_profile.username}/edit`">
               <span
-                class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-medium bg-archyhub-gray text-gray-700 rounded-md lg:rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+                class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-normal md:font-medium bg-archyhub-gray text-gray-700 rounded-md lg:rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
               >
                 Edit Profile
               </span>
@@ -45,7 +45,7 @@
             <span
               v-if="!is_auth_user_a_follower"
               @click="followRecommended(user_profile._id)"
-              class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-semibold bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              class="py-1 text-xs sm:text-sm lg:text-base inline-flex font-normal md:font-medium bg-archyhub-gray text-gray-700 rounded-xl px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
             >
               follow
             </span>
@@ -53,7 +53,7 @@
             <span
               v-if="is_auth_user_a_follower"
               @click="unfollowRecommended(user_profile._id)"
-              class="btn text-xs sm:text-sm lg:text-base py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
+              class="btn text-xs sm:text-sm lg:text-base font-normal md:font-medium py-1 rounded-lg px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
             >
               unfollow
             </span>

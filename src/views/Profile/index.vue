@@ -110,7 +110,6 @@
                   :eachScholarship="eachPostBoomarkedByUser"
                 />
               </div>
-              <!-- {{ eachPostBoomarkedByUser }} -->
             </div>
           </div>
         </div>
@@ -305,6 +304,7 @@ export default {
     onBeforeMount(async () => {
       await fetchUsers()
       await getAllPostsByUser()
+      getAllPostsByUser()
       scrollToTop()
     })
 

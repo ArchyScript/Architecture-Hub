@@ -216,6 +216,8 @@ export default {
     })
 
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
@@ -240,10 +242,9 @@ export default {
           'Sorry, an unknown error occurred... Check connection',
         )
 
-      console.log(data)
-
       is_loading.value = false
       await assignToken(null)
+      router.push('/auth/login')
     }
 
     async function assignToken(token: any) {

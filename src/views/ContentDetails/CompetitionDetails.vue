@@ -11,7 +11,6 @@
 <script lang="ts">
 import { onBeforeMount, ref } from 'vue'
 import { useRoute } from 'vue-router'
-// import SinglePostDetailsVue from '@/components/Posts/SinglePostDetails.vue'
 import SingleCompetitionDetailsVue from '@/components/Competitions/SingleCompetitionDetails.vue'
 export default {
   name: 'CompetitionDetails',
@@ -19,7 +18,6 @@ export default {
     SingleCompetitionDetailsVue,
   },
   setup() {
-    const test_ref = ref('testing')
     const toggle_active_profile_page_link = ref('Posts')
     const route = useRoute()
     const profile_page_links = ref([
@@ -37,12 +35,6 @@ export default {
       },
     ])
 
-    onBeforeMount(async () => {
-      // const { username } = route.params
-      // const data = await getUserData(username)
-      // console.log(data)
-    })
-
     const getUserData = async (username: string | string[]) => {
       // const response = await fetchSingleUserByUsername(username)
       // const { data, status, error } = response
@@ -51,11 +43,15 @@ export default {
 
     const toggleActiveProfilePageLink = (current_active: string) => {
       toggle_active_profile_page_link.value = current_active
-      console.log(current_active)
     }
 
+    onBeforeMount(async () => {
+      // const { username } = route.params
+      // const data = await getUserData(username)
+      // console.log(data)
+    })
+
     return {
-      test_ref,
       profile_page_links,
       toggle_active_profile_page_link,
       toggleActiveProfilePageLink,

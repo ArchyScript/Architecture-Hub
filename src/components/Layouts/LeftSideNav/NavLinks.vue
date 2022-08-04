@@ -133,20 +133,6 @@ export default {
     const is_loading = ref(false)
     const auth_user_profile_image = ref('')
     const auth_user = computed(() => store.state.users.auth_user)
-
-    const getAuthUserImage = async () => {
-      const {
-        bio: { gender },
-        profile_picture: { avatar },
-      } = auth_user.value
-      const profile_picture_image = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
-
-      auth_user_profile_image.value = profile_picture_image
-    }
-
     const navbar_links = ref([
       {
         route: '/home',
@@ -180,6 +166,19 @@ export default {
       store.dispatch('component_handler/closeAllModals')
     }
 
+    const getAuthUserImage = async () => {
+      const {
+        bio: { gender },
+        profile_picture: { avatar },
+      } = auth_user.value
+      const profile_picture_image = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      auth_user_profile_image.value = profile_picture_image
+    }
+
     const closeAllModals = async () => {
       store.dispatch('component_handler/closeAllModals')
     }
@@ -188,12 +187,24 @@ export default {
       current_active_route.value = route.fullPath
     }
 
-    window.onkeyup = () => getCurrentActiveRoute()
-    window.onscroll = () => getCurrentActiveRoute()
-    window.onresize = () => getCurrentActiveRoute()
+    window.onkeyup = () => {
+      getAuthUserImage()
+      getCurrentActiveRoute()
+    }
+    window.onscroll = () => {
+      getAuthUserImage()
+      getCurrentActiveRoute()
+    }
+    window.onresize = () => {
+      getAuthUserImage()
+      getCurrentActiveRoute()
+    }
 
     //
-    onBeforeMount(async () => await getCurrentActiveRoute())
+    onBeforeMount(async () => {
+      getAuthUserImage()
+      getCurrentActiveRoute()
+    })
 
     //
     const openNewPostModal = () => {

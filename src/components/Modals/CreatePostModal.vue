@@ -5,7 +5,7 @@
     <div
       class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
     >
-      <form class="w-full flex-1" @submit="createPost">
+      <form class="w-full flex-1" @submit.prevent="createPost">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
@@ -23,6 +23,7 @@
           </label>
 
           <textarea
+            @input="resetErrorMessages"
             class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 mb-2 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
             placeholder="Provide litle hint about the competition"
@@ -76,7 +77,7 @@
         <div class="flex justify-between items-center mt-20">
           <div class="flex-shrink-0">
             <img
-              class="w-10 h-10 sm:w-12 sm:h-12 md:h-14 md:w-14 rounded-full border"
+              class="w-10 h-10 sm:w-14 sm:h-14 md:h-16 md:w-16 rounded-full border"
               :src="auth_user_profile_picture"
             />
           </div>
@@ -130,17 +131,15 @@ export default {
   name: 'CreatePostModal',
   setup() {
     const store = useStore()
-    const post_id = ref('')
     const image_url = ref('')
-    const message = ref({ type: '', text: '' })
     const is_loading = ref(false)
+    const auth_user = computed(() => store.state.users.auth_user)
+    const auth_user_profile_picture = ref('')
+    const message = ref({ type: '', text: '' })
     const payload = ref({
       content: '',
       image_file: null,
     })
-
-    const auth_user = computed(() => store.state.users.auth_user)
-    const auth_user_profile_picture = ref('')
 
     const getUserProfilePicture = async () => {
       const {
@@ -156,54 +155,41 @@ export default {
       auth_user_profile_picture.value = profile_picture
     }
 
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
+
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
 
     const createPost = async (event: any) => {
-      event.preventDefault()
       is_loading.value = true
 
-      if (payload.value.content === '') {
-        updateResponseMessage('error', 'content cannot be empty')
-        is_loading.value = false
-
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      if (payload.value.content === '')
+        return updateResponseMessage('error', 'content cannot be empty')
 
       const poster_id = auth_user.value._id
-      updateResponseMessage('', '')
 
       if (payload.value.image_file) {
         const response = await createNewPostWithImage(poster_id, payload.value)
         const { error, data, status } = response
 
-        if (error) {
-          updateResponseMessage('error', error)
-          is_loading.value = false
+        if (error) return updateResponseMessage('error', error)
 
-          return setTimeout(() => {
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
-
-        if (!status || status === 400 || !data) {
-          updateResponseMessage(
+        if (!status || status === 400 || !data)
+          return updateResponseMessage(
             'error',
-            'Sorry, an unknown error occurred... Check connection',
+            'Sorry, an unknown error occurred.. Check internet connection',
           )
 
-          return setTimeout(() => {
-            is_loading.value = false
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
-
-        is_loading.value = false
+        updateResponseMessage('success', data)
         await fetchPosts()
+        is_loading.value = false
         closeAllModals()
       }
 
@@ -215,36 +201,26 @@ export default {
 
         const { error, data, status } = response
 
-        if (error) {
-          updateResponseMessage('error', error)
-          is_loading.value = false
+        if (error) return updateResponseMessage('error', error)
 
-          return setTimeout(() => {
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
-
-        if (!status || status === 400 || !data) {
-          updateResponseMessage(
+        if (!status || status === 400 || !data)
+          return updateResponseMessage(
             'error',
-            'Sorry, an unknown error occurred... Check connection',
+            'Sorry, an unknown error occurred.. Check internet connection',
           )
 
-          return setTimeout(() => {
-            is_loading.value = false
-            return updateResponseMessage('', '')
-          }, 5000)
-        }
-
+        updateResponseMessage('success', data)
         is_loading.value = false
-
         await fetchPosts()
         closeAllModals()
       }
+
+      scrollToTop()
     }
 
     //
     const onFileChange = (e: any) => {
+      resetErrorMessages()
       const file = e.target.files[0]
 
       payload.value.image_file = file
@@ -259,11 +235,13 @@ export default {
       store.dispatch('component_handler/closeAllModals')
     }
 
+    //
+    const scrollToTop = () => window.scrollTo(0, 0)
+
     onBeforeMount(async () => await getUserProfilePicture())
 
     //
     return {
-      post_id,
       is_loading,
       payload,
       auth_user_profile_picture,
@@ -272,6 +250,7 @@ export default {
       auth_user,
       createPost,
       onFileChange,
+      resetErrorMessages,
     }
   },
 }

@@ -1,39 +1,41 @@
 <template>
   <section
-    class="flex justify-center items-center h-full w-full bg-opacity-40 bg-archyhub-main"
+    class="flex flex-col items-center h-full w-full bg-opacity-40 bg-archyhub-main py-10 overflow-scroll"
   >
     <div
-      class="flex shadow-2xl p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-5/6 md:w-3/4 lg:w-1/2"
+      class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
     >
-      <div class="flex-shrink-0 mx-4 hidden sm:inline">
-        <img class="w-20 h-20 rounded-full border" :src="user_profile_avatar" />
-      </div>
-
-      <form class="w-full flex-1" @submit="newComment">
+      <form class="w-full flex-1" @submit.prevent="newComment">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
-          class="text-center font-medium mb-4 px-8"
+          class="text-sm sm:text-base text-center font-normal mb-4 px-4 sm:px-6 lg:px-8"
         >
           {{ message.text }}
         </div>
 
-        <div class="flex flex-col w-full border-b-2 mb-3 border-gray-300">
+        <div class="mb-1 p-1">
+          <label
+            class="block mb-1 mx-2 font-medium text-gray-600 text-sm sm:text-base"
+            for="content"
+          >
+            Comment
+          </label>
+
           <textarea
-            class="w-full text-xl resize-none p-4 mb-3 text-gray-700 bg-archyhub-light bg-opa city-100 focus:outline-none rounded-2xl"
+            @input="resetErrorMessages"
+            class="w-full resize-none font-normal text-sm sm:text-base p-2 sm:p-3 md:p-4 mb-2 text-gray-600 bg-archyhub-light outline-none rounded-lg placeholder-gray-400"
             rows="4"
-            placeholder="Drop your comment..."
+            placeholder="Drop your comment"
             v-model="payload.comment"
           ></textarea>
         </div>
 
-        {{ post_comment_object }}
-
-        <div class="flex justify-between items-center sm:flex-row-reverse">
-          <div class="flex-shrink-0 sm:hidden">
+        <div class="flex justify-between items-center mt-4">
+          <div class="flex-shrink-0">
             <img
-              class="w-12 h-12 rounded-full border"
-              :src="user_profile_avatar"
+              class="w-10 h-10 sm:w-14 sm:h-14 md:h-16 md:w-16 rounded-full border"
+              :src="auth_user_profile_picture"
             />
           </div>
 
@@ -41,8 +43,12 @@
             <button
               class="text-archyhub-semi-light text-sm sm:text-base lg:text-lg bg-archyhub-main hover:text-archyhub-light font-normal lg:font-medimum rounded-lg sm:rounded-xl md:rounded-lg py-2 sm:py-3 px-4 sm:px-8"
             >
-              <div class="w-full flex justify-center items-center space-x-2">
-                <span>{{ is_loading ? 'loading...' : 'Comment' }}</span>
+              <div
+                class="w-full flex justify-center items-center space-x-1 sm:space-x-2"
+              >
+                <span>
+                  {{ is_loading ? 'Loading...' : 'Comment' }}
+                </span>
 
                 <svg
                   v-if="is_loading"
@@ -73,38 +79,49 @@ import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { commentOnPost } from '@/controller/api/reactions.api'
 import { getDisplayProfilePicture } from '@/controller/utilities'
-import router from '@/router'
 
 export default {
   name: 'CreateCommentModal',
 
   setup() {
     const store = useStore()
-    const post_id = ref('')
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
-    const scrollShadowBoolean = ref(true)
-    const side_nav_toggler_boolean = ref(true)
     const payload = ref({ comment: '' })
-    const post_to_comment_on_id = computed(
-      () => store.state.component_handler.post_to_comment_on_id,
-    )
+    const auth_user_profile_picture = ref('')
+    const auth_user = computed(() => store.state.users.auth_user)
     const post_comment_object = computed(
       () => store.state.component_handler.post_comment_object,
     )
-    const user_profile_avatar = ref('')
-    const user = computed(() => store.state.users.user)
-    const auth_user = computed(() => store.state.users.auth_user)
+
+    const getUserProfilePicture = async () => {
+      const {
+        bio: { gender },
+        profile_picture: { avatar },
+      } = auth_user.value
+
+      const profile_picture: any = await getDisplayProfilePicture(
+        avatar,
+        gender,
+      )
+
+      auth_user_profile_picture.value = profile_picture
+    }
+
+    const resetErrorMessages = () => {
+      is_loading.value = false
+      updateResponseMessage('', '')
+    }
 
     const updateResponseMessage = (type: string, text: string) => {
+      if (type === 'error') is_loading.value = false
+
       message.value.type = type
       message.value.text = text
     }
 
     const newComment = async (event: any) => {
-      event.preventDefault()
       is_loading.value = true
-      updateResponseMessage('', '')
 
       const params = {
         commenter_id: auth_user.value._id,
@@ -115,86 +132,53 @@ export default {
       const response = await commentOnPost(params, payload.value)
       const { error, data, status } = response
 
-      console.log(response)
+      if (error) return updateResponseMessage('error', error)
 
-      if (error) {
-        updateResponseMessage('error', error)
-        is_loading.value = false
-
-        return setTimeout(() => {
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
+      if (!status || status === 400 || !data)
+        return updateResponseMessage(
+          'error',
+          'Sorry, an unknown error occurred.. Check internet connection',
+        )
 
       updateResponseMessage('success', data)
 
+      await fetchUsers()
+
+      if (post_comment_object.value === 'post') await fetchPosts()
+      if (post_comment_object.value === 'competition') await fetchCompetitions()
+      if (post_comment_object.value === 'scholarship') await fetchScholarships()
+
+      closeAllModals()
+    }
+
+    //
+    async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
-
-      if (post_comment_object.value === 'post')
-        await store.dispatch('_requests/getAllPosts')
-      if (post_comment_object.value === 'competition')
-        await store.dispatch('_requests/getAllCompetitions')
-      if (post_comment_object.value === 'scholarship')
-        await store.dispatch('_requests/getAllScholarships')
-
+    }
+    async function fetchPosts() {
+      await store.dispatch('_requests/getAllPosts')
+    }
+    async function fetchCompetitions() {
+      await store.dispatch('_requests/getAllCompetitions')
+    }
+    async function fetchScholarships() {
+      await store.dispatch('_requests/getAllScholarships')
+    }
+    const closeAllModals = () => {
       store.dispatch('component_handler/closeAllModals')
-      // return router.push('/')
     }
 
-    // close create post modal
-    // window.addEventListener('click', (event: any) => {
-    //   if (event.target.id === 'create_post_modal') {
-    //     store.dispatch('component_handler/createPostVisibillity')
-    //   }
-    // })
-
-    // onBeforeMount(() => {
-    //   handleScroll()
-    //   window.addEventListener('scroll', () => handleScroll())
-    // })
-
-    // const handleScroll = () => {
-    //   if (window.pageYOffset > 0) {
-    //     // user is scrolled
-    //     if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
-    //   } else {
-    //     // user is at top of page
-    //     if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
-    //   }
-    // }
-
-    // const newComment = (post_id: any) => {
-    //   console.log(post_id)
-    // }
-
-    onBeforeMount(async () => {
-      //
-      user_profile_avatar.value = await getDisplayProfilePicture(
-        user.value.profile_picture.avatar,
-        user.value.bio.gender,
-      )
-      // displayPostReactions()
-    })
-
-    window.onkeyup = () => test
-
-    const test = (event: any) => {
-      console.log(event)
-    }
+    onBeforeMount(async () => getUserProfilePicture())
 
     return {
-      post_id,
-      // likePost,
-      // newComment,
       post_comment_object,
-      user_profile_avatar,
-      scrollShadowBoolean,
+      auth_user_profile_picture,
       is_loading,
       payload,
-      side_nav_toggler_boolean,
       message,
+      resetErrorMessages,
+      getUserProfilePicture,
       newComment,
-      test,
     }
   },
 }
