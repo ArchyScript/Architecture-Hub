@@ -3,9 +3,7 @@ import {
   HandleAxiosResponse,
   HandleAxiosError,
 } from '../utilities/axios_return_response'
-import { formatDateAndTime } from '../utilities'
 
-//
 export const fetchAllScholarships = async () => {
   try {
     const response = await default_axios_instance
@@ -18,7 +16,6 @@ export const fetchAllScholarships = async () => {
   }
 }
 
-//
 export const fetchSingleScholarship = async (scholarships_id: any) => {
   try {
     const response = await default_axios_instance
@@ -31,7 +28,6 @@ export const fetchSingleScholarship = async (scholarships_id: any) => {
   }
 }
 
-//
 export const createScholarship = async (creator_id: any, payload: any) => {
   const { link, host, title, description, content, image_file } = payload
   const formData = new FormData()
@@ -54,7 +50,6 @@ export const createScholarship = async (creator_id: any, payload: any) => {
   }
 }
 
-//
 export const updateScholarship = async (params: any, payload: any) => {
   const { scholarships_id, creator_id } = params
 
@@ -68,7 +63,7 @@ export const updateScholarship = async (params: any, payload: any) => {
     return HandleAxiosError(error)
   }
 }
-//
+
 export const deleteScholarship = async (params: any) => {
   const { scholarships_id, creator_id } = params
   try {

@@ -4,7 +4,6 @@ import {
   HandleAxiosError,
 } from '../utilities/axios_return_response'
 
-//
 export const AuthApiService = {
   async loginWithEmail(payload: any) {
     try {
@@ -29,7 +28,6 @@ export const AuthApiService = {
     }
   },
 
-  //
   async signup(payload: any) {
     try {
       const response = await default_axios_instance
@@ -42,7 +40,6 @@ export const AuthApiService = {
     }
   },
 
-  //
   async resetPassword(payload: any) {
     try {
       const response = await default_axios_instance
@@ -55,10 +52,7 @@ export const AuthApiService = {
     }
   },
 
-  //
   async logout() {
-    console.log(localStorage.getItem('user'))
-
     try {
       const response = await default_axios_instance
         .post(`auth/logout`)

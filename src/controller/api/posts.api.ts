@@ -1,12 +1,9 @@
-// import { default_axios_instance } from './axios_config'
-
+import default_axios_instance from './axios_config'
 import {
   HandleAxiosResponse,
   HandleAxiosError,
 } from '../utilities/axios_return_response'
-import default_axios_instance from './axios_config'
 
-//
 export const fetchAllPosts = async () => {
   try {
     const response = await default_axios_instance
@@ -19,7 +16,6 @@ export const fetchAllPosts = async () => {
   }
 }
 
-//
 export const fetchSinglePost = async (_id: any) => {
   try {
     const response = await default_axios_instance
@@ -32,7 +28,6 @@ export const fetchSinglePost = async (_id: any) => {
   }
 }
 
-//
 export const createNewPost = async (post_id: string | number, payload: any) => {
   try {
     const response = await default_axios_instance
@@ -44,7 +39,7 @@ export const createNewPost = async (post_id: string | number, payload: any) => {
     return HandleAxiosError(error)
   }
 }
-//
+
 export const createNewPostWithoutImage = async (
   poster_id: any,
   content: any,
@@ -53,17 +48,15 @@ export const createNewPostWithoutImage = async (
 
   try {
     const response = await default_axios_instance
-      // .post(`posts/new/62cab7cdc0873b83d04dfd6f`, payload)
       .post(`posts/new/${poster_id}`, payload)
       .then((response) => response)
 
-    console.log(response)
     return HandleAxiosResponse(response)
   } catch (error) {
     return HandleAxiosError(error)
   }
 }
-//
+
 export const createNewPostWithImage = async (
   poster_id: string | number,
   payload: any,
@@ -79,15 +72,12 @@ export const createNewPostWithImage = async (
       .post(`posts/new/upload/${poster_id}`, formData)
       .then((response) => response)
 
-    console.log(response)
-
     return HandleAxiosResponse(response)
   } catch (error) {
     return HandleAxiosError(error)
   }
 }
 
-//
 export const updatePost = async (params: any, payload: any) => {
   const { user_id, post_id } = params
 
@@ -102,7 +92,6 @@ export const updatePost = async (params: any, payload: any) => {
   }
 }
 
-//
 export const deletePost = async (params: any) => {
   const { poster_id, post_id } = params
 

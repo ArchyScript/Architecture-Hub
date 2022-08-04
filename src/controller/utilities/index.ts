@@ -77,11 +77,9 @@ export const getDisplayProfilePicture = (profile_image: any, gender: any) => {
     random: `https://cdn1.vectorstock.com/i/thumb-large/71/90/blank-avatar-photo-icon-design-vector-30257190.jpg`,
   }
 
-  let avatar = ''
+  if (profile_image !== '') return profile_image
 
-  if (profile_image !== '') return (avatar = profile_image)
-
-  if (gender === 'male') return (avatar = default_images.male)
-  if (gender === 'female') return (avatar = default_images.female)
-  else return (avatar = default_images.random)
+  if (gender === 'male') return default_images.male
+  if (gender === 'female') return default_images.female
+  else return default_images.random
 }

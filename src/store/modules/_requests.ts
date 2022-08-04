@@ -77,7 +77,6 @@ export default {
     },
 
     //
-
     getAllPostComments: (state: any) => {
       return state.allPostComments
     },
@@ -192,73 +191,77 @@ export default {
   //
   mutations: {
     SET_SINGLE_USER(state: any, data: any) {
-      console.log(data)
-      // if (!data)return
+      if (!data) return
+
       return (state.singleUser = data)
     },
     SET_SINGLE_POST(state: any, data: any) {
-      console.log(data)
-      // if (!data)return
+      if (!data) return
+
       return (state.singlePost = data)
     },
     SET_SINGLE_COMPETITION(state: any, data: any) {
-      console.log(data)
-      // if (!data)return
+      if (!data) return
+
       return (state.singleCompetition = data)
     },
     SET_SINGLE_SCHOLARSHIP(state: any, data: any) {
-      console.log(data)
-      // if (!data)return
+      if (!data) return
+
       return (state.singleScholarship = data)
     },
     SET_ALL_COMPETITIONS(state: any, data: any) {
       if (!data) return
+
       return (state.allCompetitions = data)
     },
     SET_ALL_SCHOLARSHIPS(state: any, data: any) {
       if (!data) return
-      console.log(data)
+
       return (state.allScholarships = data)
     },
     SET_ALL_USERS(state: any, data: any) {
       if (!data) return
-      // console.log(data)
+
       return (state.allUsers = data)
     },
     SET_ALL_POSTS(state: any, data: any) {
-      // console.log(data)
       if (!data) return
+
       return (state.allPosts = data)
     },
 
     // REACTIONS
     // comments
     SET_ALL_POST_COMMENTS(state: any, data: any) {
-      // console.log(data)
       if (!data) return
+
       return (state.allPostComments = data)
     },
     SET_ALL_COMPETITION_COMMENTS(state: any, data: any) {
       if (!data) return
+
       return (state.allCompetitionComments = data)
     },
     SET_ALL_SCHOLARSHIP_COMMENTS(state: any, data: any) {
       if (!data) return
-      console.log(data)
+
       return (state.allScholarshipComments = data)
     },
     // likes
     SET_ALL_POST_LIKES(state: any, data: any) {
       if (!data) return
+
       return (state.allPostLikes = data)
     },
     SET_ALL_COMPETITION_LIKES(state: any, data: any) {
       if (!data) return
+
       return (state.allCompetitionLikes = data)
     },
     SET_ALL_SCHOLARSHIP_LIKES(state: any, data: any) {
       if (!data) return
-      console.log(data)
+
       return (state.allScholarshipLikes = data)
     },
   },

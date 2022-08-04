@@ -15,7 +15,6 @@ export default {
     },
   },
 
-  //
   getters: {
     getLeftNavVisibillity(state: any) {
       return state.open_left_nav
@@ -46,7 +45,6 @@ export default {
     },
   },
 
-  //
   actions: {
     async openActiveModal({ commit }: any, current_active_modal: string) {
       commit('CLOSE_ALL_MODALS')
@@ -81,7 +79,6 @@ export default {
     },
   },
 
-  //
   mutations: {
     OPEN_ACTIVE_MODAL(state: any, current_active_modal: string) {
       return (state.current_active_modal = current_active_modal)
@@ -113,13 +110,3 @@ export default {
     },
   },
 }
-
-/* 
-    OPEN_LEFT_NAV: (state: any) => (state.open_left_nav = true),
-    OPEN_NEW_POST_MODAL: (state: any) => (state.open_new_post_modal = true),
-    OPEN_NEW_COMPETITION_MODAL: (state: any) =>
-      (state.open_new_competition_modal = true),
-
-    OPEN_NEW_COMMENT_MODAL: (state: any) =>
-      (state.open_new_comment_modal = true),
- */

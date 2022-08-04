@@ -67,8 +67,8 @@ export default {
       },
       {
         route: '/users',
-        title: 'Connections',
-        icon: 'fa fa-search',
+        title: 'Explore',
+        icon: 'fa fa-users',
       },
       {
         route: '/competitions',

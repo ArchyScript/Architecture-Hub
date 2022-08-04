@@ -4,7 +4,6 @@ import {
   HandleAxiosError,
 } from '../utilities/axios_return_response'
 
-//
 export const addToBookmarked = async (params: any) => {
   const { user_id, post_id, post_type } = params
   try {
@@ -18,11 +17,6 @@ export const addToBookmarked = async (params: any) => {
   }
 }
 
-/* 
-router.get('/:post_type/:post_id', singleBookmarkedPost)
-router.patch('/add/:user_id/:post_type/:post_id', addToBookmarked)
-router.patch('/remove/:user_id/:post_type/:post_id', removeFromBookmarked) */
-//
 export const removeFromBookmarked = async (params: any) => {
   const { user_id, post_id, post_type } = params
   try {

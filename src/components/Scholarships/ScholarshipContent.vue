@@ -26,7 +26,7 @@
           <p class="flex justify-between items-center truncate">
             <router-link
               :to="`/profile/${scholarship_info.username}`"
-              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 sm:space-x-2 truncate"
+              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2 truncate"
             >
               <span class="text-sm md:text-base font-semibold truncate">
                 {{

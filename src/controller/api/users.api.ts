@@ -4,7 +4,6 @@ import {
   HandleAxiosError,
 } from '../utilities/axios_return_response'
 
-//
 export const fetchAllUsers = async () => {
   try {
     const response = await default_axios_instance
@@ -17,7 +16,6 @@ export const fetchAllUsers = async () => {
   }
 }
 
-//
 export const fetchSingleUserById = async (_id: any) => {
   try {
     const response = await default_axios_instance
@@ -30,7 +28,6 @@ export const fetchSingleUserById = async (_id: any) => {
   }
 }
 
-//
 export const fetchSingleUserByUsername = async (
   username: string | string[],
 ) => {
@@ -69,21 +66,6 @@ export const updateUserAuth = async (_id: any, payload: any) => {
   }
 }
 
-//
-// export const updateUserData = async (_id: any, payload: any) => {
-
-//   try {
-//     const response = await default_axios_instance
-//       .patch(`users/${_id}`, payload)
-//       .then(async (response) => response)
-
-//     return HandleAxiosResponse(response)
-//   } catch (error) {
-//     return HandleAxiosError(error)
-//   }
-// }
-
-//
 export const deleteUser = async (_id: any) => {
   try {
     const response = await default_axios_instance
@@ -96,7 +78,6 @@ export const deleteUser = async (_id: any) => {
   }
 }
 
-//
 export const uploadProfilePicture = async (_id: any, payload: any) => {
   const formData = new FormData()
   formData.append('profile-picture', payload)
@@ -116,10 +97,7 @@ export const uploadProfilePicture = async (_id: any, payload: any) => {
   }
 }
 
-//
 export const deleteProfilePicture = async (_id: any) => {
-  console.log(_id)
-
   try {
     const response = await default_axios_instance
       .delete(`users/profile/delete/${_id}`)
@@ -131,7 +109,6 @@ export const deleteProfilePicture = async (_id: any) => {
   }
 }
 
-//
 export const followUser = async (params: any) => {
   const { current_user_id, user_to_follow_id } = params
 
@@ -146,7 +123,6 @@ export const followUser = async (params: any) => {
   }
 }
 
-//
 export const unfollowUser = async (params: any) => {
   const { current_user_id, user_to_unfollow_id } = params
 
@@ -161,7 +137,6 @@ export const unfollowUser = async (params: any) => {
   }
 }
 
-// get all user followers
 export const allUserFollowers = async (_id: any) => {
   try {
     const response = await default_axios_instance
@@ -174,7 +149,6 @@ export const allUserFollowers = async (_id: any) => {
   }
 }
 
-// get all user followings
 export const allUserFollowings = async (_id: any) => {
   try {
     const response = await default_axios_instance

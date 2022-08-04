@@ -4,7 +4,6 @@ import {
   HandleAxiosError,
 } from '../utilities/axios_return_response'
 
-//
 export const fetchAllCompetitions = async () => {
   try {
     const response = await default_axios_instance
@@ -17,7 +16,6 @@ export const fetchAllCompetitions = async () => {
   }
 }
 
-//
 export const fetchSingleCompetition = async (competition_id: any) => {
   try {
     const response = await default_axios_instance
@@ -30,7 +28,6 @@ export const fetchSingleCompetition = async (competition_id: any) => {
   }
 }
 
-//
 export const createCompetition = async (creator_id: any, payload: any) => {
   const { link, host, title, description, content, image_file } = payload
   const formData = new FormData()
@@ -53,7 +50,6 @@ export const createCompetition = async (creator_id: any, payload: any) => {
   }
 }
 
-//
 export const updateCompetition = async (params: any, payload: any) => {
   const { competition_id, creator_id } = params
 
@@ -67,7 +63,7 @@ export const updateCompetition = async (params: any, payload: any) => {
     return HandleAxiosError(error)
   }
 }
-//
+
 export const deleteCompetition = async (params: any) => {
   const { competition_id, creator_id } = params
   try {

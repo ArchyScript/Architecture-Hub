@@ -26,7 +26,7 @@
           <p class="flex justify-between items-center truncate">
             <router-link
               :to="`/profile/${competition_info.username}`"
-              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 sm:space-x-2 truncate"
+              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2 truncate"
             >
               <span class="text-sm md:text-base font-semibold truncate">
                 {{
@@ -149,7 +149,6 @@ export default {
       },
     })
 
-    //
     const getCompetitionDetails = async () => {
       const {
         _id,
@@ -161,13 +160,11 @@ export default {
 
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      //
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
       reactions.value.post_comment_object.post_id = _id
       reactions.value.post_comment_object.post_type = 'competition'
 
-      //
       if (storeUsers.value.length < 1) await fetchUsers()
 
       storeUsers.value.forEach(async (user: any) => {
