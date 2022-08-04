@@ -80,37 +80,40 @@
 
         <div class="px-1 sm:px-2 mt-2 md:mt-3">
           <router-link :to="`/posts/${eachPost._id}`">
-            <p class="text-sm md:text-base font-normal text-gray-500 break-all">
-              {{ eachPost.content }}
-            </p>
+            <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
+              <p
+                class="text-sm md:text-base font-normal text-gray-500 break-all"
+              >
+                {{ eachPost.content }}
+              </p>
 
-            <!-- <div class="flex justify-center items-center"> -->
-            <img
-              v-if="eachPost.post_image.avatar !== ''"
-              class="w-full h-60 mt-2 sm:h-72 lg:h-80 object-fill border rounded-xl"
-              :src="eachPost.post_image.avatar"
-            />
-            <!-- </div> -->
+              <img
+                v-if="eachPost.post_image.avatar !== ''"
+                class="w-full h-60 mt-2 sm:h-72 lg:h-80 object-fill border rounded-xl"
+                :src="eachPost.post_image.avatar"
+              />
+            </div>
           </router-link>
         </div>
       </article>
     </div>
 
-    <ReactionsVue :reactions="reactions" />
+    <div>
+      <ReactionsVue :reactions="reactions" />
+    </div>
   </section>
 </template>
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
+import { useStore } from 'vuex'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import { PostSchema } from '@/controller/typings/index'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import router from '@/router'
-import { useStore } from 'vuex'
 
 export default {
   name: 'PostContent',
@@ -123,6 +126,7 @@ export default {
   },
   setup(props: any) {
     const store = useStore()
+    const storeUsers = computed(() => store.state._requests.allUsers)
     const post_info = ref({
       display_name: '',
       poster_id: '',
@@ -139,18 +143,11 @@ export default {
         post_type: '',
       },
     })
-    const storeUsers = computed(() => store.state._requests.allUsers)
-
-    const viewUserProfile = (username: any) => {
-      router.push(`/profile/${username}`)
-      console.log(username)
-    }
 
     const getPostDetails = async () => {
       const { _id, poster_id, createdAt, comments, likes } = props.eachPost
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      //
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
       reactions.value.post_comment_object.post_id = _id
@@ -196,7 +193,6 @@ export default {
     return {
       post_info,
       reactions,
-      viewUserProfile,
       getPostDetails,
     }
   },

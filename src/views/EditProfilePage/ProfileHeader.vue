@@ -95,14 +95,7 @@ export default {
     })
 
     const getUserData = async (username: any) => {
-      // const response = await fetchSingleUserByUsername(username)
-      // const { data, status, error } = response
-
-      // if (error || status === 400 || !data || typeof data === 'string')
-      //   return router.push(`/profile/${username}`)
-      if (storeUsers.value.length < 1) {
-        await fetchUsers()
-      }
+      if (storeUsers.value.length < 1) await fetchUsers()
 
       storeUsers.value.forEach(async (eachUser: any) => {
         if (eachUser.username === username) {
@@ -118,19 +111,19 @@ export default {
           auth_user_profile.value.display_name = display_name
           auth_user_profile.value.username = username
           auth_user_profile.value.profile_picture = profile_picture
-
-          return
         }
       })
     }
+
+    //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
+
     onBeforeMount(async () => {
       const username = route.params.username
 
       await getUserData(username)
-      // username.value = username
     })
 
     return {

@@ -38,16 +38,9 @@ export default {
         icon: 'fa fa-image',
       },
     ])
-    const scrollToTop = () => {
-      window.scrollTo(0, 0)
-    }
+    const scrollToTop = () => window.scrollTo(0, 0)
 
-    onBeforeMount(async () => {
-      scrollToTop()
-      // const { username } = route.params
-      // const data = await getUserData(username)
-      // console.log(data)
-    })
+    onBeforeMount(async () => scrollToTop())
 
     const getUserData = async (username: string | string[]) => {
       // const response = await fetchSingleUserByUsername(username)

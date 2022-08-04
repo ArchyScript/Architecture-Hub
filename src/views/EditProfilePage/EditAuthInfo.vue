@@ -252,8 +252,6 @@ export default {
           'Sorry, an unknown error occurred... Check connection',
         )
 
-      // await fetchAuthUser()
-      // await fetchUsers()
       is_loading.value = false
 
       await assignToken(null)

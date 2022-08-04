@@ -29,7 +29,6 @@
                 class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-100"
                 :src="recommended.profile_image"
               />
-              <!-- :alt="recommended.username" -->
             </router-link>
           </div>
 
@@ -90,10 +89,9 @@
 
 <script lang="ts">
 import { onBeforeMount, ref, computed } from 'vue'
-import { fetchAllUsers } from '@/controller/api/users.api'
+import { useStore } from 'vuex'
 import AnimatedRecommendedVue from '@/components/Animation/AnimatedRecommended.vue'
 import { getDisplayProfilePicture } from '@/controller/utilities'
-import { useStore } from 'vuex'
 import { followUser } from '@/controller/api/users.api'
 
 type RecommendedSchema =
@@ -171,7 +169,7 @@ export default {
         }
       })
 
-      return store.dispatch('_requests/getAllUsers')
+      return fetchUsers()
     }
 
     const followRecommended = async (user_id: string) => {
@@ -194,6 +192,7 @@ export default {
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
+
     //
     onBeforeMount(async () => await getRecommendedPeople())
 

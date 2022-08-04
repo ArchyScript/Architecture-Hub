@@ -2,11 +2,11 @@
   <section
     class="flex flex-col inset-x-0 bg-archyhub-semi-light bg-opacity-20 pb-16"
   >
-    <div class="" v-if="scholarship_info.creator_username === ''">
+    <div v-if="scholarship_info.creator_username === ''">
       <AnimatedSingleContentVue />
     </div>
 
-    <div class="" v-if="scholarship_info.creator_username !== ''">
+    <div v-if="scholarship_info.creator_username !== ''">
       <div class="flex-col w-full p-2 sm:p-3 xl:p-4 pb-2">
         <div class="flex justify-center items-center">
           <span class="flex-shrink-0 mr-3">
@@ -50,9 +50,9 @@
               class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="scholarship_info.date || scholarship_info.time"
             >
-              <span class="">{{ scholarship_info.date }}</span>
+              <span>{{ scholarship_info.date }}</span>
 
-              <span class="">
+              <span>
                 <strong class="font-medium text-gray-600">@</strong>
                 {{ scholarship_info.time }}
               </span>
@@ -128,18 +128,21 @@
         </article>
       </div>
 
-      <div class="">
+      <div>
         <ReactionsVue :reactions="reactions" />
       </div>
 
       <div class="mt-6">
-        <div class="" v-if="does_scholarship_have_comment === false">
-          <span class="block text-center">No comment found</span>
+        <div v-if="does_scholarship_have_comment === false">
+          <span
+            class="block text-center text-gray-700 font-normal text-sm sm:text-base"
+          >
+            No comment found
+          </span>
         </div>
 
         <div v-else>
           <div
-            class=""
             v-for="scholarship_comment in scholarship_comments"
             :key="scholarship_comment.creator_username"
           >
@@ -153,24 +156,15 @@
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
-import type { PropType } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import ReactionsVue from '@/components/Reactions/index.vue'
+import CommentVue from '@/components/Utilities/Comment.vue'
+import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import router from '@/router'
-// import { default_images } from '@/controller/utils/index'
-import { useRoute } from 'vue-router'
-import {
-  singleCommentOnPost,
-  specificComment,
-} from '@/controller/api/reactions.api'
-import CommentVue from '@/components/Utilities/Comment.vue'
-import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-import { fetchSingleScholarship } from '@/controller/api/scholarships'
-import { useStore } from 'vuex'
 
 type CommentSchema =
   | {
@@ -184,11 +178,17 @@ type CommentSchema =
 
 export default {
   name: 'SingleScholarshipDetails',
-  components: { ReactionsVue, AnimatedSingleContentVue, CommentVue },
+  components: {
+    ReactionsVue,
+    AnimatedSingleContentVue,
+    CommentVue,
+  },
 
   setup() {
     const store = useStore()
     const route = useRoute()
+    const does_scholarship_have_comment = ref(false)
+    const scholarship_comments = ref<CommentSchema[]>([])
     const storeUsers = computed(() => store.state._requests.allUsers)
     const storeScholarships = computed(
       () => store.state._requests.allScholarships,
@@ -196,9 +196,6 @@ export default {
     const storeScholarshipComments = computed(
       () => store.state._requests.allScholarshipComments,
     )
-    const does_scholarship_have_comment = ref(false)
-    const scholarship_comments = ref<CommentSchema[]>([])
-    const auth_user = computed(() => store.state.users.auth_user)
     const scholarship_info = ref({
       link: '',
       creator_picture: '',
@@ -241,9 +238,8 @@ export default {
             likes,
             scholarship_image: { avatar },
           } = await eachScholarship
-          const { formattedDate, formattedTime } = await formatDateAndTime(
-            createdAt,
-          )
+
+          const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
           scholarship_info.value.title = title
           scholarship_info.value.content = content
@@ -254,15 +250,14 @@ export default {
           scholarship_info.value.description = description
           scholarship_info.value.scholarship_image = avatar
 
-          //
           reactions.value.no_of_comments = comments.length
           reactions.value.no_of_likes = likes.length
           reactions.value.post_comment_object.post_id = _id
           reactions.value.post_comment_object.post_type = 'scholarship'
 
-          if (storeUsers.value.length < 1) await fetchUsers()
+          if (storeUsers.value && storeUsers.value.length < 1)
+            await fetchUsers()
 
-          //
           storeUsers.value.forEach(async (eachUser: any) => {
             if (eachUser._id === creator_id) {
               const {
@@ -276,7 +271,6 @@ export default {
                 gender,
               )
 
-              //
               scholarship_info.value.display_name = display_name
               scholarship_info.value.creator_username = username
               scholarship_info.value.creator_picture = creator_picture
@@ -298,6 +292,9 @@ export default {
               async (each_store_scholarship_comment: any) => {
                 if (comment_id === each_store_scholarship_comment._id) {
                   const { commenter_id } = each_store_scholarship_comment
+
+                  if (storeUsers.value && storeUsers.value.length < 1)
+                    await fetchUsers()
 
                   storeUsers.value.forEach(async (eachUser: any) => {
                     if (eachUser._id === commenter_id) {
@@ -331,10 +328,13 @@ export default {
           })
         }
       })
-      return
+
+      await fetchScholarships()
+      await fetchAllScholarshipComments()
+      await fetchUsers()
     }
 
-    // fetch data from store
+    //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
@@ -348,9 +348,6 @@ export default {
     //
     onBeforeMount(async () => {
       const { scholarship_id } = route.params
-
-      // await store.dispatch('_requests/getAllScholarships')
-      // await store.dispatch('_requests/getAllUsers')
 
       await getScholarshipDetails(scholarship_id)
     })

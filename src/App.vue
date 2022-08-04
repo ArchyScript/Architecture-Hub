@@ -7,13 +7,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 
-export default defineComponent({
+export default {
   name: 'App',
-
-  data() {
-    return {
-      //
-    }
+  setup() {
+    return {}
   },
-})
+}
 </script>

@@ -67,11 +67,11 @@
 </template>
 
 <script lang="ts">
-import RightSideNav from '../Layouts/RightSideNav/index.vue'
-import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { ref, computed, onBeforeMount } from 'vue'
+import RightSideNav from '../Layouts/RightSideNav/index.vue'
+import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
 import BottomTabVue from '../Layouts/BottomTab.vue'
 import ModalsDisplayVue from './ModalsDisplay.vue'
 
@@ -86,18 +86,10 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
-    const current_active_route = ref('/home')
-    const user = computed(() => store.state.users.user)
     const auth_user = computed(() => store.state.users.auth_user)
     const open_left_nav = computed(
       () => store.state.component_handler.open_left_nav,
     )
-
-    // if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
-    // if (storeScholarships.value && storeScholarships.value.length < 1)
-    //         await fetchScholarships()
-    // if (storeCompetitions.value && storeCompetitions.value.length < 1)
-    //   await fetchCompetitions()
 
     window.addEventListener('click', (event: any) => {
       const nav_modal = document.getElementById('nav_modal')
@@ -111,38 +103,22 @@ export default {
         return closeAllModals()
     })
 
-    const closeAllModals = () =>
-      store.dispatch('component_handler/closeAllModals')
-
-    const openTargettedModal = () => {
-      if (route.fullPath === '/home') return
-      if (route.fullPath === '/competitions')
-        return store.dispatch('component_handler/openNewCompetitionModal')
-      if (route.fullPath === '/scholarships')
-        return store.dispatch('component_handler/openNewScholarshipModal')
-    }
-
     //
-    const openScholarshipModal = () =>
-      store.dispatch('component_handler/openNewScholarshipModal')
-    const openCompetitionModal = () =>
-      store.dispatch('component_handler/openNewCompetitionModal')
-
-    const scrollToTop = () => {
-      window.scrollTo(0, 0)
+    const closeAllModals = () => {
+      store.dispatch('component_handler/closeAllModals')
     }
+
+    const scrollToTop = () => window.scrollTo(0, 0)
 
     onBeforeMount(async () => {
       scrollToTop()
     })
 
     return {
-      user,
       auth_user,
       open_left_nav,
       route,
       closeAllModals,
-      openTargettedModal,
     }
   },
 }

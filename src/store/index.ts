@@ -9,7 +9,6 @@ interface StoreInterface {
   _requests: any
 }
 
-// export default createStore({
 export default createStore<StoreInterface>({
   modules: {
     users,

@@ -21,7 +21,6 @@
       </div>
 
       <div class="flex justify-center items-start">
-        <!-- @click="openTargettedModal(props.page_title)" -->
         <span
           :class="props.page_icon"
           class="hidden md:flex text-xl text-gray-500 hover:bg-archyhub-semi-light hover:bg-opacity-50 px-4 py-3 cursor-pointer rounded-full"
@@ -33,14 +32,14 @@
               class="flex items-center cursor-pointer space-x-2 border border-archyhub-semi-light w-10 h-10 sm:h-12 sm:w-12 rounded-full"
             >
               <img
-                v-if="auth_user_details.profile_image !== ''"
+                v-if="auth_user_details.profile_picture !== ''"
                 class="rounded-full w-full h-full"
-                :src="auth_user_details.profile_image"
+                :src="auth_user_details.profile_picture"
                 :alt="auth_user_details.username"
               />
 
               <div
-                v-if="auth_user_details.profile_image === ''"
+                v-if="auth_user_details.profile_picture === ''"
                 class="w-full h-full bg-gray-400 rounded-full animate-pulse"
               ></div>
             </div>
@@ -71,10 +70,9 @@ export default {
   setup(props: any) {
     const store = useStore()
     const scrollShadowBoolean = ref(true)
-
     const auth_user = computed(() => store.state.users.auth_user)
     const auth_user_details = ref({
-      profile_image: '',
+      profile_picture: '',
       username: '',
     })
 
@@ -84,18 +82,12 @@ export default {
         bio: { gender },
         profile_picture: { avatar },
       } = auth_user.value
-      const picture_image = await getDisplayProfilePicture(avatar, gender)
 
-      auth_user_details.value.profile_image = picture_image
+      const profile_picture = await getDisplayProfilePicture(avatar, gender)
+
+      auth_user_details.value.profile_picture = profile_picture
       auth_user_details.value.username = username
     }
-
-    window.addEventListener('scroll', () => handleScroll())
-
-    onBeforeMount(() => {
-      handleScroll()
-      getAuthUserProfile()
-    })
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -115,9 +107,17 @@ export default {
         return store.dispatch('component_handler/openNewScholarshipModal')
     }
 
+    //
     const openLeftNav = () => {
       return store.dispatch('component_handler/openLeftNav')
     }
+
+    window.addEventListener('scroll', () => handleScroll())
+
+    onBeforeMount(() => {
+      handleScroll()
+      getAuthUserProfile()
+    })
 
     return {
       scrollShadowBoolean,

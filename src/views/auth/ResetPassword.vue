@@ -229,7 +229,6 @@ export default {
           'Sorry, an unknown error occurred... Check connection',
         )
 
-      //
       router.push('/auth/login')
     }
 

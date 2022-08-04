@@ -18,16 +18,6 @@
             : auth_user.bio.display_name
         }}
       </h4>
-
-      <!-- <span
-        class="text-base block italic cursor-pointer font-medium text-gray-500 truncate"
-      >
-        {{
-          auth_user.posts.length === 0
-            ? ` ${auth_user.posts.length} post`
-            : ` ${auth_user.posts.length} posts`
-        }}
-      </span> -->
     </div>
   </nav>
 </template>
@@ -58,6 +48,7 @@ export default {
       handleScroll()
       window.addEventListener('scroll', () => handleScroll())
     })
+
     return {
       scrollShadowBoolean,
       router,

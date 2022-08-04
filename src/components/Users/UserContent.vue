@@ -172,10 +172,12 @@ export default {
       required: true,
     },
   },
+
   setup(props: any) {
     const store = useStore()
     const storeUsers = computed(() => store.state._requests.allUsers)
     const auth_user = computed(() => store.state.users.auth_user)
+    const is_auth_user_a_follower = ref(false)
     const user_info = ref({
       display_name: '',
       _id: '',
@@ -187,8 +189,6 @@ export default {
       followers: 0,
       followings: 0,
     })
-    const is_auth_user_a_follower = ref(false)
-
     const getUserDetails = async (eachUserProps: any) => {
       const {
         _id,
@@ -201,14 +201,11 @@ export default {
       } = eachUserProps
       const { formattedFullDate, formattedTime } = formatDateAndTime(createdAt)
 
-      //
       if (storeUsers.value.length < 1) await fetchUsers()
 
       await auth_user.value.followings.forEach(async (following: any) => {
         if (following.following_id === _id) {
           is_auth_user_a_follower.value = true
-
-          console.log(following.following_id)
         }
       })
 
@@ -251,8 +248,6 @@ export default {
 
       is_auth_user_a_follower.value = true
       user_info.value.followers = result.data.followers.length
-
-      // await fetchUsers()
     }
 
     const unfollowRecommended = async (user_to_unfollow_id: string) => {
@@ -274,11 +269,9 @@ export default {
 
       await fetchAuthUser()
       await fetchUsers()
-      // await fetchUsers()
     }
 
     //
-    // fetch data from store
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }

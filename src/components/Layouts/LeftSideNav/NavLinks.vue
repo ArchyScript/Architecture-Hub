@@ -1,20 +1,20 @@
 <template>
   <section class="flex items-center rounded-2xl sm:px-2 mt-10">
     <div class="w-full">
-      <router-link :to="`/profile/${auth_user.username}`">
+      <router-link :to="`/profile/${auth_user_info.username}`">
         <div
           @click="closeAllModals"
           class="mb-16 flex items-center cursor-pointer"
         >
           <span class="w-12 h-12 lg:w-14 lg:h-14 rounded-full">
             <img
-              v-if="auth_user_profile_image !== ''"
+              v-if="auth_user_info.profile_picture !== ''"
               class="h-full rounded-full w-full"
-              :src="auth_user_profile_image"
+              :src="auth_user_info.profile_picture"
             />
 
             <div
-              v-if="auth_user_profile_image === ''"
+              v-if="auth_user_info.profile_picture === ''"
               class="w-full h-full bg-gray-400 rounded-full animate-pulse"
             ></div>
           </span>
@@ -22,13 +22,13 @@
           <div class="flex-1 ml-2">
             <span class="text-lg block font-semibold text-gray-600 truncate">
               {{
-                auth_user.bio.display_name !== ''
-                  ? auth_user.bio.display_name
-                  : auth_user.username
+                auth_user_info.display_name !== ''
+                  ? auth_user_info.display_name
+                  : auth_user_info.username
               }}
             </span>
             <span class="text-base block font-medium text-gray-500 truncate">
-              @{{ auth_user.username }}
+              @{{ auth_user_info.username }}
             </span>
           </div>
         </div>
@@ -131,8 +131,12 @@ export default {
     const route = useRoute()
     const current_active_route = ref('/home')
     const is_loading = ref(false)
-    const auth_user_profile_image = ref('')
     const auth_user = computed(() => store.state.users.auth_user)
+    const auth_user_info = ref({
+      profile_picture: '',
+      username: '',
+      display_name: '',
+    })
     const navbar_links = ref([
       {
         route: '/home',
@@ -168,19 +172,16 @@ export default {
 
     const getAuthUserImage = async () => {
       const {
-        bio: { gender },
+        username,
+        bio: { gender, display_name },
         profile_picture: { avatar },
       } = auth_user.value
-      const profile_picture_image = await getDisplayProfilePicture(
-        avatar,
-        gender,
-      )
 
-      auth_user_profile_image.value = profile_picture_image
-    }
+      const profile_picture = await getDisplayProfilePicture(avatar, gender)
 
-    const closeAllModals = async () => {
-      store.dispatch('component_handler/closeAllModals')
+      auth_user_info.value.profile_picture = profile_picture
+      auth_user_info.value.username = username
+      auth_user_info.value.display_name = display_name
     }
 
     const getCurrentActiveRoute = () => {
@@ -198,6 +199,11 @@ export default {
     window.onresize = () => {
       getAuthUserImage()
       getCurrentActiveRoute()
+    }
+
+    //
+    const closeAllModals = async () => {
+      store.dispatch('component_handler/closeAllModals')
     }
 
     //
@@ -235,9 +241,8 @@ export default {
       route,
       navbar_links,
       current_active_route,
-      auth_user_profile_image,
+      auth_user_info,
       is_loading,
-      auth_user,
       openNewPostModal,
       toggleCurrentActiveNavLink,
       closeAllModals,

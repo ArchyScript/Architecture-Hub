@@ -142,12 +142,11 @@ export default {
 
       updateResponseMessage('success', data)
 
-      await fetchUsers()
-
       if (post_comment_object.value === 'post') await fetchPosts()
       if (post_comment_object.value === 'competition') await fetchCompetitions()
       if (post_comment_object.value === 'scholarship') await fetchScholarships()
 
+      await fetchUsers()
       closeAllModals()
     }
 

@@ -227,7 +227,6 @@ export default {
       const email_login_payload = { email, password }
       const username_login_payload = { username, password }
 
-      //
       if (login_method.value === 'email') {
         const response = await AuthApiService.loginWithEmail(
           email_login_payload,
@@ -247,7 +246,6 @@ export default {
         auth_user_id = await HandleTokenResponse(token)
       }
 
-      //
       if (login_method.value === 'username') {
         const response = await AuthApiService.loginWithUsername(
           username_login_payload,
@@ -277,7 +275,6 @@ export default {
       is_loading.value = false
       updateResponseMessage('', '')
 
-      //
       return router.push('/')
     }
 

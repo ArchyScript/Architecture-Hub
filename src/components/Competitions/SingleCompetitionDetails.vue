@@ -2,11 +2,11 @@
   <section
     class="flex flex-col inset-x-0 bg-archyhub-semi-light bg-opacity-20 pb-16"
   >
-    <div class="" v-if="competition_info.creator_username === ''">
+    <div v-if="competition_info.creator_username === ''">
       <AnimatedSingleContentVue />
     </div>
 
-    <div class="" v-if="competition_info.creator_username !== ''">
+    <div v-if="competition_info.creator_username !== ''">
       <div class="flex-col w-full p-2 sm:p-3 xl:p-4 pb-2">
         <div class="flex justify-center items-center">
           <span class="flex-shrink-0 mr-3">
@@ -50,9 +50,9 @@
               class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
               v-if="competition_info.date || competition_info.time"
             >
-              <span class="">{{ competition_info.date }}</span>
+              <span>{{ competition_info.date }}</span>
 
-              <span class="">
+              <span>
                 <strong class="font-medium text-gray-600">@</strong>
                 {{ competition_info.time }}
               </span>
@@ -128,12 +128,12 @@
         </article>
       </div>
 
-      <div class="">
+      <div>
         <ReactionsVue :reactions="reactions" />
       </div>
 
       <div class="mt-6">
-        <div class="" v-if="does_competition_have_comment === false">
+        <div v-if="does_competition_have_comment === false">
           <span
             class="block text-center text-gray-700 font-normal text-sm sm:text-base"
           >
@@ -143,7 +143,6 @@
 
         <div v-else>
           <div
-            class=""
             v-for="competition_comment in competition_comments"
             :key="competition_comment.creator_username"
           >
@@ -157,24 +156,15 @@
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
-import type { PropType } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 import ReactionsVue from '@/components/Reactions/index.vue'
+import CommentVue from '@/components/Utilities/Comment.vue'
+import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import router from '@/router'
-// import { default_images } from '@/controller/utils/index'
-import { useRoute } from 'vue-router'
-import {
-  singleCommentOnPost,
-  specificComment,
-} from '@/controller/api/reactions.api'
-import CommentVue from '@/components/Utilities/Comment.vue'
-import AnimatedSingleContentVue from '@/components/Animation/AnimatedSingleDetail.vue'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-import { fetchSingleCompetition } from '@/controller/api/competitions'
-import { useStore } from 'vuex'
 
 type CommentSchema =
   | {
@@ -188,14 +178,24 @@ type CommentSchema =
 
 export default {
   name: 'SingleCompetitionDetails',
-  components: { ReactionsVue, AnimatedSingleContentVue, CommentVue },
+  components: {
+    ReactionsVue,
+    AnimatedSingleContentVue,
+    CommentVue,
+  },
 
   setup() {
     const store = useStore()
     const route = useRoute()
     const does_competition_have_comment = ref(false)
     const competition_comments = ref<CommentSchema[]>([])
-    const auth_user = computed(() => store.state.users.auth_user)
+    const storeUsers = computed(() => store.state._requests.allUsers)
+    const storeCompetitions = computed(
+      () => store.state._requests.allCompetitions,
+    )
+    const storeCompetitionComments = computed(
+      () => store.state._requests.allCompetitionComments,
+    )
     const competition_info = ref({
       link: '',
       creator_picture: '',
@@ -209,13 +209,6 @@ export default {
       time: '',
       date: '',
     })
-    const storeUsers = computed(() => store.state._requests.allUsers)
-    const storeCompetitions = computed(
-      () => store.state._requests.allCompetitions,
-    )
-    const storeCompetitionComments = computed(
-      () => store.state._requests.allCompetitionComments,
-    )
     const reactions = ref({
       no_of_likes: 0,
       no_of_comments: 0,
@@ -245,6 +238,7 @@ export default {
             likes,
             competition_image: { avatar },
           } = eachCompetition
+
           const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
           competition_info.value.title = title
@@ -256,15 +250,14 @@ export default {
           competition_info.value.description = description
           competition_info.value.competition_image = avatar
 
-          //
           reactions.value.no_of_comments = comments.length
           reactions.value.no_of_likes = likes.length
           reactions.value.post_comment_object.post_id = _id
           reactions.value.post_comment_object.post_type = 'competition'
 
-          if (storeUsers.value.length < 1) await fetchUsers()
+          if (storeUsers.value && storeUsers.value.length < 1)
+            await fetchUsers()
 
-          //
           storeUsers.value.forEach(async (eachUser: any) => {
             if (eachUser._id === creator_id) {
               const {
@@ -278,7 +271,6 @@ export default {
                 gender,
               )
 
-              //
               competition_info.value.display_name = display_name
               competition_info.value.creator_username = username
               competition_info.value.creator_picture = creator_picture
@@ -301,8 +293,8 @@ export default {
                 if (comment_id === each_store_competition_comment._id) {
                   const { commenter_id } = each_store_competition_comment
 
-                  //
-                  if (storeUsers.value.length < 1) await fetchUsers()
+                  if (storeUsers.value && storeUsers.value.length < 1)
+                    await fetchUsers()
 
                   storeUsers.value.forEach(async (eachUser: any) => {
                     if (eachUser._id === commenter_id) {
@@ -311,6 +303,7 @@ export default {
                         profile_picture: { avatar },
                         bio: { gender },
                       } = eachUser
+
                       const commenter_image: any = await getDisplayProfilePicture(
                         avatar,
                         gender,
@@ -335,10 +328,13 @@ export default {
           })
         }
       })
-      return
+
+      await fetchCompetitions()
+      await fetchAllCompetitionComments()
+      await fetchUsers()
     }
 
-    // fetch data from store
+    //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
@@ -352,9 +348,6 @@ export default {
     //
     onBeforeMount(async () => {
       const { competition_id } = route.params
-
-      // await store.dispatch('_requests/getAllCompetitions')
-      // await store.dispatch('_requests/getAllUsers')
 
       await getCompetitionDetails(competition_id)
     })

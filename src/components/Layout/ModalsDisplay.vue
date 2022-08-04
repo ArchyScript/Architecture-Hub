@@ -83,7 +83,6 @@ export default {
   },
   setup() {
     const store = useStore()
-    const current_active_modal = ref('')
     const open_new_post_modal = computed(
       () => store.state.component_handler.open_new_post_modal,
     )
@@ -97,11 +96,12 @@ export default {
       () => store.state.component_handler.open_new_comment_modal,
     )
 
-    const closeAllModals = () =>
+    //
+    const closeAllModals = () => {
       store.dispatch('component_handler/closeAllModals')
+    }
 
     return {
-      current_active_modal,
       open_new_post_modal,
       open_new_competition_modal,
       open_new_scholarship_modal,

@@ -1,9 +1,7 @@
 <template>
   <section
-    class="flex flex-col items-center inset-x-0 mt-2 bg-archyhub-semi-light bg-opacity-40"
+    class="flex flex-col items-center mt-1 xl:mt-2 inset-x-0 bg-archyhub-semi-light bg-opacity-40"
   >
-    <!-- {{ reaction_object }} -->
-
     <div class="w-full flex items-center justify-around space-x-2">
       <span
         :title="`Comment on ${reaction_object.post_type}`"
@@ -42,7 +40,6 @@
         </span>
       </span>
 
-      <!--  -->
       <span
         :title="`Bookmark ${reaction_object.post_type}`"
         class="flex-1 space-x-1 items-center cursor-pointer text-center text-purple-500 font-bold hover:bg-purple-200 hover:bg-opacity-20"
@@ -60,7 +57,6 @@
         ></span>
       </span>
 
-      <!--  -->
       <span
         :title="`Delete ${reaction_object.post_type}`"
         :class="is_auth_user_creator_of_post ? 'hidden' : 'hidden'"
@@ -79,10 +75,7 @@
 import { ref, onBeforeMount, computed } from 'vue'
 import { useStore } from 'vuex'
 import { createNewLike, reverseLike } from '@/controller/api/reactions.api'
-import {
-  addToBookmarked,
-  removeFromBookmarked,
-} from '@/controller/api/bookmarks.api'
+import { formatNumbers } from '@/controller/utilities'
 import { deletePost, fetchSinglePost } from '@/controller/api/posts.api'
 import {
   deleteCompetition,
@@ -92,9 +85,10 @@ import {
   deleteScholarship,
   fetchSingleScholarship,
 } from '@/controller/api/scholarships'
-import router from '@/router'
-import { useRoute } from 'vue-router'
-import { formatNumbers } from '@/controller/utilities'
+import {
+  addToBookmarked,
+  removeFromBookmarked,
+} from '@/controller/api/bookmarks.api'
 
 export default {
   name: 'Reactions',
@@ -110,17 +104,16 @@ export default {
     const current_liked_post_id = ref('')
     const storeUsers = computed(() => store.state._requests.allUsers)
     const storePostLikes = computed(() => store.state._requests.allPostLikes)
+    const is_post_bookmarked_by_auth_user = ref(false)
+    const is_post_liked_by_auth_user = ref(false)
+    const like_id = ref('')
+    const is_auth_user_creator_of_post = ref(false)
     const storeCompetitionLikes = computed(
       () => store.state._requests.allCompetitionLikes,
     )
     const storeScholarshipLikes = computed(
       () => store.state._requests.allScholarshipLikes,
     )
-    const is_post_bookmarked_by_auth_user = ref(false)
-    const is_post_liked_by_auth_user = ref(false)
-    const post_comment_object = ref({ post_id: '', post_type: '' })
-    const like_id = ref('')
-    const is_auth_user_creator_of_post = ref(false)
     const reaction_object = ref({
       post_type: '',
       post_id: '',
@@ -128,7 +121,6 @@ export default {
       no_of_likes: 0,
     })
 
-    //
     const displayPostReactions = async () => {
       const {
         post_comment_object: { post_type, post_id },
@@ -145,7 +137,6 @@ export default {
       reaction_object.value.no_of_comments = total_comments
       reaction_object.value.no_of_likes = total_likes
 
-      //
       reaction_object.value.no_of_comments < 1
         ? ''
         : reaction_object.value.no_of_comments
@@ -156,23 +147,18 @@ export default {
       await checkIfPostHaveBeenLikedByAuthUser(reaction_object.value)
       await fetchAuthUser()
       await checkIfPostHaveBeenBookmarkedByAuthUser(reaction_object.value)
-      // await checkIfAuthUserCanDeletePost(reaction_object.value)
     }
 
-    //
     const checkIfAuthUserCanDeletePost = async (object_params: any) => {
       const { post_id, post_type } = object_params
 
       is_auth_user_creator_of_post.value = false
 
-      //
       if (post_type === 'post') {
         if (auth_user.value.posts.length < 1) return
 
         auth_user.value.posts.forEach(async (each_auth_user_post: any) => {
-          console.log(each_auth_user_post)
           if (each_auth_user_post.post_id === post_id) {
-            console.log(post_id)
             return (is_auth_user_creator_of_post.value = true)
           }
         })
@@ -209,7 +195,6 @@ export default {
     const checkIfPostHaveBeenBookmarkedByAuthUser = async (
       object_params: any,
     ) => {
-      //
       if (storeUsers.value.length < 1) await fetchUsers()
       is_post_bookmarked_by_auth_user.value = false
 
@@ -235,7 +220,6 @@ export default {
     const checkIfPostHaveBeenLikedByAuthUser = async (object_params: any) => {
       is_post_liked_by_auth_user.value = false
 
-      //
       if (object_params.post_type === 'post') {
         if (storePostLikes.value.length < 1) await fetchAllPostLikes()
 
@@ -250,7 +234,7 @@ export default {
           }
         })
       }
-      //
+
       if (object_params.post_type === 'competition') {
         if (storeCompetitionLikes.value.length < 1)
           await fetchAllCompetitionLikes()
@@ -268,7 +252,7 @@ export default {
           },
         )
       }
-      //
+
       if (object_params.post_type === 'scholarship') {
         if (storeScholarshipLikes.value.length < 1)
           await fetchAllScholarshipLikes()
@@ -303,7 +287,6 @@ export default {
           post_type,
         }
 
-        //
         const response = await reverseLike(params)
 
         const { error, data, status } = response
@@ -334,7 +317,6 @@ export default {
       await checkIfPostHaveBeenLikedByAuthUser(object_params)
 
       //
-      // fetch post deatails to get no. of likes and no. of comments
       if (post_type === 'post') {
         const response = await fetchSinglePost(post_id)
         const { error, data, status } = response
@@ -347,6 +329,7 @@ export default {
         reaction_object.value.no_of_comments = total_comments
         reaction_object.value.no_of_likes = total_likes
       }
+
       if (post_type === 'competition') {
         const response = await fetchSingleCompetition(post_id)
         const { error, data, status } = response
@@ -359,6 +342,7 @@ export default {
         reaction_object.value.no_of_comments = total_comments
         reaction_object.value.no_of_likes = total_likes
       }
+
       if (post_type === 'scholarship') {
         const response = await fetchSingleScholarship(post_id)
         const { error, data, status } = response
@@ -397,13 +381,11 @@ export default {
         const { error, data, status } = response
         if (error || status === 400 || !data) return
 
-        console.log(data)
         is_post_bookmarked_by_auth_user.value = true
       }
 
       await fetchUsers()
       await checkIfPostHaveBeenBookmarkedByAuthUser(object_params)
-      console.log('data')
     }
 
     const handleDeletion = async (object_params: any) => {
@@ -419,6 +401,7 @@ export default {
         const { error, data, status } = response
         if (error || status === 400 || !data) return
       }
+
       if (post_type === 'competition') {
         const params = {
           competition_id: post_id,
@@ -449,27 +432,15 @@ export default {
       }
       if (post_type === 'competition') {
         await fetchCompetitions()
-        // fetchCompetitions()
+        fetchCompetitions()
       }
       if (post_type === 'scholarship') {
         await fetchScholarships()
-        // fetchScholarships()
+        fetchScholarships()
       }
-
-      console.log(reaction_object.value)
-      console.log(useRoute().fullPath)
-      console.log(props.reactions)
-      // await fetchAuthUser()
-      // await fetchAuthUser()
-      // router.push(useRoute().fullPath)
     }
 
     //
-    const commentOnPost = (params: any) => {
-      store.dispatch('component_handler/getPostCommentObject', params)
-    }
-
-    // fetch data from store
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
@@ -494,6 +465,9 @@ export default {
     const fetchAllScholarshipLikes = async () => {
       await store.dispatch('_requests/getAllScholarshipLikes')
     }
+    const commentOnPost = (params: any) => {
+      store.dispatch('component_handler/getPostCommentObject', params)
+    }
 
     //
     onBeforeMount(async () => {
@@ -501,10 +475,6 @@ export default {
     })
 
     return {
-      auth_user,
-      like_id,
-      // no_of_likes,
-      // post_comment_object,
       is_post_liked_by_auth_user,
       current_liked_post_id,
       is_post_bookmarked_by_auth_user,

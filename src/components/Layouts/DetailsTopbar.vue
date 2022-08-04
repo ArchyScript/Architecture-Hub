@@ -110,6 +110,7 @@ export default {
       }
     }
 
+    //
     async function fetchUsers() {
       return await store.dispatch('_requests/getAllUsers')
     }

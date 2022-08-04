@@ -101,7 +101,6 @@ export default {
       () => store.state._requests.allCompetitions,
     )
 
-    //
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
       message.value.text = text
@@ -111,7 +110,6 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
-      //
       if (storeCompetitions.value && storeCompetitions.value.length < 1)
         await fetchCompetitions()
 
@@ -134,18 +132,24 @@ export default {
     }
 
     //
-    const scrollToTop = () => {
-      window.scrollTo(0, 0)
-    }
+    const scrollToTop = () => window.scrollTo(0, 0)
 
     //
     async function fetchCompetitions() {
       await store.dispatch('_requests/getAllCompetitions')
     }
+    async function fetchAllCompetitionComments() {
+      await store.dispatch('_requests/getAllCompetitionComments')
+    }
+    const fetchAllCompetitionLikes = async () => {
+      await store.dispatch('_requests/getAllCompetitionLikes')
+    }
 
     //
     onBeforeMount(async () => {
       await getAllCompetitions()
+      await fetchAllCompetitionLikes()
+      await fetchAllCompetitionComments()
       scrollToTop()
     })
 

@@ -21,12 +21,10 @@ export default {
 
   setup() {
     const scrollShadowBoolean = ref(true)
-    const navbarTogglerIsOpenBoolean = ref(false)
-    const image_link = ref("require('@/assets/mysquareroof/squareroof2.png')")
 
-    onBeforeMount(() => {
-      window.addEventListener('scroll', () => handleScroll())
-    })
+    window.addEventListener('scroll', () => handleScroll())
+
+    onBeforeMount(() => handleScroll())
 
     const handleScroll = () => {
       if (window.pageYOffset > 0) {
@@ -40,8 +38,6 @@ export default {
 
     return {
       scrollShadowBoolean,
-      navbarTogglerIsOpenBoolean,
-      image_link,
     }
   },
 }

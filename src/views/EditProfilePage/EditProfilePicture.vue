@@ -223,9 +223,9 @@ export default {
       message,
       payload,
       is_loading,
+      user_have_profile_picture,
       uploadPicture,
       removeProfilePicture,
-      user_have_profile_picture,
     }
   },
 }

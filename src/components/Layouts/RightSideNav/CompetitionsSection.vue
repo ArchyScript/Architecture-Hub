@@ -41,13 +41,13 @@
 
             <div class="flex-1 truncate mr-4">
               <span
-                class="text-base block font-medium text-gray-700 truncate text-ellipsis dark:text-white"
+                class="text-base block font-medium text-gray-700 truncate text-ellipsis break-all"
               >
                 {{ competition.title }}
               </span>
             </div>
 
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-gray-700 break-all">
               {{
                 is_more_description_boolean &&
                 read_more_competition_id == competition._id
@@ -86,7 +86,6 @@
 import { onBeforeMount, ref, computed } from 'vue'
 import { useStore } from 'vuex'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
-import { fetchAllCompetitions } from '@/controller/api/competitions'
 
 type CompetitonSchema =
   | {
@@ -108,7 +107,6 @@ export default {
     const storeCompetitions = computed(
       () => store.state._requests.allCompetitions,
     )
-    const auth_user = computed(() => store.state.users.auth_user)
 
     const toggleDescriptionLength = (competition_id: string) => {
       if (read_more_competition_id.value === competition_id) {
@@ -118,7 +116,6 @@ export default {
 
       is_more_description_boolean.value = true
       read_more_competition_id.value = competition_id
-      console.log(competition_id)
     }
 
     const getCompetitions = async () => {
@@ -140,8 +137,6 @@ export default {
           }
         },
       )
-
-      // await fetchCompetitions()
     }
 
     //
@@ -149,7 +144,6 @@ export default {
       await store.dispatch('_requests/getAllCompetitions')
     }
 
-    //
     onBeforeMount(async () => await getCompetitions())
 
     return {

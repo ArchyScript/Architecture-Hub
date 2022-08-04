@@ -257,7 +257,6 @@ export default {
       is_loading.value = false
       updateResponseMessage('', '')
 
-      //
       return router.push('/')
     }
 

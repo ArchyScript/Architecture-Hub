@@ -80,55 +80,45 @@
     <article class="w-full px-2 sm:px-3 xl:px-4 pb-2">
       <div class="px-1 sm:px-2 mt-2">
         <router-link :to="`/scholarships/${eachScholarship._id}`">
-          <span
-            class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
-          >
-            {{ eachScholarship.title }}
-          </span>
+          <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
+            <span
+              class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
+            >
+              {{ eachScholarship.title }}
+            </span>
 
-          <img
-            v-if="eachScholarship.scholarship_image.avatar !== ''"
-            class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-5 object-fill border rounded-xl"
-            :src="eachScholarship.scholarship_image.avatar"
-          />
+            <img
+              v-if="eachScholarship.scholarship_image.avatar !== ''"
+              class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-5 object-fill border rounded-xl"
+              :src="eachScholarship.scholarship_image.avatar"
+            />
 
-          <span
-            class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
-          >
-            {{ eachScholarship.description }}
-          </span>
+            <span
+              class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
+            >
+              {{ eachScholarship.description }}
+            </span>
+          </div>
         </router-link>
       </div>
     </article>
 
-    <div class="mt-3 sm:mt-4 lg:mt-6">
+    <div>
       <ReactionsVue :reactions="reactions" />
     </div>
-
-    <!-- <p class="py-2 w-f ull font-normal text-gray-500 space-x-2 italic">
-      <a
-        :href="eachScholarship.link"
-        target="_blank"
-        class="flex justify-center items-center space-x-1 sm:space-x-2 hover:underline"
-      >
-        participate now
-      </a>
-    </p> -->
   </section>
 </template>
 
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
+import { useStore } from 'vuex'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import { ScholarshipSchema } from '@/controller/typings/index'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import router from '@/router'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-import { useStore } from 'vuex'
 
 export default {
   name: 'ScholarshipContent',
@@ -142,7 +132,6 @@ export default {
   setup(props: any) {
     const store = useStore()
     const storeUsers = computed(() => store.state._requests.allUsers)
-    const allUsers = ref([])
     const scholarship_info = ref({
       display_name: '',
       creator_id: '',
@@ -160,6 +149,7 @@ export default {
       },
     })
 
+    //
     const getScholarshipDetails = async () => {
       const {
         _id,
@@ -168,6 +158,7 @@ export default {
         comments,
         likes,
       } = props.eachScholarship
+
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
       //
@@ -204,7 +195,7 @@ export default {
       return await fetchUsers()
     }
 
-    // fetch data from store
+    //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }

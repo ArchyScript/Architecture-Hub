@@ -211,10 +211,6 @@ export default {
       payload.value.email = email
     }
 
-    onBeforeMount(() => {
-      loadAuthUserInfo()
-    })
-
     const updateResponseMessage = (type: string, text: string) => {
       if (type === 'error') is_loading.value = false
 
@@ -252,6 +248,10 @@ export default {
     }
 
     //
+    onBeforeMount(() => {
+      loadAuthUserInfo()
+    })
+
     return {
       payload,
       is_loading,

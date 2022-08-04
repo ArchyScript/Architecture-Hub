@@ -80,28 +80,30 @@
     <article class="w-full px-2 sm:px-3 xl:px-4 pb-2">
       <div class="px-1 sm:px-2 mt-2">
         <router-link :to="`/competitions/${eachCompetition._id}`">
-          <span
-            class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
-          >
-            {{ eachCompetition.title }}
-          </span>
+          <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
+            <span
+              class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
+            >
+              {{ eachCompetition.title }}
+            </span>
 
-          <img
-            v-if="eachCompetition.competition_image.avatar !== ''"
-            class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 object-fill border rounded-xl"
-            :src="eachCompetition.competition_image.avatar"
-          />
+            <img
+              v-if="eachCompetition.competition_image.avatar !== ''"
+              class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 object-fill border rounded-xl"
+              :src="eachCompetition.competition_image.avatar"
+            />
 
-          <span
-            class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
-          >
-            {{ eachCompetition.description }}
-          </span>
+            <span
+              class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
+            >
+              {{ eachCompetition.description }}
+            </span>
+          </div>
         </router-link>
       </div>
     </article>
 
-    <div class="mt-3 sm:mt-4 lg:mt-6">
+    <div>
       <ReactionsVue :reactions="reactions" />
     </div>
   </section>
@@ -110,15 +112,13 @@
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
+import { useStore } from 'vuex'
 import ReactionsVue from '@/components/Reactions/index.vue'
 import { CompetitionSchema } from '@/controller/typings/index'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import router from '@/router'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-import { useStore } from 'vuex'
 
 export default {
   name: 'CompetitionContent',
@@ -158,6 +158,7 @@ export default {
         comments,
         likes,
       } = props.eachCompetition
+
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
       //
@@ -194,7 +195,7 @@ export default {
       return await fetchUsers()
     }
 
-    // fetch data from store
+    //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }

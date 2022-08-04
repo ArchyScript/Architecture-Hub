@@ -87,12 +87,6 @@ export default {
       },
     ])
 
-    window.onkeyup = () => (current_active_route.value = route.fullPath)
-    window.onscroll = () => (current_active_route.value = route.fullPath)
-    window.onresize = () => (current_active_route.value = route.fullPath)
-
-    onBeforeMount(() => (current_active_route.value = route.fullPath))
-
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
     }
@@ -105,6 +99,12 @@ export default {
       if (current_active_route.value === '/scholarships')
         return store.dispatch('component_handler/openNewScholarshipModal')
     }
+
+    window.onkeyup = () => (current_active_route.value = route.fullPath)
+    window.onscroll = () => (current_active_route.value = route.fullPath)
+    window.onresize = () => (current_active_route.value = route.fullPath)
+
+    onBeforeMount(() => (current_active_route.value = route.fullPath))
 
     return {
       bottom_bar_links,

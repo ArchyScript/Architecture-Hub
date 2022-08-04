@@ -5,7 +5,7 @@
     <div
       class="flex flex-col shadow-2xl my-auto p-3 md:p-4 lg:p-6 border rounded-md bg-archyhub-semi-light w-11/12 sm:w-3/4 md:w-2/3 lg:w-1/2"
     >
-      <form class="w-full flex-1" @submit="newScholarship">
+      <form class="w-full flex-1" @submit.prevent="newScholarship">
         <div
           v-if="message.type !== ''"
           :class="message.type === 'error' ? 'text-red-500' : 'text-green-500'"
@@ -239,7 +239,6 @@ export default {
     }
 
     const newScholarship = async (event: any) => {
-      event.preventDefault()
       is_loading.value = true
 
       const creator_id = auth_user.value._id

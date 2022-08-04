@@ -38,13 +38,11 @@
 <script lang="ts">
 import { ref, onBeforeMount } from 'vue'
 import type { PropType } from 'vue'
+import { fetchSingleUserById } from '@/controller/api/users.api'
 import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
-import { fetchSingleUserById } from '@/controller/api/users.api'
-// import { default_images } from '@/controller/utils/index'
-import router from '@/router'
 
 type CommentSchema =
   | {
@@ -87,20 +85,17 @@ export default {
         comments,
         likes,
       } = props.eachPostComment
+
       const { formattedDate, formattedTime } = formatDateAndTime(createdAt)
 
-      //
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
       reactions.value.post_id = _id
 
-      //
       const response = await fetchSingleUserById(poster_id)
       const { error, data, status } = response
 
-      if (error) return
-      if (!data) return
-      if (status === 400) return
+      if (!status || status === 400 || !data) return
 
       const {
         username,
@@ -119,14 +114,9 @@ export default {
       post_info.value.time = formattedTime
       post_info.value.date = formattedDate
       post_info.value.profile_picture_avatar = profile_picture_avatar
-
-      return
     }
 
-    onBeforeMount(async () => {
-      await getPostCommentDetails()
-      // getPostCommentDetails()
-    })
+    onBeforeMount(async () => await getPostCommentDetails())
 
     return {
       post_info,

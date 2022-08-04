@@ -3,14 +3,17 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 // Default Layout and entry point
 const DefaultLayout = () => import('@/components/Layout/DefaultLayout.vue')
-// const PageContentLayout = () => import('@/components/Layout/PageContentLayout.vue')
+
+// User Authentication
+const AuthLayout = () => import('@/views/auth/AuthLayout.vue')
+const Login = () => import('@/views/auth/Login.vue')
+const SignUp = () => import('@/views/auth/SignUp.vue')
+const ResetPassword = () => import('@/views/auth/ResetPassword.vue')
 
 //
 const HomePage = () => import('@/views/HomePage/index.vue')
 const Competitions = () => import('@/views/Competitions/index.vue')
 const Scholarships = () => import('@/views/Scholarships/index.vue')
-// const Explore = () => import('@/views/Explore/index.vue')
-// const NewsUpdate = () => import('@/views/NewsUpdate/index.vue')
 const Profile = () => import('@/views/Profile/index.vue')
 const EditProfilePage = () => import('@/views/EditProfilePage/index.vue')
 const Users = () => import('@/views/Users/index.vue')
@@ -23,16 +26,6 @@ const CompetitionDetails = () =>
   import('@/views/ContentDetails/CompetitionDetails.vue')
 const ScholarshipDetails = () =>
   import('@/views/ContentDetails/ScholarshipDetails.vue')
-// const SinglePostDetails = () =>
-//   import('@/views/Profile copy/SinglePostDetails.vue')
-
-// const QuickSearch = () => import('@/components/Layouts/RightSideNav/index.vue')
-
-// User Authentication
-const AuthLayout = () => import('@/views/auth/AuthLayout.vue')
-const Login = () => import('@/views/auth/Login.vue')
-const SignUp = () => import('@/views/auth/SignUp.vue')
-const ResetPassword = () => import('@/views/auth/ResetPassword.vue')
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -132,9 +125,6 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  // scrollBehavior() {
-  //   return { x: 0, y: 0 };
-  // },
 })
 
 router.beforeEach((to, from, next) => {
@@ -146,8 +136,6 @@ router.beforeEach((to, from, next) => {
   // and redirect the user to his or her dashboard
   // OR better put check if the user is logged in and tries to access any auth page
   // ELSE go to the route the wants to access
-  console.log(store.state.users)
-  console.log(store.state.users.token)
 
   if (to.meta.requiredAuth && !store.state.users.token) {
     router.push('/auth/login')

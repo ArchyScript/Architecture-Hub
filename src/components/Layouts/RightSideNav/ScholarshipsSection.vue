@@ -41,13 +41,13 @@
 
             <div class="flex-1 truncate mr-4">
               <span
-                class="text-base block font-medium text-gray-700 truncate text-ellipsis dark:text-white"
+                class="text-base block font-medium text-gray-700 truncate text-ellipsis break-all"
               >
                 {{ scholarship.title }}
               </span>
             </div>
 
-            <p class="text-sm text-gray-700">
+            <p class="text-sm text-gray-700 break-all">
               {{
                 is_more_description_boolean &&
                 read_more_scholarship_id == scholarship._id
@@ -56,7 +56,7 @@
               }}
               <span
                 @click="toggleDescriptionLength(scholarship._id)"
-                class="py-1 pl-1 pr-3 font-semibold text-gray-700 border-gray-200 cursor-pointer"
+                class="py-1 pl-1 pr-3 font-medium text-gray-700 border-gray-200 cursor-pointer"
               >
                 {{
                   is_more_description_boolean &&
@@ -86,14 +86,10 @@
 import { onBeforeMount, ref, computed } from 'vue'
 import AnimatedLatestVue from '@/components/Animation/AnimatedLatest.vue'
 import { useStore } from 'vuex'
-import { fetchAllScholarships } from '@/controller/api/scholarships'
-// import { default_images } from '@/controller/utils'
-// import { fetchSingleUserById } from '@/controller/api/users.api'
 
 type ScholarshipSchema =
   | {
       _id: any
-      // scholarship_image: string
       creator_id: any
       content: string
       title: string
@@ -112,7 +108,6 @@ export default {
       () => store.state._requests.allScholarships,
     )
 
-    //
     const toggleDescriptionLength = (user_id: string) => {
       if (read_more_scholarship_id.value === user_id) {
         is_more_description_boolean.value = false
@@ -121,7 +116,6 @@ export default {
 
       is_more_description_boolean.value = true
       read_more_scholarship_id.value = user_id
-      console.log(user_id)
     }
 
     const getScholarships = async () => {
@@ -143,8 +137,6 @@ export default {
           }
         },
       )
-
-      // await fetchScholarships()
     }
 
     //
@@ -152,10 +144,7 @@ export default {
       await store.dispatch('_requests/getAllScholarships')
     }
 
-    //
-    onBeforeMount(() => {
-      getScholarships()
-    })
+    onBeforeMount(() => getScholarships())
 
     return {
       is_more_description_boolean,
