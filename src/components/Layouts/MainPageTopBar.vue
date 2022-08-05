@@ -3,7 +3,7 @@
     :class="{ scrolled: !scrollShadowBoolean }"
     class="flex sticky items-center top-0 inset-x-0 pt-2 pb-2 md:pt-4 md:pb-4 xl:pt-8"
   >
-    <div class="w-full flex justify-between items-center px-4">
+    <div class="w-full flex justify-between items-center px-2 sm:px-4">
       <div class="flex items-center spacex-2">
         <span
           @click="openLeftNav"

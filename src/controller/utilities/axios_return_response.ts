@@ -44,9 +44,8 @@ export const HandleTokenResponse = async (token: any) => {
   const decoded_token: any = JWT_DECODE(token)
   const { user_id } = decoded_token
 
-  // save token to localstorage
-  localStorage.removeItem('user_token')
-  localStorage.setItem('user_token', token)
+  sessionStorage.removeItem('architecture_hub_user_token')
+  sessionStorage.setItem('architecture_hub_user_token', token)
 
   return user_id
 }

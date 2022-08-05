@@ -186,7 +186,6 @@ export default {
 
   setup() {
     const store = useStore()
-    const is_typing = ref(true)
     const is_loading = ref(false)
     const login_with_email = ref(true)
     const login_method = ref('')

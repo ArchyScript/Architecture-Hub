@@ -1,3 +1,4 @@
+import { tokenVerification } from '@/controller/utilities/token_verification'
 import store from '@/store'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
@@ -127,7 +128,7 @@ const router = createRouter({
   routes,
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   // to and from are both route objects. must call `next`.
   // First checks if the route we want to access requires a token (login or signup)
   // and as well checks if the user has a token (from the store => token can be goten when user login or signup)
@@ -136,6 +137,9 @@ router.beforeEach((to, from, next) => {
   // and redirect the user to his or her dashboard
   // OR better put check if the user is logged in and tries to access any auth page
   // ELSE go to the route the wants to access
+
+  const token = sessionStorage.getItem('architecture_hub_user_token')
+  if (token) await tokenVerification(token)
 
   if (to.meta.requiredAuth && !store.state.users.token) {
     router.push('/auth/login')

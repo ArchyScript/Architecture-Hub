@@ -69,7 +69,7 @@
           </div>
 
           <blockquote
-            class="text-xs sm:text-sm md:text-base font-normal my-1 text-gray-500 truncate"
+            class="text-xs sm:text-sm md:text-base break-all font-normal my-1 text-gray-500 truncate"
           >
             {{ user_info.description }}
           </blockquote>
