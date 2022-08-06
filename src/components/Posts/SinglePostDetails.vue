@@ -1,48 +1,40 @@
 <template>
   <section
-    class="flex flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-10 pb-16"
+    class="flex flex-col inset-x-0 min-h-screen hover:bg-archyhub-semi-light hover:bg-opacity-10 pb-16"
   >
     <div class="" v-if="post_info.username === ''">
       <AnimatedSingleContentVue />
     </div>
 
-    <div class="" v-if="post_info.username !== ''">
+    <div v-if="post_info.username !== ''">
       <div class="flex-col w-full p-2 sm:p-3 xl:p-4 pb-2">
-        <div class="flex justify-center items-center">
-          <span class="flex-shrink-0 mr-3">
+        <div class="flex items-center">
+          <span class="flex-shrink-0 mr-2 sm:mr-3">
             <router-link :to="`/profile/${post_info.username}`">
               <img
-                class="w-12 h-12 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
+                class="w-10 h-10 sm:h-14 sm:w-14 rounded-full border cursor-pointer"
                 :src="post_info.poster_picture"
               />
             </router-link>
           </span>
 
           <div class="flex-1 flex-col truncate">
-            <p class="items-center flex justify-between">
-              <router-link
-                :to="`/profile/${post_info.username}`"
-                class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2"
-              >
-                <span class="text-base md:text-lg font-semibold truncate">
-                  {{
-                    post_info.display_name
-                      ? post_info.display_name
-                      : post_info.username
-                  }}
-                </span>
+            <router-link
+              :to="`/profile/${post_info.username}`"
+              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2"
+            >
+              <span class="text-base md:text-lg font-semibold truncate">
+                {{
+                  post_info.display_name
+                    ? post_info.display_name
+                    : post_info.username
+                }}
+              </span>
 
-                <span class="text-sm md:text-base font-normal truncate">
-                  @{{ post_info.username }}
-                </span>
-              </router-link>
-
-              <!-- <span
-                class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
-              >
-                <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
-              </span> -->
-            </p>
+              <span class="text-sm md:text-base font-normal truncate">
+                @{{ post_info.username }}
+              </span>
+            </router-link>
 
             <p
               class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
@@ -58,38 +50,36 @@
           </div>
         </div>
 
-        <article class="w-full flex-1 mt-4">
-          <div class="px-1 sm:px-2 mt-2">
-            <p
-              class="text-base sm:text-lg xl:text-xl font-normal text-gray-500 break-all"
-            >
-              {{ post_info.post_content }}
-            </p>
+        <article class="w-full flex-1 mt-6 px-1 sm:px-2">
+          <p
+            class="text-base sm:text-lg xl:text-xl font-normal text-gray-500 break-all"
+          >
+            {{ post_info.post_content }}
+          </p>
 
+          <div
+            v-if="post_info.post_image !== ''"
+            class="w-full flex justify-center items-center h-60 mt-4 sm:h-80 lg:h-96 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
+          >
             <img
-              v-if="post_info.post_image !== ''"
-              class="w-full h-60 mt-4 sm:h-80 lg:h-96 object-fill border rounded-xl"
+              class="w-auto h-auto max-h-full object-fill rounded-xl"
               :src="post_info.post_image"
             />
           </div>
         </article>
       </div>
 
-      <div class="">
-        <ReactionsVue :reactions="reactions" />
-      </div>
+      <ReactionsVue :reactions="reactions" />
 
       <div class="mt-6">
-        <div class="" v-if="!does_post_have_comment">
-          <span
-            class="block text-center text-gray-700 font-normal text-sm sm:text-base"
-          >
-            No comment found
-          </span>
+        <div
+          class="block text-center text-gray-700 font-normal text-sm sm:text-base"
+          v-if="!does_post_have_comment"
+        >
+          No comment found
         </div>
 
         <div
-          class=""
           v-else
           v-for="post_comment in post_comments"
           :key="post_comment.username"

@@ -10,9 +10,7 @@
           id="nav_modal"
         >
           <!-- open_left_nav ? 'hidden md:block fixed' : 'hidden ' -->
-          <div
-            class="w-3/4 sm:w-3/5 md:w-2/5 md: h-full shadow-md min-h-screen"
-          >
+          <div class="w-3/4 sm:w-3/5 md:w-2/5 h-full shadow-md min-h-screen">
             <LeftSideNav />
           </div>
 
@@ -29,7 +27,7 @@
         <section class="grid grid-cols-9">
           <!-- entry point -->
           <main
-            class="rela tive col-span-full bg-archyhub-semi-light bg-opacity-20 md:col-span-5 min-h-screen pb-20 md:pb-8"
+            class="col-span-full bg-archyhub-semi-light bg-opacity-20 md:col-span-5 min-h-screen pb-10 md:pb-4"
           >
             <router-view :key="route.fullPath"></router-view>
           </main>

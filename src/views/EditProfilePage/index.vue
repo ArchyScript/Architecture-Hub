@@ -103,7 +103,18 @@ export default {
 
     const scrollToTop = () => window.scrollTo(0, 0)
 
+    const redirectToLoginPage = async () => {
+      await store.dispatch('users/assignToken', null)
+
+      router.push('/auth/login')
+    }
+
     onBeforeMount(() => {
+      const { username } = route.params
+
+      if (username === null || username === undefined || username === '')
+        return redirectToLoginPage()
+
       loadAuthUserInfo()
       scrollToTop()
     })

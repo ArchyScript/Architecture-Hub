@@ -1,6 +1,6 @@
 <template>
   <section
-    class="flex flex-col animate-pulse inset-x-0 border-b hover:bg-archyhub-semi-light hover:bg-opacity-20"
+    class="flex flex-col animate-pulse inset-x-0 hover:bg-archyhub-semi-light hover:bg-opacity-20"
   >
     <div class="flex justify-between items-center p-2 sm:p-3 xl:p-4">
       <div class="h-2 bg-gray-400 rounded-xl w-1/3 mb-1"></div>

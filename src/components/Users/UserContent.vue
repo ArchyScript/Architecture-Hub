@@ -1,78 +1,75 @@
 <template>
   <section
-    class="flex-col inset-x-0 border-b hover:bg-archyhub-semi-light hover:shadow-sm hover:bg-opacity-20"
+    class="inset-x-0 border-b hover:bg-archyhub-semi-light hover:shadow-sm hover:bg-opacity-20"
   >
-    <div class="flex w-full p-2 sm:p-3 xl:p-4 pb-2">
-      <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
-        <router-link :to="`/profile/${user_info.username}`">
-          <img
-            v-if="user_info.profile_picture !== ''"
-            class="w-full h-full rounded-full border cursor-pointer"
-            :src="user_info.profile_picture"
-          />
-        </router-link>
+    <div class="w-full p-2 sm:p-3 xl:p-4 pb-2">
+      <div class="px-1 mb-1 w-full" v-if="user_info.username !== ''">
+        <div
+          class="flex truncate justify-between items-center space-x-2 sm:space-x-4 w-full"
+        >
+          <router-link
+            :to="`/profile/${user_info.username}`"
+            :title="`${user_info.display_name}   @${user_info.username}`"
+            class="items-center space-x-1 sm:space-x-2 justify-center flex cursor-pointer text-gray-600 hover:underline hover:text-archyhub-main truncate"
+          >
+            <router-link
+              :to="`/profile/${user_info.username}`"
+              class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1 inline-flex"
+            >
+              <img
+                v-if="user_info.profile_picture !== ''"
+                class="w-full h-full rounded-full border cursor-pointer"
+                :src="user_info.profile_picture"
+              />
+            </router-link>
 
-        <span
-          v-if="user_info.profile_picture === ''"
-          class="block w-full h-full rounded-full border cursor-pointer bg-gray-500 animate-pulse"
-        ></span>
-      </div>
-
-      <div class="mb-1 flex flex-1 px-1 w-full ml-1 sm:ml-2">
-        <div class="flex-1 flex-col truncate" v-if="user_info.username !== ''">
-          <div class="flex justify-between items-center space-x-4 w-full">
-            <p class="truncate">
-              <router-link
-                :to="`/profile/${user_info.username}`"
-                class="items-center text-gray-600 flex space-x-1 sm:space-x-2 hover:underline hover:text-archyhub-main truncate"
-              >
-                <span class="text-sm md:text-base font-semibold truncate">
-                  {{
-                    user_info.display_name
-                      ? user_info.display_name
-                      : user_info.username
-                  }}
-                </span>
-
-                <span class="text-sm md:text-base font-normal truncate">
-                  @{{ user_info.username }}
-                </span>
-              </router-link>
-            </p>
-
-            <span :class="user_info._id === auth_user._id ? 'hidden' : 'flex'">
-              <span
-                class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 flex-1 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
-                @click="followRecommended(user_info._id)"
-                v-if="!is_auth_user_a_follower"
-              >
-                follow
-              </span>
-
-              <span
-                @click="unfollowRecommended(user_info._id)"
-                v-if="is_auth_user_a_follower"
-                class="btn py-1 text-xs md:text-sm rounded-lg px-2 md:px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
-              >
-                unfollow
-              </span>
+            <span class="text-sm md:text-base font-semibold truncate">
+              {{
+                user_info.display_name
+                  ? user_info.display_name
+                  : user_info.username
+              }}
             </span>
 
-            <span :class="user_info._id === auth_user._id ? 'flex' : 'hidden'">
-              <router-link
-                :to="`/profile/${user_info.username}`"
-                class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 border cursor-pointer hover:bg-gray-700 hover:text-gray-100 border-gray-700"
-              >
-                View Profile
-              </router-link>
+            <span class="text-sm md:text-base font-normal truncate">
+              @{{ user_info.username }}
             </span>
-          </div>
+          </router-link>
 
-          <blockquote
-            class="text-xs sm:text-sm md:text-base break-all font-normal my-1 text-gray-500 truncate"
+          <span :class="user_info._id === auth_user._id ? 'hidden' : 'flex'">
+            <span
+              class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 flex-1 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              @click="followRecommended(user_info._id)"
+              v-if="!is_auth_user_a_follower"
+            >
+              follow
+            </span>
+
+            <span
+              @click="unfollowRecommended(user_info._id)"
+              v-if="is_auth_user_a_follower"
+              class="btn py-1 text-xs md:text-sm rounded-lg px-2 md:px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
+            >
+              unfollow
+            </span>
+          </span>
+
+          <span :class="user_info._id === auth_user._id ? 'flex' : 'hidden'">
+            <router-link
+              :to="`/profile/${user_info.username}`"
+              class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 border cursor-pointer hover:bg-gray-700 hover:text-gray-100 border-gray-700"
+            >
+              View Profile
+            </router-link>
+          </span>
+        </div>
+
+        <div class="ml-12 sm:ml-14">
+          <p
+            class="text-xs sm:text-sm md:text-base break-all font-normal my-1 text-gray-500 flex-wrap"
           >
             {{ user_info.description }}
-          </blockquote>
+          </p>
 
           <p class="text-base mt-1 sm:mt-2 truncate">
             <span class="fa fa-calendar text-sm mr-2 text-gray-400"></span>
@@ -84,13 +81,13 @@
           <p
             class="flex items-center text-xs md:text-sm xl:text-base mt-4 space-x-4 md:space-x-6 truncate"
           >
-            <span class="flex space-x-2">
+            <span class="flex space-x-1 sm:space-x-2 truncate">
               <span v-if="user_info.followings < 1">
                 <span class="text-gray-600 font-bold">
                   {{ user_info.followings }}
                 </span>
 
-                <span class="text-gray-500">
+                <span class="text-gray-500 truncate">
                   following
                 </span>
               </span>
@@ -104,22 +101,28 @@
                   {{ user_info.followings }}
                 </span>
 
-                <span class="font-normal" v-if="user_info.followings === 1">
+                <span
+                  class="font-normal truncate"
+                  v-if="user_info.followings === 1"
+                >
                   following
                 </span>
-                <span class="font-normal" v-if="user_info.followings > 1">
+                <span
+                  class="font-normal truncate"
+                  v-if="user_info.followings > 1"
+                >
                   followings
                 </span>
               </router-link>
             </span>
 
-            <span class="flex space-x-2">
+            <span class="flex space-x-1 sm:space-x-2 truncate">
               <span v-if="user_info.followers < 1">
                 <span class="text-gray-600 font-bold">
                   {{ user_info.followers }}
                 </span>
 
-                <span class="text-gray-500">
+                <span class="text-gray-500 truncate">
                   follower
                 </span>
               </span>
@@ -133,10 +136,16 @@
                   {{ user_info.followers }}
                 </span>
 
-                <span class="font-normal" v-if="user_info.followers === 1">
+                <span
+                  class="font-normal truncate"
+                  v-if="user_info.followers === 1"
+                >
                   follower
                 </span>
-                <span class="font-normal" v-if="user_info.followers > 1">
+                <span
+                  class="font-normal truncate"
+                  v-if="user_info.followers > 1"
+                >
                   followers
                 </span>
               </router-link>
@@ -151,7 +160,7 @@
 <script lang="ts">
 import { ref, onBeforeMount, computed } from 'vue'
 import type { PropType } from 'vue'
-import { ScholarshipSchema, UserSchema } from '@/controller/typings/index'
+import { UserSchema } from '@/controller/typings/index'
 import {
   formatDateAndTime,
   formatNumbers,
@@ -163,6 +172,7 @@ import {
   followUser,
   unfollowUser,
 } from '@/controller/api/users.api'
+import router from '@/router'
 
 export default {
   name: 'ScholarshipContent',
@@ -271,6 +281,11 @@ export default {
       await fetchUsers()
     }
 
+    const goToUserProfile = async (username: string) => {
+      await router.push(`/profile/${username}`)
+      console.log(username)
+    }
+
     //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
@@ -288,10 +303,12 @@ export default {
     return {
       user_info,
       auth_user,
+      router,
       is_auth_user_a_follower,
       getUserDetails,
       followRecommended,
       unfollowRecommended,
+      goToUserProfile,
     }
   },
 }

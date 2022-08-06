@@ -8,7 +8,7 @@
       </h4>
 
       <div v-if="scholarships.length < 1">
-        <div v-for="x in 3" :key="x">
+        <div v-for="x in 2" :key="x">
           <AnimatedLatestVue />
         </div>
       </div>
@@ -71,6 +71,7 @@
       </div>
 
       <router-link
+        v-if="scholarships.length >= 1"
         class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/scholarships"
       >
@@ -121,7 +122,9 @@ export default {
     const getScholarships = async () => {
       if (storeScholarships.value.length < 1) await fetchScholarships()
 
-      storeScholarships.value.forEach(
+      const newScholarships: any = []
+
+      await storeScholarships.value.forEach(
         async (scholarship: any, index: number) => {
           if (index < 2) {
             const { _id, creator_id, content, title } = scholarship
@@ -133,10 +136,12 @@ export default {
               title,
             }
 
-            scholarships.value.push(latest_scholarship)
+            newScholarships.push(latest_scholarship)
           }
         },
       )
+
+      scholarships.value = newScholarships
     }
 
     //
@@ -144,7 +149,12 @@ export default {
       await store.dispatch('_requests/getAllScholarships')
     }
 
-    onBeforeMount(() => getScholarships())
+    //
+    window.onkeyup = () => getScholarships()
+    window.onscroll = () => getScholarships()
+    window.onresize = () => getScholarships()
+
+    onBeforeMount(async () => await getScholarships())
 
     return {
       is_more_description_boolean,

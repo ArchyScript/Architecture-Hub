@@ -31,7 +31,7 @@
         </div>
 
         <div
-          class="h-40 sm:h-48 p-1 bg-gray-400 rounded-xl col-span-2 mt-4"
+          class="h-40 sm:h-48 p-1 bg-gray-400 rounded-xl col-span-2 mt-4 hidden sm:block"
         ></div>
       </article>
     </div>

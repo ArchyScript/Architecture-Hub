@@ -2,77 +2,66 @@
   <section
     class="flex flex-col inset-x-0 hover:bg-archyhub-semi-light hover:shadow-sm hover:bg-opacity-30"
   >
-    <div class="flex items-center w-full p-2 sm:p-3 xl:p-4 pb-2">
-      <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
-        <router-link :to="`/profile/${competition_info.username}`">
-          <img
-            v-if="competition_info.profile_picture_avatar !== ''"
-            class="w-full h-full rounded-full border cursor-pointer"
-            :src="competition_info.profile_picture_avatar"
-          />
-        </router-link>
+    <div class="flex mb-1 items-center w-full p-2 sm:p-3 xl:p-4 pb-2">
+      <div
+        v-if="competition_info.username !== ''"
+        class="flex justify-between items-center truncate"
+      >
+        <div class="flex-shrink-0 w-10 h-10 sm:h-12 sm:w-12 mr-1">
+          <router-link :to="`/profile/${competition_info.username}`">
+            <img
+              v-if="competition_info.profile_picture_avatar !== ''"
+              class="w-full h-full rounded-full border cursor-pointer"
+              :src="competition_info.profile_picture_avatar"
+            />
+          </router-link>
 
-        <span
-          v-if="competition_info.profile_picture_avatar === ''"
-          class="block w-full h-full rounded-full border cursor-pointer bg-gray-500 animate-pulse"
-        ></span>
-      </div>
+          <span
+            v-if="competition_info.profile_picture_avatar === ''"
+            class="block w-full h-full rounded-full border cursor-pointer bg-gray-500 animate-pulse"
+          ></span>
+        </div>
 
-      <div class="mb-1 flex flex-1 px-1 w-full ml-1 sm:ml-2">
-        <div
-          class="flex-1 flex-col truncate"
-          v-if="competition_info.username !== ''"
-        >
-          <p class="flex justify-between items-center truncate">
-            <router-link
-              :to="`/profile/${competition_info.username}`"
-              class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2 truncate"
-            >
-              <span class="text-sm md:text-base font-semibold truncate">
-                {{
-                  competition_info.display_name
-                    ? competition_info.display_name
-                    : competition_info.username
-                }}
-              </span>
+        <div class="truncate">
+          <router-link
+            :to="`/profile/${competition_info.username}`"
+            class="hover:underline hover:text-archyhub-main text-gray-600 items-center flex flex-1 space-x-1 sm:space-x-2 truncate"
+          >
+            <span class="text-sm md:text-base font-semibold truncate">
+              {{
+                competition_info.display_name
+                  ? competition_info.display_name
+                  : competition_info.username
+              }}
+            </span>
 
-              <span class="text-sm md:text-base font-normal truncate">
-                @{{ competition_info.username }}
-              </span>
-            </router-link>
-
-            <!-- <span
-              class="text-gray-600 hover:bg-archyhub-light hover:bg-opacity-50 px-3 py-1 cursor-pointer rounded-full"
-            >
-              <span class="fa fa-ellipsis-h text-base md:text-lg"></span>
-            </span> -->
-          </p>
+            <span class="text-sm md:text-base font-normal truncate">
+              @{{ competition_info.username }}
+            </span>
+          </router-link>
 
           <p
             class="flex items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
             v-if="competition_info.date || competition_info.time"
           >
-            <span class="">{{ competition_info.date }}</span>
+            <span class="truncate">{{ competition_info.date }}</span>
 
-            <span class="">
-              <strong class="font-medium text-gray-600">@</strong>
+            <span class="truncate">
+              <strong class="font-medium">@</strong>
               {{ competition_info.time }}
             </span>
           </p>
         </div>
+      </div>
 
+      <div v-if="competition_info.username === ''" class="animate-pulse w-full">
         <div
-          v-if="competition_info.username === ''"
-          class="animate-pulse w-full"
-        >
-          <div
-            class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
-          ></div>
+          class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
+        ></div>
 
-          <div class="grid grid-cols-8 gap-2">
-            <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
-            <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
-          </div>
+        <div class="grid grid-cols-8 gap-2">
+          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
         </div>
       </div>
     </div>
@@ -82,19 +71,23 @@
         <router-link :to="`/competitions/${eachCompetition._id}`">
           <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
             <span
-              class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-all"
+              class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-words break-all"
             >
               {{ eachCompetition.title }}
             </span>
 
-            <img
+            <div
               v-if="eachCompetition.competition_image.avatar !== ''"
-              class="w-full h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 object-fill border rounded-xl"
-              :src="eachCompetition.competition_image.avatar"
-            />
+              class="w-full flex justify-center items-center h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
+            >
+              <img
+                class="h-auto max-h-full w-auto object-fill rounded-xl"
+                :src="eachCompetition.competition_image.avatar"
+              />
+            </div>
 
             <span
-              class="text-xs sm:text-sm md:text-base block font-normal text-gray-600 break-all"
+              class="text-xs sm:text-sm break-words md:text-base block font-normal text-gray-600 break-all"
             >
               {{ eachCompetition.description }}
             </span>
@@ -103,9 +96,7 @@
       </div>
     </article>
 
-    <div>
-      <ReactionsVue :reactions="reactions" />
-    </div>
+    <ReactionsVue :reactions="reactions" />
   </section>
 </template>
 

@@ -14,11 +14,11 @@
     <form @submit.prevent="uploadPicture">
       <div class="w-full mt-16 px-2 sm:px-4">
         <div
-          class="h-96 w-full border rounded-2xl md:rounded-3xl bg-archyhub-light"
+          class="h-96 w-full flex justify-center items-center border rounded-2xl md:rounded-3xl bg-archyhub-semi-light bg-opacity-40"
         >
           <img
             :src="image_url"
-            class="w-full h-full rounded-2xl md:rounded-3xl object-cover"
+            class="w-auto h-full rounded-2xl md:rounded-3xl object-cover"
           />
         </div>
 

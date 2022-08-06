@@ -1,6 +1,6 @@
 <template>
   <section
-    class="w-full sticky shadow-md min-h-screen top-0 z-4 bg-archyhub-light"
+    class="hide-scrollbar w-full sticky shadow-md min-h-screen max-h-screen overflow-scroll top-0 z-4 bg-archyhub-light"
   >
     <div class="hidden">
       <SearchTrendsVue />
@@ -15,7 +15,6 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
 import SearchTrendsVue from '../RightSideNav/SearchTrends.vue'
 import RecommendedWhoToFollowVue from './RecommendedForYou.vue'
 import CompetitionSectionVue from './CompetitionsSection.vue'
@@ -36,4 +35,27 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.hide-scrollbar::-webkit-scrollbar {
+  @apply overflow-hidden;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 1px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-archyhub-main;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-archyhub-main;
+}
+</style>

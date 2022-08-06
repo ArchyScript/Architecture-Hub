@@ -1,7 +1,10 @@
 <template>
   <section class="flex items-center rounded-2xl sm:px-2 mt-10">
     <div class="w-full">
-      <router-link :to="`/profile/${auth_user_info.username}`">
+      <router-link
+        v-if="auth_user_info.username !== ''"
+        :to="`/profile/${auth_user_info.username}`"
+      >
         <div
           @click="closeAllModals"
           class="mb-16 flex items-center cursor-pointer"
@@ -33,6 +36,22 @@
           </div>
         </div>
       </router-link>
+
+      <div
+        v-if="auth_user_info.username === ''"
+        class="mb-16 flex items-center cursor-pointer"
+      >
+        <span class="w-12 h-12 lg:w-14 lg:h-14 rounded-full">
+          <div
+            class="w-full h-full bg-gray-400 rounded-full animate-pulse"
+          ></div>
+        </span>
+
+        <div class="flex-1 ml-2 space-y-3">
+          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl w-full"></div>
+          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl w-3/4"></div>
+        </div>
+      </div>
 
       <div class="">
         <div class="hidden md:flex flex-col space-y-2 mb-14 sm:mb-16 lg:mb-14">
@@ -83,7 +102,7 @@
         </div>
 
         <form
-          class="w-full hidden text-center mt-20"
+          class="w-full hidden left-0 bottom-0 text-center mt-20"
           @submit.prevent="logUserOut"
         >
           <button
@@ -122,6 +141,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { AuthApiService } from '@/controller/api/auth.api'
 import { getDisplayProfilePicture } from '@/controller/utilities'
+import router from '@/router'
 
 export default {
   name: 'NavLinks',
@@ -167,7 +187,7 @@ export default {
 
     const toggleCurrentActiveNavLink = (active_link_route: string) => {
       current_active_route.value = active_link_route
-      store.dispatch('component_handler/closeAllModals')
+      closeAllModals()
     }
 
     const getAuthUserImage = async () => {
@@ -176,6 +196,9 @@ export default {
         bio: { gender, display_name },
         profile_picture: { avatar },
       } = auth_user.value
+
+      if (username === null || username === undefined || username === '')
+        return redirectToLoginPage()
 
       const profile_picture = await getDisplayProfilePicture(avatar, gender)
 
@@ -206,6 +229,12 @@ export default {
       store.dispatch('component_handler/closeAllModals')
     }
 
+    const redirectToLoginPage = async () => {
+      await store.dispatch('users/assignToken', null)
+
+      router.push('/auth/login')
+    }
+
     //
     onBeforeMount(async () => {
       getAuthUserImage()
@@ -233,8 +262,11 @@ export default {
     }
 
     onBeforeMount(async () => {
-      await getAuthUserImage()
+      if (!auth_user.value._id || auth_user.value._id === undefined)
+        return window.location.reload()
+
       await fetchAuthUser(auth_user.value._id)
+      await getAuthUserImage()
     })
 
     return {

@@ -2,10 +2,10 @@
   <div class="w-full top-0 h-full z-4">
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
-    <div class="mt-10 pb-8">
+    <div class="mt-4 md:mt-6 xl:mt-10 pb-8">
       <div class="" v-if="storeUsers.length < 1">
         <div
-          class="text-xs sm:text-sm lg:text-base rounded-lg md:rounded-xl text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-normal py-2 px-6 mb-6"
+          class="text-center py-1 sm:py-2 text-xs sm:text-sm md:text-base rounded-sm sm:rounded-md md:rounded-lg font-medium px-2 md:px-5 cursor-pointer mb-2 md:mb-3 text-gray-600"
         >
           <span>{{ is_loading ? '' : ' No user found' }}</span>
         </div>
@@ -13,7 +13,7 @@
         <div class="text-center">
           <form @submit.prevent="getUsers">
             <button
-              class="text-xs sm:text-sm lg:text-base rounded-lg md:rounded-xl text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-normal py-2 px-6"
+              class="text-archyhub-light bg-opacity-40 bg-archyhub-main text-xs sm:text-sm md:text-base rounded-lg sm:rounded-xl md:rounded-2xl font-medium py-1 md:py-2 px-3 sm:px-4 lg:px-6 cursor-pointer"
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>{{ is_loading ? 'Loading' : 'Reload' }}</span>
@@ -21,7 +21,7 @@
                 <svg
                   v-if="is_loading"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6 text-white animate-spin"
+                  class="w-4 h-4 sm:h-6 sm:w-6 text-white animate-spin"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -112,36 +112,16 @@ export default {
   setup() {
     const store = useStore()
     const is_loading = ref(false)
-    const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Users', icon: 'fas fa-users' })
     const storeUsers = computed(() => store.state._requests.allUsers)
     const auth_user = computed(() => store.state.users.auth_user)
     const sorted_user_by_no_of_followers = ref<UserSchema[]>([])
     const sorted_user_by_no_of_followings = ref<UserSchema[]>([])
 
-    const updateResponseMessage = (type: string, text: string) => {
-      message.value.type = type
-      message.value.text = text
-    }
-
     const getUsers = async () => {
       is_loading.value = true
-      updateResponseMessage('', '')
 
       if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
-
-      if (!storeUsers.value) {
-        is_loading.value = false
-        updateResponseMessage(
-          'error',
-          'Sorry, an unknown error occurred... Check connection',
-        )
-
-        return setTimeout(() => {
-          is_loading.value = false
-          return updateResponseMessage('', '')
-        }, 5000)
-      }
 
       sorted_user_by_no_of_followers.value = []
       sorted_user_by_no_of_followings.value = []
@@ -167,7 +147,6 @@ export default {
         sorted_user_by_no_of_followings.value.push(more_followings_user)
       })
 
-      updateResponseMessage('success', '')
       is_loading.value = false
       await fetchUsers()
     }
@@ -187,7 +166,6 @@ export default {
 
     onBeforeMount(async () => {
       await fetchAuthUser()
-      await fetchUsers()
       await getUsers()
       scrollToTop()
     })
@@ -195,7 +173,6 @@ export default {
     return {
       storeUsers,
       is_loading,
-      message,
       topbar,
       sorted_user_by_no_of_followers,
       sorted_user_by_no_of_followings,

@@ -112,4 +112,28 @@ export default {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.hide-scrollbar::-webkit-scrollbar {
+  @apply overflow-hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+  @apply w-1 md:w-2;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply rounded-3xl;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-archyhub-main;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-archyhub-main;
+}
+</style>

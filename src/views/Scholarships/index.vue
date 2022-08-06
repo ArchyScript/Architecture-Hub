@@ -2,16 +2,18 @@
   <div class="w-full top-0 h-full bg-archyhub -semi-light z-4">
     <MainPageTopBarVue :page_title="topbar.title" :page_icon="topbar.icon" />
 
-    <div class="mt-10 pb-8">
+    <div class="mt-4 md:mt-6 xl:mt-10 pb-8">
       <div class="" v-if="storeScholarships.length < 1">
-        <div class="text-center font-medium mb-6">
+        <div
+          class="text-center py-1 sm:py-2 text-xs sm:text-sm md:text-base rounded-sm sm:rounded-md md:rounded-lg font-medium px-2 md:px-5 cursor-pointer mb-2 md:mb-3 text-gray-600"
+        >
           <span>{{ is_loading ? '' : ' No scholarship found' }}</span>
         </div>
 
         <div class="text-center">
           <form @submit.prevent="getScholarships">
             <button
-              class="text-md text-archyhub-semi-light bg-opacity-40 bg-archyhub-main hover:text-archyhub-light font-bold rounded-2xl py-2 px-6"
+              class="text-archyhub-light bg-opacity-40 bg-archyhub-main text-xs sm:text-sm md:text-base rounded-lg sm:rounded-xl md:rounded-2xl font-medium py-1 md:py-2 px-3 sm:px-4 lg:px-6 cursor-pointer"
             >
               <div class="w-full flex justify-center items-center space-x-2">
                 <span>{{ is_loading ? 'Loading' : 'Reload' }}</span>
@@ -19,7 +21,7 @@
                 <svg
                   v-if="is_loading"
                   xmlns="http://www.w3.org/2000/svg"
-                  class="w-6 h-6 text-white animate-spin"
+                  class="w-4 h-4 sm:h-6 sm:w-6 text-white animate-spin"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"

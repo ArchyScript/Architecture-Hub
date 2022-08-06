@@ -71,6 +71,7 @@
       </div>
 
       <router-link
+        v-if="competitions.length >= 1"
         class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/competitions"
       >
@@ -121,7 +122,9 @@ export default {
     const getCompetitions = async () => {
       if (storeCompetitions.value.length < 1) await fetchCompetitions()
 
-      storeCompetitions.value.forEach(
+      const newCompetitions: any = []
+
+      await storeCompetitions.value.forEach(
         async (competition: any, index: number) => {
           if (index < 2) {
             const { _id, creator_id, content, title } = competition
@@ -133,16 +136,23 @@ export default {
               title,
             }
 
-            competitions.value.push(latest_competition)
+            newCompetitions.push(latest_competition)
           }
         },
       )
+
+      competitions.value = newCompetitions
     }
 
     //
     async function fetchCompetitions() {
       await store.dispatch('_requests/getAllCompetitions')
     }
+
+    //
+    window.onkeyup = () => getCompetitions()
+    window.onscroll = () => getCompetitions()
+    window.onresize = () => getCompetitions()
 
     onBeforeMount(async () => await getCompetitions())
 

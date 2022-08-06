@@ -1,6 +1,6 @@
 <template>
   <div class="w-full top-0 h-full z-4">
-    <div class="mt-10 pb-8">
+    <div class="mt-4 md:mt-6 xl:mt-10 pb-8">
       <div class="" v-if="userCommunities.length < 1">
         <div class="text-center font-medium mb-6">
           <span>{{ is_loading ? '' : ' No user found' }}</span>

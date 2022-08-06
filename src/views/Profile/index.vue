@@ -128,6 +128,7 @@ import ProfileHeaderVue from './ProfileHeader.vue'
 import PostContentVue from '@/components/Posts/PostContent.vue'
 import CompetitionContentVue from '@/components/Competitions/CompetitionContent.vue'
 import ScholarshipContentVue from '@/components/Scholarships/ScholarshipContent.vue'
+import router from '@/router'
 
 export default {
   name: 'Profile',
@@ -301,7 +302,18 @@ export default {
     //
     const scrollToTop = () => window.scrollTo(0, 0)
 
+    const redirectToLoginPage = async () => {
+      await store.dispatch('users/assignToken', null)
+
+      router.push('/auth/login')
+    }
+
     onBeforeMount(async () => {
+      const { username } = route.params
+
+      if (username === null || username === undefined || username === '')
+        return redirectToLoginPage()
+
       await fetchUsers()
       await getAllPostsByUser()
       getAllPostsByUser()

@@ -1,17 +1,48 @@
 <template>
   <section
-    :class="{ scrolled: !scrollShadowBoolean }"
-    class="w-full top-0 min-h-screen h-full md:h-auto sticky z-4 shadow-md bg-archyhub-light"
+    class="hide-scrollbar w-full top-0 min-h-screen max-h-screen overflow-scroll md:h-auto sticky z-4 shadow-md bg-archyhub-light"
   >
     <div class="p-6">
       <NavLinks />
     </div>
+
+    <form
+      class="w-full hidden ring-0 px-6 sticky left-0 bottom-0 text-center bg-archyhub-semi-light bg-opacity-30 pt-6"
+      @submit.prevent="logUserOut"
+    >
+      <button
+        type="submit"
+        class="w-full text-lg lg:text-xl text-archyhub-semi-light hover:text-archyhub-light bg-archyhub-main font-semibold rounded-3xl py-3"
+      >
+        <div class="w-full flex justify-center items-center space-x-2">
+          <span>Logout</span>
+
+          <svg
+            v-if="is_loading"
+            xmlns="http://www.w3.org/2000/svg"
+            class="w-6 h-6 text-white animate-spin"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+            />
+          </svg>
+        </div>
+      </button>
+    </form>
   </section>
 </template>
 
-<script>
-import { onBeforeMount, ref } from 'vue'
+<script lang="ts">
+import { ref } from 'vue'
 import NavLinks from './NavLinks.vue'
+import { useStore } from 'vuex'
+import router from '@/router'
 
 export default {
   name: 'LeftSideNav',
@@ -20,27 +51,53 @@ export default {
   },
 
   setup() {
-    const scrollShadowBoolean = ref(true)
+    const store = useStore()
+    const is_loading = ref(false)
 
-    window.addEventListener('scroll', () => handleScroll())
+    const logUserOut = async () => {
+      is_loading.value = true
 
-    onBeforeMount(() => handleScroll())
+      await assignToken(null)
 
-    const handleScroll = () => {
-      if (window.pageYOffset > 0) {
-        // user is scrolled
-        if (scrollShadowBoolean.value) scrollShadowBoolean.value = false
-      } else {
-        // user is at top of page
-        if (!scrollShadowBoolean.value) scrollShadowBoolean.value = true
-      }
+      sessionStorage.removeItem('architecture_hub_user_token')
+      router.push('/auth/login')
+    }
+
+    //
+    async function assignToken(token: any) {
+      await store.dispatch('users/assignToken', token)
     }
 
     return {
-      scrollShadowBoolean,
+      is_loading,
+      logUserOut,
     }
   },
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.hide-scrollbar::-webkit-scrollbar {
+  @apply overflow-hidden;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 1px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-archyhub-main;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-archyhub-main;
+}
+</style>

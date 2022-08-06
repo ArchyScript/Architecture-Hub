@@ -74,10 +74,8 @@
 import { ref, computed, onBeforeMount } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
-import {
-  formatDateAndTime,
-  getDisplayProfilePicture,
-} from '@/controller/utilities'
+import { getDisplayProfilePicture } from '@/controller/utilities'
+import router from '@/router'
 
 export default {
   name: 'EditProfileHeader',

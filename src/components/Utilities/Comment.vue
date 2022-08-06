@@ -12,7 +12,7 @@
         </router-link>
       </span>
 
-      <div class="flex-col flex-1 ml-2 sm:ml-3">
+      <div class="truncate flex-col flex-1 ml-2 sm:ml-3">
         <p
           class="flex-1 text-xs sm:text-sm my-2 text-gray-700 sm:mb-3 flex-wrap break-all"
         >
@@ -23,10 +23,10 @@
           class="flex justify-end items-center italic space-x-3 text-xs font-normal text-gray-400 truncate"
           v-if="eachPostComment.date || eachPostComment.time"
         >
-          <span class="">{{ eachPostComment.date }}</span>
+          <span class="truncate">{{ eachPostComment.date }}</span>
 
-          <span class="">
-            <strong class="font-semibold">@</strong>
+          <span class="truncate">
+            <strong class="font-medium">@</strong>
             {{ eachPostComment.time }}
           </span>
         </p>

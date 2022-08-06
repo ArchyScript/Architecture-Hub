@@ -100,11 +100,15 @@ export default {
         return store.dispatch('component_handler/openNewScholarshipModal')
     }
 
-    window.onkeyup = () => (current_active_route.value = route.fullPath)
-    window.onscroll = () => (current_active_route.value = route.fullPath)
-    window.onresize = () => (current_active_route.value = route.fullPath)
+    const getCurrentActiveRoute = () => {
+      current_active_route.value = route.fullPath
+    }
 
-    onBeforeMount(() => (current_active_route.value = route.fullPath))
+    window.onkeyup = () => getCurrentActiveRoute()
+    window.onscroll = () => getCurrentActiveRoute()
+    window.onresize = () => getCurrentActiveRoute()
+
+    onBeforeMount(() => getCurrentActiveRoute())
 
     return {
       bottom_bar_links,

@@ -1,8 +1,8 @@
 <template>
   <section
-    v-if="recommended_people_to_follow.length >= 1"
     class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
+    <!-- v-if="recommended_people_to_follow.length >= 1" -->
     <div class="w-full">
       <h4 class="text-lg md:text-xl font-semibold mb-6 px-5 text-gray-600">
         Recommended for You
@@ -76,6 +76,7 @@
       </div>
 
       <router-link
+        v-if="recommended_people_to_follow.length >= 1"
         class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/users"
       >
@@ -168,8 +169,6 @@ export default {
           }
         }
       })
-
-      return fetchUsers()
     }
 
     const followRecommended = async (user_id: string) => {
@@ -192,6 +191,11 @@ export default {
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
     }
+
+    //
+    window.onkeyup = async () => await getRecommendedPeople()
+    window.onscroll = async () => await getRecommendedPeople()
+    window.onresize = async () => await getRecommendedPeople()
 
     //
     onBeforeMount(async () => await getRecommendedPeople())

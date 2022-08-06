@@ -289,11 +289,62 @@ export default {
 
         const response = await reverseLike(params)
 
-        const { error, data, status } = response
-        if (error || status === 400 || !data) return
-
         is_post_liked_by_auth_user.value = false
+        reaction_object.value.no_of_likes -= 1
+
+        const { error, data, status } = response
+        if (error || status === 400 || !data) {
+          reaction_object.value.no_of_likes += 1
+          return (is_post_liked_by_auth_user.value = true)
+        }
+
+        if (post_type === 'post') await fetchAllPostLikes()
+        if (post_type === 'competition') await fetchAllCompetitionLikes()
+        if (post_type === 'scholarship') await fetchAllScholarshipLikes()
+
+        if (post_type === 'post') {
+          const response = await fetchSinglePost(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
+
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
+
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
+
+        if (post_type === 'competition') {
+          const response = await fetchSingleCompetition(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
+
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
+
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
+
+        if (post_type === 'scholarship') {
+          const response = await fetchSingleScholarship(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
+
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
+
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
+
+        await checkIfPostHaveBeenLikedByAuthUser(object_params)
+        return
       }
+
       if (!is_post_liked) {
         const params = {
           liker_id: auth_user.value._id,
@@ -301,63 +352,65 @@ export default {
           post_type,
         }
 
+        is_post_liked_by_auth_user.value = true
+        reaction_object.value.no_of_likes += 1
+
         const response = await createNewLike(params)
 
         const { error, data, status } = response
-        if (error || status === 400 || !data) return
+        if (error || status === 400 || !data) {
+          reaction_object.value.no_of_likes -= 1
+          return (is_post_liked_by_auth_user.value = false)
+        }
 
-        is_post_liked_by_auth_user.value = true
-      }
+        if (post_type === 'post') await fetchAllPostLikes()
+        if (post_type === 'competition') await fetchAllCompetitionLikes()
+        if (post_type === 'scholarship') await fetchAllScholarshipLikes()
 
-      if (post_type === 'post') await fetchAllPostLikes()
-      if (post_type === 'competition') await fetchAllCompetitionLikes()
-      if (post_type === 'scholarship') await fetchAllScholarshipLikes()
+        if (post_type === 'post') {
+          const response = await fetchSinglePost(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
 
-      // update post like value
-      await checkIfPostHaveBeenLikedByAuthUser(object_params)
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
 
-      //
-      if (post_type === 'post') {
-        const response = await fetchSinglePost(post_id)
-        const { error, data, status } = response
-        if (error || status === 400 || !data) return
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
 
-        const { likes, comments } = data
-        const total_comments = await formatNumbers(+comments.length)
-        const total_likes = await formatNumbers(+likes.length)
+        if (post_type === 'competition') {
+          const response = await fetchSingleCompetition(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
 
-        reaction_object.value.no_of_comments = total_comments
-        reaction_object.value.no_of_likes = total_likes
-      }
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
 
-      if (post_type === 'competition') {
-        const response = await fetchSingleCompetition(post_id)
-        const { error, data, status } = response
-        if (error || status === 400 || !data) return
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
 
-        const { likes, comments } = data
-        const total_comments = await formatNumbers(+comments.length)
-        const total_likes = await formatNumbers(+likes.length)
+        if (post_type === 'scholarship') {
+          const response = await fetchSingleScholarship(post_id)
+          const { error, data, status } = response
+          if (error || status === 400 || !data) return
 
-        reaction_object.value.no_of_comments = total_comments
-        reaction_object.value.no_of_likes = total_likes
-      }
+          const { likes, comments } = data
+          const total_comments = await formatNumbers(+comments.length)
+          const total_likes = await formatNumbers(+likes.length)
 
-      if (post_type === 'scholarship') {
-        const response = await fetchSingleScholarship(post_id)
-        const { error, data, status } = response
-        if (error || status === 400 || !data) return
+          reaction_object.value.no_of_comments = total_comments
+          reaction_object.value.no_of_likes = total_likes
+        }
 
-        const { likes, comments } = data
-        const total_comments = await formatNumbers(+comments.length)
-        const total_likes = await formatNumbers(+likes.length)
-
-        reaction_object.value.no_of_comments = total_comments
-        reaction_object.value.no_of_likes = total_likes
+        await checkIfPostHaveBeenLikedByAuthUser(object_params)
+        return
       }
     }
 
-    //
     const handleBookmark = async (
       is_post_bookmarked: boolean,
       object_params: any,
