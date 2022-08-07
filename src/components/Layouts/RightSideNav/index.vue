@@ -36,6 +36,10 @@ export default {
 </script>
 
 <style scoped>
+.hide-scrollbar {
+  overflow-x: hidden;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   @apply overflow-hidden;
 }

@@ -1,5 +1,12 @@
 <template>
   <div class="container mx-auto min-h-screen">
+    <!-- <div
+      v-if="!is_mounted"
+      class="z-50 fixed h-screen w-screen flex text-7xl bg-archyhub-main text-white items-center justify-center"
+    >
+      hljgkvbn,m
+    </div> -->
+
     <div class="w-full h-full">
       <!-- smaller screen -->
       <div class="lg:hidden h-full">
@@ -84,6 +91,7 @@ export default {
   setup() {
     const store = useStore()
     const route = useRoute()
+    // const is_mounted = ref(false)
     const auth_user = computed(() => store.state.users.auth_user)
     const open_left_nav = computed(
       () => store.state.component_handler.open_left_nav,
@@ -116,6 +124,7 @@ export default {
       auth_user,
       open_left_nav,
       route,
+      // is_mounted,
       closeAllModals,
     }
   },

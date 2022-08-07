@@ -100,6 +100,7 @@ export default {
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Home', icon: 'fa fa-home' })
     const storePosts = computed(() => store.state._requests.allPosts)
+    const storeUsers = computed(() => store.state._requests.allUsers)
 
     const updateResponseMessage = (type: string, text: string) => {
       message.value.type = type
@@ -110,6 +111,7 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
+      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
       if (storePosts.value && storePosts.value.length < 1) await fetchPosts()
 
       if (!storePosts.value) {
@@ -138,6 +140,9 @@ export default {
     //
     async function fetchPosts() {
       await store.dispatch('_requests/getAllPosts')
+    }
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
     }
 
     //

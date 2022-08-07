@@ -99,6 +99,7 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Scholarships', icon: 'fas fa-award' })
+    const storeUsers = computed(() => store.state._requests.allUsers)
     const storeScholarships = computed(
       () => store.state._requests.allScholarships,
     )
@@ -112,6 +113,7 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
+      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
       if (storeScholarships.value && storeScholarships.value.length < 1)
         await fetchScholarships()
 
@@ -142,7 +144,9 @@ export default {
     async function fetchScholarships() {
       await store.dispatch('_requests/getAllScholarships')
     }
-
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
     onBeforeMount(async () => {
       await getScholarships()
       scrollToTop()

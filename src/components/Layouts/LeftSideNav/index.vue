@@ -7,12 +7,12 @@
     </div>
 
     <form
-      class="w-full hidden ring-0 px-6 sticky left-0 bottom-0 text-center bg-archyhub-semi-light bg-opacity-30 pt-6"
+      class="w-full z-50 ring-0 px-8 sticky left-0 bottom-0 text-center bg-archyhub-semi-light bg-opacity-20 py-6"
       @submit.prevent="logUserOut"
     >
       <button
         type="submit"
-        class="w-full text-lg lg:text-xl text-archyhub-semi-light hover:text-archyhub-light bg-archyhub-main font-semibold rounded-3xl py-3"
+        class="w-full text-base lg:text-lg text-archyhub-main hover:text-archyhub-light bg-archyhub-semi-light hover:bg-archyhub-main bg-opacity-40 border border-archyhub-main hover:border-archyhub-semi-light border-opacity-60 font-medium xl:font-semibold rounded-3xl py-3"
       >
         <div class="w-full flex justify-center items-center space-x-2">
           <span>Logout</span>
@@ -77,6 +77,10 @@ export default {
 </script>
 
 <style scoped>
+.hide-scrollbar {
+  overflow-x: hidden;
+}
+
 .hide-scrollbar::-webkit-scrollbar {
   @apply overflow-hidden;
 }

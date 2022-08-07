@@ -54,14 +54,22 @@
         </div>
       </div>
 
-      <div v-if="competition_info.username === ''" class="animate-pulse w-full">
+      <div
+        v-if="competition_info.username === ''"
+        class="animate-pulse w-full flex items-center"
+      >
         <div
-          class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1"
+          class="h-10 sm:h-12 lg:h-14 w-10 sm:w-12 lg:w-14 mr-1 sm:mr-2 bg-gray-400 rounded-full"
         ></div>
+        <div class="flex-col flex-1">
+          <div
+            class="h-2 sm:h-3 p-1 w-3/4 bg-gray-400 rounded-xl col-span-2 mb-1 sm:mb-2"
+          ></div>
 
-        <div class="grid grid-cols-8 gap-2">
-          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
-          <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          <div class="grid grid-cols-8 gap-2">
+            <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+            <div class="h-2 sm:h-3 p-1 bg-gray-400 rounded-xl col-span-2"></div>
+          </div>
         </div>
       </div>
     </div>

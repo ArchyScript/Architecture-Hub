@@ -101,7 +101,7 @@
           </button>
         </div>
 
-        <form
+        <!-- <form
           class="w-full hidden left-0 bottom-0 text-center mt-20"
           @submit.prevent="logUserOut"
         >
@@ -129,7 +129,7 @@
               </svg>
             </div>
           </button>
-        </form>
+        </form> -->
       </div>
     </div>
   </section>

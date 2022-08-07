@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
@@ -21,7 +22,18 @@
       </strong>
     </noscript>
 
-    <div id="app"></div>
+    <div id="app">
+        <div id="loading__container">
+            <svg xmlns="http://www.w3.org/2000/svg" class="animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+          />
+        </svg>
+        </div>
+    </div>
     <!-- built files will be auto injected -->
 </body>
 

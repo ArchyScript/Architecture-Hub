@@ -99,6 +99,7 @@ export default {
     const is_loading = ref(false)
     const message = ref({ type: '', text: '' })
     const topbar = ref({ title: 'Competitions', icon: 'fa fa-trophy' })
+    const storeUsers = computed(() => store.state._requests.allUsers)
     const storeCompetitions = computed(
       () => store.state._requests.allCompetitions,
     )
@@ -112,6 +113,7 @@ export default {
       is_loading.value = true
       updateResponseMessage('', '')
 
+      if (storeUsers.value && storeUsers.value.length < 1) await fetchUsers()
       if (storeCompetitions.value && storeCompetitions.value.length < 1)
         await fetchCompetitions()
 
@@ -146,12 +148,15 @@ export default {
     const fetchAllCompetitionLikes = async () => {
       await store.dispatch('_requests/getAllCompetitionLikes')
     }
+    async function fetchUsers() {
+      await store.dispatch('_requests/getAllUsers')
+    }
 
     //
     onBeforeMount(async () => {
       await getAllCompetitions()
-      await fetchAllCompetitionLikes()
-      await fetchAllCompetitionComments()
+      // await fetchAllCompetitionLikes()
+      // await fetchAllCompetitionComments()
       scrollToTop()
     })
 
