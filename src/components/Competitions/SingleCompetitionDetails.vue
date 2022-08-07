@@ -157,6 +157,7 @@ import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
+import CompetitionsSectionVue from '../Layouts/RightSideNav/CompetitionsSection.vue'
 
 type CommentSchema =
   | {
@@ -274,7 +275,9 @@ export default {
 
           does_competition_have_comment.value = true
 
-          comments.forEach(async (eachCompetitionComment: any) => {
+          const competition_comments_array: any = []
+
+          await comments.forEach(async (eachCompetitionComment: any) => {
             const { comment_id } = await eachCompetitionComment
 
             if (storeCompetitionComments.value < 1)
@@ -309,7 +312,7 @@ export default {
                         time: formattedTime,
                       }
 
-                      competition_comments.value.unshift(
+                      competition_comments_array.unshift(
                         competition_comment_info,
                       )
                     }
@@ -318,6 +321,8 @@ export default {
               },
             )
           })
+
+          competition_comments.value = competition_comments_array
         }
       })
 
@@ -341,6 +346,8 @@ export default {
     onBeforeMount(async () => {
       const { competition_id } = route.params
 
+      await getCompetitionDetails(competition_id)
+      await fetchAllCompetitionComments()
       await getCompetitionDetails(competition_id)
     })
 

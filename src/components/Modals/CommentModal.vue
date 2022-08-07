@@ -142,12 +142,21 @@ export default {
 
       updateResponseMessage('success', data)
 
-      if (post_comment_object.value === 'post') await fetchPosts()
-      if (post_comment_object.value === 'competition') await fetchCompetitions()
-      if (post_comment_object.value === 'scholarship') await fetchScholarships()
-
       await fetchUsers()
       closeAllModals()
+
+      if (post_comment_object.value === 'post') {
+        await fetchPosts()
+        await fetchPosts()
+      }
+      if (post_comment_object.value === 'competition') {
+        await fetchCompetitions()
+        await fetchCompetitions()
+      }
+      if (post_comment_object.value === 'scholarship') {
+        await fetchScholarships()
+        await fetchScholarships()
+      }
     }
 
     //

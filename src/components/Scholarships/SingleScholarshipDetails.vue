@@ -278,6 +278,8 @@ export default {
 
           does_scholarship_have_comment.value = true
 
+          const scholarship_comments_array: any = []
+
           comments.forEach(async (eachScholarshipComment: any) => {
             const { comment_id } = await eachScholarshipComment
 
@@ -313,7 +315,7 @@ export default {
                         time: formattedTime,
                       }
 
-                      scholarship_comments.value.unshift(
+                      scholarship_comments_array.unshift(
                         scholarship_comment_info,
                       )
                     }
@@ -322,6 +324,8 @@ export default {
               },
             )
           })
+
+          scholarship_comments.value = scholarship_comments_array
         }
       })
 
@@ -345,6 +349,8 @@ export default {
     onBeforeMount(async () => {
       const { scholarship_id } = route.params
 
+      await getScholarshipDetails(scholarship_id)
+      await fetchAllScholarshipComments()
       await getScholarshipDetails(scholarship_id)
     })
 

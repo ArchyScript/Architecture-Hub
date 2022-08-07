@@ -7,7 +7,7 @@
     </div>
 
     <form
-      class="w-full z-50 ring-0 px-8 sticky left-0 bottom-0 text-center bg-archyhub-semi-light bg-opacity-20 py-6"
+      class="w-full z-50 ring-0 px-8 hidden sticky left-0 bottom-0 text-center bg-archyhub-semi-light bg-opacity-20 py-6"
       @submit.prevent="logUserOut"
     >
       <button

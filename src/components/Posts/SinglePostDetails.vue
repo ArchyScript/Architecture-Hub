@@ -201,7 +201,9 @@ export default {
 
           does_post_have_comment.value = true
 
-          comments.forEach(async (eachPostComment: any) => {
+          const post_comments_array: any = []
+
+          await comments.forEach(async (eachPostComment: any) => {
             const { comment_id } = eachPostComment
 
             if (storePostComments.value < 1) await fetchAllPostComments()
@@ -234,13 +236,15 @@ export default {
                         time: formattedTime,
                       }
 
-                      post_comments.value.unshift(post_comment_info)
+                      post_comments_array.unshift(post_comment_info)
                     }
                   })
                 }
               },
             )
           })
+
+          post_comments.value = post_comments_array
         }
       })
 
@@ -263,6 +267,8 @@ export default {
     onBeforeMount(async () => {
       const { post_id } = route.params
 
+      await getPostDetails(post_id)
+      await fetchAllPostComments()
       await getPostDetails(post_id)
     })
 
