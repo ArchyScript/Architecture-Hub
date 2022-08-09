@@ -124,9 +124,7 @@
         </article>
       </div>
 
-      <div>
-        <ReactionsVue :reactions="reactions" />
-      </div>
+      <ReactionsVue :reactions="reactions" />
 
       <div class="mt-6">
         <div v-if="does_scholarship_have_comment === false">
@@ -139,10 +137,38 @@
 
         <div v-else>
           <div
-            v-for="scholarship_comment in scholarship_comments"
-            :key="scholarship_comment.creator_username"
+            v-if="scholarship_comments.length < 1"
+            class="w-full flex items-start justify-center space-x-1 sm:space-x-2"
           >
-            <CommentVue :eachPostComment="scholarship_comment" />
+            <span
+              class="text-center text-gray-500 font-semibold text-xs sm:text-sm md:text-base"
+            >
+              loading comments
+            </span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-archyhub-main fill-current animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              />
+            </svg>
+          </div>
+
+          <div v-else>
+            <div
+              v-for="scholarship_comment in scholarship_comments"
+              :key="scholarship_comment.creator_username"
+            >
+              <CommentVue :eachPostComment="scholarship_comment" />
+            </div>
           </div>
         </div>
       </div>
@@ -214,7 +240,6 @@ export default {
       },
     })
 
-    //
     const getScholarshipDetails = async (scholarship_id: any) => {
       if (storeScholarships.value && storeScholarships.value.length < 1)
         await fetchScholarships()
@@ -280,7 +305,7 @@ export default {
 
           const scholarship_comments_array: any = []
 
-          comments.forEach(async (eachScholarshipComment: any) => {
+          await comments.forEach(async (eachScholarshipComment: any) => {
             const { comment_id } = await eachScholarshipComment
 
             if (storeScholarshipComments.value < 1)
@@ -324,6 +349,7 @@ export default {
               },
             )
           })
+          console.log(scholarship_comments_array)
 
           scholarship_comments.value = scholarship_comments_array
         }
@@ -350,8 +376,8 @@ export default {
       const { scholarship_id } = route.params
 
       await getScholarshipDetails(scholarship_id)
-      await fetchAllScholarshipComments()
-      await getScholarshipDetails(scholarship_id)
+      // await fetchAllScholarshipComments()
+      getScholarshipDetails(scholarship_id)
     })
 
     //

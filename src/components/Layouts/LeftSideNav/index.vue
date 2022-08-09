@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
+import { computed, onBeforeMount, ref } from 'vue'
 import NavLinks from './NavLinks.vue'
 import { useStore } from 'vuex'
 import router from '@/router'
@@ -53,6 +53,7 @@ export default {
   setup() {
     const store = useStore()
     const is_loading = ref(false)
+    const auth_user = computed(() => store.state.users.auth_user)
 
     const logUserOut = async () => {
       is_loading.value = true
@@ -60,6 +61,7 @@ export default {
       await assignToken(null)
 
       sessionStorage.removeItem('architecture_hub_user_token')
+      window.location.reload()
       router.push('/auth/login')
     }
 
@@ -67,6 +69,13 @@ export default {
     async function assignToken(token: any) {
       await store.dispatch('users/assignToken', token)
     }
+
+    onBeforeMount(async () => {
+      const { username } = auth_user.value
+
+      if (username === null || username === undefined || username === '')
+        return logUserOut()
+    })
 
     return {
       is_loading,

@@ -112,7 +112,7 @@ export default {
   setup() {
     const store = useStore()
     const is_loading = ref(false)
-    const topbar = ref({ title: 'Users', icon: 'fas fa-users' })
+    const topbar = ref({ title: 'Explore', icon: 'fas fa-users' })
     const storeUsers = computed(() => store.state._requests.allUsers)
     const auth_user = computed(() => store.state.users.auth_user)
     const sorted_user_by_no_of_followers = ref<UserSchema[]>([])
@@ -167,7 +167,7 @@ export default {
     onBeforeMount(async () => {
       await fetchAuthUser()
       await getUsers()
-      scrollToTop()
+      // scrollToTop()
     })
 
     return {

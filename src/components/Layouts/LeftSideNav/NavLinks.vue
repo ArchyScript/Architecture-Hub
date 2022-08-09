@@ -268,6 +268,7 @@ export default {
 
     const getCurrentActiveRoute = () => {
       current_active_route.value = route.fullPath
+      getAuthUserImage()
     }
 
     window.onkeyup = () => {
@@ -289,6 +290,7 @@ export default {
     }
 
     const redirectToLoginPage = async () => {
+      sessionStorage.removeItem('architecture_hub_user_token')
       await store.dispatch('users/assignToken', null)
 
       router.push('/auth/login')
@@ -322,9 +324,9 @@ export default {
 
     onBeforeMount(async () => {
       if (!auth_user.value._id || auth_user.value._id === undefined)
-        return window.location.reload()
+        // return window.location.reload()
 
-      await fetchAuthUser(auth_user.value._id)
+        await fetchAuthUser(auth_user.value._id)
       await getAuthUserImage()
     })
 

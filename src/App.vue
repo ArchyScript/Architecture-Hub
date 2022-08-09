@@ -8,26 +8,17 @@
 </template>
 
 <script lang="ts">
-import { onBeforeMount, onMounted } from 'vue'
+import { computed, onBeforeMount, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import router from './router'
+import { useStore } from 'vuex'
 export default {
   name: 'App',
   setup() {
     const route = useRoute()
 
-    // if (route.fullPath === '/') {
-    //   console.log('vdsds')
-    // } else {
-    //   console.log(765)
-    // }
-    // onBeforeMount(() => {
-    //   console.log(route.fullPath)
-    //   console.log('bmounted')
-    // })
-
-    // onMounted(() => {
-    //   console.log(route.fullPath)
-    //   console.log('mounted')
+    // onBeforeMount(async () => {
+    //   await redirectToLoginPage()
     // })
     return { route }
   },

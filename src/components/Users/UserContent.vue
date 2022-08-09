@@ -258,6 +258,9 @@ export default {
 
       is_auth_user_a_follower.value = true
       user_info.value.followers = result.data.followers.length
+
+      await fetchAuthUser()
+      await fetchUsers()
     }
 
     const unfollowRecommended = async (user_to_unfollow_id: string) => {
@@ -277,6 +280,7 @@ export default {
       is_auth_user_a_follower.value = false
       user_info.value.followers = result.data.followers.length
 
+      // await fetchAuthUser()
       await fetchAuthUser()
       await fetchUsers()
     }

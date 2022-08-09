@@ -303,8 +303,9 @@ export default {
     const scrollToTop = () => window.scrollTo(0, 0)
 
     const redirectToLoginPage = async () => {
+      sessionStorage.removeItem('architecture_hub_user_token')
       await store.dispatch('users/assignToken', null)
-
+      window.location.reload()
       router.push('/auth/login')
     }
 

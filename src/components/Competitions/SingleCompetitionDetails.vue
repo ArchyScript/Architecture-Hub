@@ -134,12 +134,41 @@
           No comment found
         </div>
 
-        <div
-          v-else
-          v-for="competition_comment in competition_comments"
-          :key="competition_comment.creator_username"
-        >
-          <CommentVue :eachPostComment="competition_comment" />
+        <div v-else>
+          <div
+            v-if="competition_comments.length < 1"
+            class="w-full flex items-start justify-center space-x-1 sm:space-x-2"
+          >
+            <span
+              class="text-center text-gray-500 font-semibold text-xs sm:text-sm md:text-base"
+            >
+              loading comments
+            </span>
+
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 text-archyhub-main fill-current animate-spin"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
+              />
+            </svg>
+          </div>
+
+          <div v-else>
+            <div
+              v-for="competition_comment in competition_comments"
+              :key="competition_comment.creator_username"
+            >
+              <CommentVue :eachPostComment="competition_comment" />
+            </div>
+          </div>
         </div>
       </div>
     </div>

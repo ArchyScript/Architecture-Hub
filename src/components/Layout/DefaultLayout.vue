@@ -79,6 +79,7 @@ import RightSideNav from '../Layouts/RightSideNav/index.vue'
 import LeftSideNav from '../Layouts/LeftSideNav/index.vue'
 import BottomTabVue from '../Layouts/BottomTab.vue'
 import ModalsDisplayVue from './ModalsDisplay.vue'
+import router from '@/router'
 
 export default {
   name: 'DefaultLayout',
@@ -116,7 +117,17 @@ export default {
 
     const scrollToTop = () => window.scrollTo(0, 0)
 
+    const redirectToLoginPage = async () => {
+      await store.dispatch('users/assignToken', null)
+      sessionStorage.removeItem('architecture_hub_user_token')
+    }
+
     onBeforeMount(async () => {
+      const { username } = auth_user.value
+
+      if (username === null || username === undefined || username === '')
+        return redirectToLoginPage()
+
       scrollToTop()
     })
 

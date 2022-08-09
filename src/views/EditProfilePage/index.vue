@@ -105,7 +105,8 @@ export default {
 
     const redirectToLoginPage = async () => {
       await store.dispatch('users/assignToken', null)
-
+      sessionStorage.removeItem('architecture_hub_user_token')
+      window.location.reload()
       router.push('/auth/login')
     }
 
