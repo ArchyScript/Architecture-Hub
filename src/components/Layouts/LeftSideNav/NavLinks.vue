@@ -2,6 +2,7 @@
   <section class="flex items-center rounded-2xl sm:px-2 mt-10">
     <div class="w-full">
       <router-link
+        @mouseover="getAuthUserImage()"
         v-if="auth_user_info.username !== ''"
         :to="`/profile/${auth_user_info.username}`"
       >
@@ -54,7 +55,10 @@
       </div>
 
       <div class="">
-        <div class="hidden md:flex flex-col space-y-2 mb-10 sm:mb-12 xl:mb-16">
+        <div
+          @mouseover="getCurrentActiveRoute()"
+          class="hidden md:flex flex-col space-y-2 mb-10 sm:mb-12 xl:mb-16"
+        >
           <div
             :key="navbar_link.title"
             v-for="navbar_link in navbar_links"
@@ -250,7 +254,6 @@ export default {
     }
 
     const getAuthUserImage = async () => {
-      console.log(8765)
       const {
         username,
         bio: { gender, display_name },
@@ -272,18 +275,18 @@ export default {
       getAuthUserImage()
     }
 
-    window.onkeyup = () => {
-      getAuthUserImage()
-      getCurrentActiveRoute()
-    }
-    window.onscroll = () => {
-      getAuthUserImage()
-      getCurrentActiveRoute()
-    }
-    window.onresize = () => {
-      getAuthUserImage()
-      getCurrentActiveRoute()
-    }
+    // window.onkeyup = () => {
+    //   getAuthUserImage()
+    //   getCurrentActiveRoute()
+    // }
+    // window.onscroll = () => {
+    //   getAuthUserImage()
+    //   getCurrentActiveRoute()
+    // }
+    // window.onresize = () => {
+    //   getAuthUserImage()
+    //   getCurrentActiveRoute()
+    // }
 
     //
     const closeAllModals = async () => {
@@ -341,6 +344,9 @@ export default {
       toggleCurrentActiveNavLink,
       closeAllModals,
       logUserOut,
+
+      getAuthUserImage,
+      getCurrentActiveRoute,
     }
   },
 }

@@ -1,5 +1,6 @@
 <template>
   <section
+    @mouseover="getCompetitions()"
     class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
     <!-- v-if="competitions.length >= 1" -->
@@ -150,11 +151,6 @@ export default {
       await store.dispatch('_requests/getAllCompetitions')
     }
 
-    //
-    window.onkeyup = () => getCompetitions()
-    window.onscroll = () => getCompetitions()
-    window.onresize = () => getCompetitions()
-
     onBeforeMount(async () => await getCompetitions())
 
     return {
@@ -162,6 +158,7 @@ export default {
       competitions,
       read_more_competition_id,
       toggleDescriptionLength,
+      getCompetitions,
     }
   },
 }

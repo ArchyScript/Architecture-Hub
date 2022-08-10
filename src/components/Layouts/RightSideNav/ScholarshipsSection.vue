@@ -1,5 +1,6 @@
 <template>
   <section
+    @mouseover="getScholarships()"
     v-if="scholarships.length >= 1"
     class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
@@ -150,11 +151,6 @@ export default {
       await store.dispatch('_requests/getAllScholarships')
     }
 
-    //
-    window.onkeyup = () => getScholarships()
-    window.onscroll = () => getScholarships()
-    window.onresize = () => getScholarships()
-
     onBeforeMount(async () => await getScholarships())
 
     return {
@@ -162,6 +158,7 @@ export default {
       scholarships,
       read_more_scholarship_id,
       toggleDescriptionLength,
+      getScholarships,
     }
   },
 }

@@ -5,12 +5,27 @@
     <div class="w-full flex items-center justify-around space-x-1">
       <span
         :title="`Comment on ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-medium bg-green-200 bg-opacity-10 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 flex justify-center items-center cursor-pointer text-center text-gray-500 font-medium bg-green-200 bg-opacity-10 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
           class="fa fa-comment-o text-sm sm:text-base xl:text-lg px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
           @click="commentOnPost(reaction_object)"
         ></span>
+        <!-- <span
+          class="flex justify-center items-center w-full px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
+          @click="commentOnPost(reaction_object)"
+        > -->
+        <!-- <svg
+          class="w-6 h-6 fill-current flex justify-center items-center"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
+          <path
+            d="M256 32C114.6 32 .0272 125.1 .0272 240c0 49.63 21.35 94.98 56.97 130.7c-12.5 50.37-54.27 95.27-54.77 95.77c-2.25 2.25-2.875 5.734-1.5 8.734C1.979 478.2 4.75 480 8 480c66.25 0 115.1-31.76 140.6-51.39C181.2 440.9 217.6 448 256 448c141.4 0 255.1-93.13 255.1-208S397.4 32 256 32z"
+          />
+        </svg> -->
+        <!-- </span> -->
 
         <span
           v-if="reaction_object.no_of_comments >= 1"
@@ -120,7 +135,6 @@ export default {
     const storePostLikes = computed(() => store.state._requests.allPostLikes)
     const is_post_bookmarked_by_auth_user = ref(false)
     const is_post_liked_by_auth_user = ref(false)
-    const like_id = ref('')
     const is_auth_user_creator_of_post = ref(false)
     const storeCompetitionLikes = computed(
       () => store.state._requests.allCompetitionLikes,
@@ -436,17 +450,23 @@ export default {
       }
 
       if (is_post_bookmarked) {
+        is_post_bookmarked_by_auth_user.value = false
+
         const response = await removeFromBookmarked(params)
 
         const { error, data, status } = response
-        if (error || status === 400 || !data) return
+        if (error || status === 400 || !data)
+          return (is_post_bookmarked_by_auth_user.value = true)
 
         is_post_bookmarked_by_auth_user.value = false
       }
       if (!is_post_bookmarked) {
+        is_post_bookmarked_by_auth_user.value = true
+
         const response = await addToBookmarked(params)
         const { error, data, status } = response
-        if (error || status === 400 || !data) return
+        if (error || status === 400 || !data)
+          return (is_post_bookmarked_by_auth_user.value = false)
 
         is_post_bookmarked_by_auth_user.value = true
       }

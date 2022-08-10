@@ -1,8 +1,8 @@
 <template>
   <section
+    @mouseover="getRecommendedPeople()"
     class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
-    <!-- v-if="recommended_people_to_follow.length >= 1" -->
     <div class="w-full">
       <h4 class="text-lg md:text-xl font-semibold mb-6 px-5 text-gray-600">
         Recommended for You
@@ -19,59 +19,61 @@
         v-if="recommended_people_to_follow.length >= 1"
       >
         <div
-          class="flex space-x-4"
           :key="recommended._id"
           v-for="recommended in recommended_people_to_follow"
         >
-          <div class="flex-shrink-0">
-            <router-link :to="`/profile/${recommended.username}`">
-              <img
-                class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-100"
-                :src="recommended.profile_image"
-              />
-            </router-link>
-          </div>
-
-          <div class="flex-1">
-            <div class="mb-1 flex items-center">
-              <div class="flex-1">
-                <span
-                  class="text-base block font-medium text-gray-700 truncate dark:text-white"
-                >
-                  {{
-                    recommended.display_name !== ''
-                      ? recommended.display_name
-                      : recommended.username
-                  }}
-                </span>
-                <span
-                  class="text-sm block text-gray-500 truncate dark:text-gray-400"
-                >
-                  {{ `@${recommended.username}` }}
-                </span>
-              </div>
-
-              <span
-                class="btn py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
-                @click="followRecommended(recommended._id)"
-                v-if="just_followed_user_id !== recommended._id"
-              >
-                follow
-              </span>
-
-              <span
-                v-if="just_followed_user_id === recommended._id"
-                class="btn py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-700 bg-gray-700 cursor-not-allowed text-gray-100"
-              >
-                following
-              </span>
+          <div class="mb-1 flex items-start space-x-1 sm:space-x-2">
+            <div class="flex-shrink-0">
+              <router-link :to="`/profile/${recommended.username}`">
+                <img
+                  class="w-10 h-10 md:w-12 md:h-12 rounded-full border border-gray-100"
+                  :src="recommended.profile_image"
+                />
+              </router-link>
             </div>
 
-            <p class="text-gray-500 font-light italic items-center text-sm">
-              <span>promoted</span>
-              <span class="fa fa-edit ml-2 text-sm"></span>
-            </p>
+            <div class="flex-1 truncate">
+              <router-link
+                :to="`/profile/${recommended.username}`"
+                class="text-base block font-medium text-gray-700 hover:underline hover:text-archyhub-main truncate"
+              >
+                {{
+                  recommended.display_name !== ''
+                    ? recommended.display_name
+                    : recommended.username
+                }}
+              </router-link>
+
+              <router-link
+                :to="`/profile/${recommended.username}`"
+                class="text-sm block text-gray-600 hover:underline hover:text-archyhub-main truncate"
+              >
+                {{ `@${recommended.username}` }}
+              </router-link>
+            </div>
+
+            <span
+              class="py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
+              @click="followRecommended(recommended._id)"
+              v-if="just_followed_user_id !== recommended._id"
+            >
+              follow
+            </span>
+
+            <span
+              v-if="just_followed_user_id === recommended._id"
+              class="btn py-1 text-xs md:text-sm rounded-lg px-3 border border-gray-700 bg-gray-700 cursor-not-allowed text-gray-100"
+            >
+              following
+            </span>
           </div>
+
+          <p
+            class="text-gray-500 w-full font-light italic items-center text-sm ml-12 sm:ml-14"
+          >
+            <span>promoted</span>
+            <span class="fa fa-edit ml-2 text-sm"></span>
+          </p>
         </div>
       </div>
 
@@ -193,17 +195,13 @@ export default {
     }
 
     //
-    window.onkeyup = async () => await getRecommendedPeople()
-    window.onscroll = async () => await getRecommendedPeople()
-    window.onresize = async () => await getRecommendedPeople()
-
-    //
     onBeforeMount(async () => await getRecommendedPeople())
 
     return {
       recommended_people_to_follow,
       just_followed_user_id,
       followRecommended,
+      getRecommendedPeople,
     }
   },
 }

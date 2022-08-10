@@ -1,5 +1,6 @@
 <template>
   <nav
+    @mouseover="getUserProfileData()"
     :class="{ scrolled: !scrollShadowBoolean }"
     class="flex items-center top-0 inset-x-0 py-3 sm:py-4 px-2 sm:px-4"
   >
@@ -98,6 +99,7 @@ export default {
       scrollShadowBoolean,
       router,
       user_profile_data,
+      getUserProfileData,
     }
   },
 }

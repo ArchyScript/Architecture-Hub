@@ -20,7 +20,10 @@
       ></span>
     </span>
 
-    <div class="flex items-center bg-archyhub-semi-light bg-opacity-80">
+    <div
+      class="flex items-center bg-archyhub-semi-light bg-opacity-90"
+      @mouseover="getCurrentActiveRoute()"
+    >
       <div
         v-for="bottom_bar_link in bottom_bar_links"
         :key="bottom_bar_link.route"
@@ -163,10 +166,6 @@ export default {
       current_active_route.value = route.fullPath
     }
 
-    window.onkeyup = () => getCurrentActiveRoute()
-    window.onscroll = () => getCurrentActiveRoute()
-    window.onresize = () => getCurrentActiveRoute()
-
     onBeforeMount(() => getCurrentActiveRoute())
 
     return {
@@ -175,6 +174,7 @@ export default {
       current_active_route,
       toggleCurrentActiveNavLink,
       openTargettedModal,
+      getCurrentActiveRoute,
     }
   },
 }
