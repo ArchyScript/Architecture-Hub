@@ -255,6 +255,9 @@ export default {
       is_loading.value = false
 
       await assignToken(null)
+
+      sessionStorage.removeItem('architecture_hub_user_token')
+      window.location.reload()
       router.push('/auth/login')
     }
 

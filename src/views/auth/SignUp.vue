@@ -114,6 +114,7 @@
                   placeholder="Confirm Password"
                   v-model="payload.confirm_password"
                   title="toggle password visibility"
+                  autocomplete="on"
                 />
                 <span
                   class="absolute top-0 h-full flex items-center justify-center my-auto right-0 px-3 sm:px-4 rounded-lg sm:rounded-xl cursor-pointer"

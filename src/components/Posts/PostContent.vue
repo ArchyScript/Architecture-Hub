@@ -80,25 +80,47 @@
       </div>
 
       <article class="w-full flex-1 pr-1 sm:pr-2 pl-12 sm:pl-14 mt-2 md:mt-3">
-        <router-link :to="`/posts/${eachPost._id}`">
-          <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
-            <p
-              class="text-sm md:text-base font-normal text-gray-500 break-words break-all"
-            >
+        <!-- <router-link :to="`/posts/${eachPost._id}`"> -->
+        <div
+          class="pb-2 sm:pb-3 md:pb-4 lg:pb-5 cursor-pointer"
+          @click="viewDetailedPost(eachPost._id)"
+        >
+          <p
+            class="text-sm md:text-base font-normal text-gray-500 break-words break-all"
+          >
+            <span v-if="eachPost.content.length <= 100">
               {{ eachPost.content }}
-            </p>
+            </span>
 
-            <div
-              v-if="eachPost.post_image.avatar !== ''"
-              class="w-full flex justify-center items-center h-60 mt-2 sm:h-72 lg:h-80 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
-            >
-              <img
-                class="w-auto h-auto max-h-full object-fill rounded-xl"
-                :src="eachPost.post_image.avatar"
-              />
-            </div>
+            <span v-if="eachPost.content.length > 100">
+              {{
+                is_more_content_boolean && see_all_post_id == eachPost._id
+                  ? eachPost.content
+                  : eachPost.content.substring(0, 100)
+              }}
+              <span
+                @click="togglePostContentLength(eachPost._id)"
+                class="py-1 pl-1 pr-3 font-medium text-gray-800 border-gray-200 cursor-pointer hover:underline"
+              >
+                {{
+                  is_more_content_boolean && see_all_post_id == eachPost._id
+                    ? 'see less'
+                    : '(see more...)'
+                }}
+              </span>
+            </span>
+          </p>
+
+          <div
+            v-if="eachPost.post_image.avatar !== ''"
+            class="w-full flex justify-center items-center h-60 mt-2 sm:h-72 lg:h-80 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
+          >
+            <img
+              class="w-auto h-auto max-h-full object-fill rounded-xl"
+              :src="eachPost.post_image.avatar"
+            />
           </div>
-        </router-link>
+        </div>
       </article>
     </div>
 
@@ -116,6 +138,7 @@ import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
+import router from '@/router'
 
 export default {
   name: 'PostContent',
@@ -129,6 +152,9 @@ export default {
   setup(props: any) {
     const store = useStore()
     const storeUsers = computed(() => store.state._requests.allUsers)
+    const is_more_content_boolean = ref(true)
+    const see_all_post_id = ref('')
+    const just_see_more = ref(true)
     const post_info = ref({
       display_name: '',
       poster_id: '',
@@ -182,6 +208,24 @@ export default {
       return await fetchUsers()
     }
 
+    const viewDetailedPost = (post_id: any) => {
+      if (just_see_more.value) return (just_see_more.value = false)
+
+      router.push(`/posts/${post_id}`)
+    }
+
+    const togglePostContentLength = (post_id: string) => {
+      just_see_more.value = true
+
+      if (see_all_post_id.value === post_id) {
+        is_more_content_boolean.value = false
+        return (see_all_post_id.value = '')
+      }
+
+      is_more_content_boolean.value = true
+      see_all_post_id.value = post_id
+    }
+
     //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
@@ -195,7 +239,11 @@ export default {
     return {
       post_info,
       reactions,
+      see_all_post_id,
+      is_more_content_boolean,
       getPostDetails,
+      viewDetailedPost,
+      togglePostContentLength,
     }
   },
 }

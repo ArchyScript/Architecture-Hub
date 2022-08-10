@@ -2,24 +2,31 @@
   <section
     class="flex flex-col items-center mt-1 xl:mt-2 inset-x-0 bg-archyhub-semi-light bg-opacity-40"
   >
-    <div class="w-full flex items-center justify-around space-x-2">
+    <div class="w-full flex items-center justify-around space-x-1">
       <span
         :title="`Comment on ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-medium hover:bg-green-200 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-medium bg-green-200 bg-opacity-10 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
           class="fa fa-comment-o text-sm sm:text-base xl:text-lg px-3 py-2 rounded-full hover:text-green-700 hover:bg-green-500 hover:bg-opacity-10"
           @click="commentOnPost(reaction_object)"
         ></span>
 
-        <span class="text-sm sm:text-base xl:text-lg">
+        <span
+          v-if="reaction_object.no_of_comments >= 1"
+          class="text-sm sm:text-base xl:text-lg"
+        >
           {{ reaction_object.no_of_comments }}
         </span>
+        <span
+          v-if="reaction_object.no_of_comments < 1"
+          class="text-sm sm:text-base xl:text-lg"
+        ></span>
       </span>
 
       <span
         :title="`Like ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-medium hover:bg-red-200 hover:bg-opacity-20 hover:text-green-700"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-gray-500 font-medium bg-red-200 bg-opacity-10 hover:bg-opacity-20 hover:text-green-700"
       >
         <span
           :class="
@@ -35,14 +42,21 @@
           "
         ></span>
 
-        <span class="text-sm sm:text-base xl:text-lg">
+        <span
+          v-if="reaction_object.no_of_likes >= 1"
+          class="text-sm sm:text-base xl:text-lg"
+        >
           {{ reaction_object.no_of_likes }}
         </span>
+        <span
+          v-if="reaction_object.no_of_likes < 1"
+          class="text-sm sm:text-base xl:text-lg"
+        ></span>
       </span>
 
       <span
         :title="`Bookmark ${reaction_object.post_type}`"
-        class="flex-1 space-x-1 items-center cursor-pointer text-center text-purple-500 font-bold hover:bg-purple-200 hover:bg-opacity-20"
+        class="flex-1 space-x-1 items-center cursor-pointer text-center text-purple-500 font-bold bg-purple-200 bg-opacity-10 hover:bg-opacity-20"
       >
         <span
           :class="
@@ -287,10 +301,10 @@ export default {
           post_type,
         }
 
-        const response = await reverseLike(params)
-
         is_post_liked_by_auth_user.value = false
         reaction_object.value.no_of_likes -= 1
+
+        const response = await reverseLike(params)
 
         const { error, data, status } = response
         if (error || status === 400 || !data) {

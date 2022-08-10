@@ -76,31 +76,57 @@
 
     <article class="w-full px-2 sm:px-3 xl:px-4 pb-2">
       <div class="px-1 sm:px-2 mt-2">
-        <router-link :to="`/competitions/${eachCompetition._id}`">
-          <div class="pb-2 sm:pb-3 md:pb-4 lg:pb-5">
-            <span
-              class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-words break-all"
-            >
-              {{ eachCompetition.title }}
-            </span>
+        <!-- <router-link :to="`/competitions/${eachCompetition._id}`"> -->
+        <div
+          @click="viewDetailedCompetiton(eachCompetition._id)"
+          class="pb-2 sm:pb-3 md:pb-4 lg:pb-5"
+        >
+          <span
+            class="text-sm sm:text-base lg:text-lg block font-medium text-gray-500 break-words break-all cursor-pointer"
+          >
+            {{ eachCompetition.title }}
+          </span>
 
-            <div
-              v-if="eachCompetition.competition_image.avatar !== ''"
-              class="w-full flex justify-center items-center h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
-            >
-              <img
-                class="h-auto max-h-full w-auto object-fill rounded-xl"
-                :src="eachCompetition.competition_image.avatar"
-              />
-            </div>
+          <div
+            v-if="eachCompetition.competition_image.avatar !== ''"
+            class="w-full flex justify-center items-center h-60 mt-2 sm:h-72 lg:h-80 mb-3 sm:mb-4 lg:mb-5 bg-archyhub-semi-light bg-opacity-40 rounded-xl"
+          >
+            <img
+              class="h-auto max-h-full w-auto object-fill rounded-xl"
+              :src="eachCompetition.competition_image.avatar"
+            />
+          </div>
 
-            <span
-              class="text-xs sm:text-sm break-words md:text-base block font-normal text-gray-600 break-all"
-            >
+          <p
+            class="text-xs sm:text-sm break-words md:text-base block font-normal text-gray-600 break-all"
+          >
+            {{ eachCompetition.description }}
+            <span v-if="eachCompetition.description.length <= 100">
               {{ eachCompetition.description }}
             </span>
-          </div>
-        </router-link>
+
+            <span v-if="eachCompetition.description.length > 100">
+              {{
+                is_more_description_boolean &&
+                see_all_competition_id == eachCompetition._id
+                  ? eachCompetition.description
+                  : eachCompetition.description.substring(0, 100)
+              }}
+              <span
+                @click="toggleCompetitionDescriptionLength(eachCompetition._id)"
+                class="py-1 pl-1 pr-3 font-medium text-gray-800 border-gray-200 cursor-pointer hover:underline"
+              >
+                {{
+                  is_more_description_boolean &&
+                  see_all_competition_id == eachCompetition._id
+                    ? 'see less'
+                    : '(see more...)'
+                }}
+              </span>
+            </span>
+          </p>
+        </div>
+        <!-- </router-link> -->
       </div>
     </article>
 
@@ -118,6 +144,7 @@ import {
   formatDateAndTime,
   getDisplayProfilePicture,
 } from '@/controller/utilities/index'
+import router from '@/router'
 
 export default {
   name: 'CompetitionContent',
@@ -131,6 +158,9 @@ export default {
   setup(props: any) {
     const store = useStore()
     const storeUsers = computed(() => store.state._requests.allUsers)
+    const is_more_description_boolean = ref(true)
+    const see_all_competition_id = ref('')
+    const just_see_more = ref(true)
     const competition_info = ref({
       display_name: '',
       creator_id: '',
@@ -143,7 +173,7 @@ export default {
       no_of_likes: 0,
       no_of_comments: 0,
       post_comment_object: {
-        post_id: '',
+        competition_id: '',
         post_type: '',
       },
     })
@@ -161,7 +191,7 @@ export default {
 
       reactions.value.no_of_comments = comments.length
       reactions.value.no_of_likes = likes.length
-      reactions.value.post_comment_object.post_id = _id
+      reactions.value.post_comment_object.competition_id = _id
       reactions.value.post_comment_object.post_type = 'competition'
 
       if (storeUsers.value.length < 1) await fetchUsers()
@@ -191,6 +221,24 @@ export default {
       return await fetchUsers()
     }
 
+    const viewDetailedCompetiton = (competition_id: any) => {
+      if (just_see_more.value) return (just_see_more.value = false)
+
+      router.push(`/competitions/${competition_id}`)
+    }
+
+    const toggleCompetitionDescriptionLength = (competition_id: string) => {
+      just_see_more.value = true
+
+      if (see_all_competition_id.value === competition_id) {
+        is_more_description_boolean.value = false
+        return (see_all_competition_id.value = '')
+      }
+
+      is_more_description_boolean.value = true
+      see_all_competition_id.value = competition_id
+    }
+
     //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
@@ -203,7 +251,11 @@ export default {
     return {
       competition_info,
       reactions,
+      see_all_competition_id,
+      is_more_description_boolean,
+      viewDetailedCompetiton,
       getCompetitionDetails,
+      toggleCompetitionDescriptionLength,
     }
   },
 }

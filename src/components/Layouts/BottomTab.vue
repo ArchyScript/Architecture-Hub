@@ -134,11 +134,11 @@ export default {
         title: 'Competitions',
         icon: 'fa fa-trophy',
       },
-      {
-        route: '/scholarships',
-        title: 'Scholarships',
-        icon: 'fas fa-award',
-      },
+      // {
+      //   route: '/scholarships',
+      //   title: 'Scholarships',
+      //   icon: 'fas fa-award',
+      // },
       {
         route: `/profile/${auth_user.value.username}`,
         title: 'Profile',

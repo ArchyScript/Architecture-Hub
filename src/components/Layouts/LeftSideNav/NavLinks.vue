@@ -227,11 +227,11 @@ export default {
         title: 'Explore',
         icon: 'fas fa-users',
       },
-      {
-        route: '/scholarships',
-        title: 'Scholarships',
-        icon: 'fas fa-award',
-      },
+      // {
+      //   route: '/scholarships',
+      //   title: 'Scholarships',
+      //   icon: 'fas fa-award',
+      // },
       {
         route: '/competitions',
         title: 'Competitions',
@@ -250,6 +250,7 @@ export default {
     }
 
     const getAuthUserImage = async () => {
+      console.log(8765)
       const {
         username,
         bio: { gender, display_name },
