@@ -1,8 +1,8 @@
 <template>
   <section
-    @mouseover="getRecommendedPeople()"
     class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
+    <!-- @mouseover="getRecommendedPeople()" -->
     <div class="w-full">
       <h4 class="text-lg md:text-xl font-semibold mb-6 px-5 text-gray-600">
         Recommended for You
