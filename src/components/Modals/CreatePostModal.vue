@@ -68,7 +68,7 @@
                 class="col-span-2 sm:col-span-1 text-center text-xs sm:text-sm lg:text-base cursor-pointer py-2 px-4 md:px-6 rounded-lg md:rounded-xl bg-red-700 text-white focus:outline-none my-1"
                 @click="payload.image_file = null"
               >
-                Romove Image
+                Remove Image
               </span>
             </div>
           </div>
