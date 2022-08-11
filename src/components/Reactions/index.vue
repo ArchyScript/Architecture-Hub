@@ -173,8 +173,9 @@ export default {
         : reaction_object.value.no_of_likes
 
       await checkIfPostHaveBeenLikedByAuthUser(reaction_object.value)
-      await fetchAuthUser()
       await checkIfPostHaveBeenBookmarkedByAuthUser(reaction_object.value)
+      // await checkIfAuthUserCanDeletePost(reaction_object.value)
+      await fetchAuthUser()
     }
 
     const checkIfAuthUserCanDeletePost = async (object_params: any) => {
@@ -514,6 +515,7 @@ export default {
       await fetchAuthUser()
 
       if (post_type === 'post') {
+        await fetchPosts()
         await fetchPosts()
         fetchPosts()
       }

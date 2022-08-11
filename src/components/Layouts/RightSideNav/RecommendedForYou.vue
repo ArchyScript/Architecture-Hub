@@ -188,6 +188,7 @@ export default {
 
       just_followed_user_id.value = user_id
       await getRecommendedPeople()
+      await fetchUsers()
       getRecommendedPeople()
     }
 
