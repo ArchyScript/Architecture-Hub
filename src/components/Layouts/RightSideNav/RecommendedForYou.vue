@@ -80,6 +80,7 @@
       </div>
 
       <router-link
+        @mouseover="getRecommendedPeople()"
         v-if="recommended_people_to_follow.length >= 1"
         class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/users"
@@ -188,13 +189,17 @@ export default {
 
       just_followed_user_id.value = user_id
       await getRecommendedPeople()
-      await fetchUsers()
       getRecommendedPeople()
+      await fetchAuthUser()
+      await fetchUsers()
     }
 
     //
     async function fetchUsers() {
       await store.dispatch('_requests/getAllUsers')
+    }
+    async function fetchAuthUser() {
+      await store.dispatch('users/getAuthUser', auth_user.value._id)
     }
 
     //
