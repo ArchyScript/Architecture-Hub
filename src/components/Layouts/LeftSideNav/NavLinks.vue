@@ -55,10 +55,7 @@
       </div>
 
       <div class="">
-        <div
-          @mouseover="getCurrentActiveRoute()"
-          class="hidden md:flex flex-col space-y-2 mb-10 sm:mb-12 xl:mb-16"
-        >
+        <div class="hidden md:flex flex-col space-y-2 mb-10 sm:mb-12 xl:mb-16">
           <div
             :key="navbar_link.title"
             v-for="navbar_link in navbar_links"
