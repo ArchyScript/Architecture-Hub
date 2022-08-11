@@ -1,11 +1,18 @@
 <template>
   <section
-    @mouseover="getCompetitions()"
-    class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
+    class="flex relative items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
+    <!-- @mouseover="getCompetitions()" -->
+    <div
+      @mouseover="getCompetitions()"
+      class="w-3 absolute left-0 h-full bg-archyhub-semi-light rounded-3xl top-0 bg-opacity-20"
+    ></div>
     <!-- v-if="competitions.length >= 1" -->
     <div class="w-full">
-      <h4 class="text-lg md:text-xl font-semibold mb-4 px-6 text-gray-600">
+      <h4
+        @mouseover="getCompetitions()"
+        class="text-lg md:text-xl font-semibold mb-4 px-6 text-gray-600"
+      >
         Latest Competitions
       </h4>
 
@@ -73,6 +80,7 @@
       </div>
 
       <router-link
+        @mouseover="getCompetitions()"
         v-if="competitions.length >= 1"
         class="w-full text-xs md:text-sm block mt-3 py-2 text-center rounded-bl-xl rounded-br-xl sm:text-base italic border-t hover:border-archyhub-semi-light text-gray-700 hover:text-archyhub-main hover:bg-archyhub-semi-light hover:bg-opacity-60"
         to="/competitions"

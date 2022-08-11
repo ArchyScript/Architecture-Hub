@@ -1,7 +1,12 @@
 <template>
   <section
-    class="flex items-center border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
+    class="flex items-center relative border rounded-2xl border-gray-200 hover:border-archyhub-semi-light inset-x-0 pt-4 shadow-sm hover:shadow-md mb-10"
   >
+    <div
+      @mouseover="getRecommendedPeople()"
+      class="w-3 absolute left-0 h-full bg-archyhub-semi-light rounded-3xl top-0 bg-opacity-20"
+    ></div>
+
     <div class="w-full">
       <h4
         @mouseover="getRecommendedPeople()"

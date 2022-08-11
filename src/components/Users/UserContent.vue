@@ -38,6 +38,7 @@
 
           <span :class="user_info._id === auth_user._id ? 'hidden' : 'flex'">
             <span
+              @mouseover="checkFollowersUpdate()"
               class="btn text-xs md:text-sm py-1 rounded-lg px-2 md:px-3 flex-1 border border-gray-200 cursor-pointer hover:bg-gray-700 hover:text-gray-100"
               @click="followRecommended(user_info._id)"
               v-if="!is_auth_user_a_follower"
@@ -46,6 +47,7 @@
             </span>
 
             <span
+              @mouseover="checkFollowersUpdate()"
               @click="unfollowRecommended(user_info._id)"
               v-if="is_auth_user_a_follower"
               class="btn py-1 text-xs md:text-sm rounded-lg px-2 md:px-3 border bg-gray-700 border-gray-700 hover:border-archyhub-gray hover:bg-archyhub-gray hover:text-gray-600 cursor-pointer text-gray-100"
@@ -259,8 +261,7 @@ export default {
       is_auth_user_a_follower.value = true
       user_info.value.followers = result.data.followers.length
 
-      await fetchAuthUser()
-      await fetchUsers()
+      await checkFollowersUpdate()
     }
 
     const unfollowRecommended = async (user_to_unfollow_id: string) => {
@@ -280,9 +281,14 @@ export default {
       is_auth_user_a_follower.value = false
       user_info.value.followers = result.data.followers.length
 
-      // await fetchAuthUser()
+      await checkFollowersUpdate()
+    }
+
+    const checkFollowersUpdate = async () => {
       await fetchAuthUser()
+      console.log(7654)
       await fetchUsers()
+      console.log(76765454)
     }
 
     const goToUserProfile = async (username: string) => {
@@ -312,6 +318,7 @@ export default {
       getUserDetails,
       followRecommended,
       unfollowRecommended,
+      checkFollowersUpdate,
       goToUserProfile,
     }
   },
