@@ -1,5 +1,5 @@
 import axios, { AxiosRequestHeaders } from 'axios'
-const API_URL = 'https://architecture-hub.herokuapp.com/api/'
+const API_URL = 'https://architecture-hub.adaptable.app/api/'
 
 // verify auth tokenn before any request
 
